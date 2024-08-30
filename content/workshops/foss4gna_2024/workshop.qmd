@@ -1,0 +1,32 @@
+---
+format: html
+author: Corey T. White
+title: Developing web-application with GRASS GIS 
+subtitle: FOSS4G NA 2024, St. Louis Missouri
+date: September 9, 2024
+categories: [workshop, foss4gna, webdev, grass]
+page-layout: full
+title-block-banner: true
+draft: false
+---
+
+Welcome to the **Developing Web Applications with GRASS GIS workshop**! During this workshop you will learn how to create geospatial web applications using GRASS GIS, Actinia, and OpenPlains. 
+
+- During the workshop we will learn how to develop web application using OpenPlains.
+
+## Setup
+
+
+## Overview
+
+* [GRASS GIS](https://grass.osgeo.org/) - is a raster and vector based geospatial processing engine.
+* [Actinia](https://actinia-org.github.io/actinia-core/) - is the GRASS GIS REST API for scalable, distributed, high performance geospatial processing.
+* [OpenPlains: Grasslands]() - is an interactive geospatial modeling framework.
+
+### What is Geoprocessing
+
+### What is a REST API
+
+### What is an interactive geosptial modeling framework?
+
+

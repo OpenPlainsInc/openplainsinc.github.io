@@ -74,7 +74,7 @@
     "href": "index.html",
     "title": "OpenPlains - Learning",
     "section": "",
-    "text": "OpenPlains Inc.: A First-Year Retrospective\n\n\nFOSS4G NA 2024, St. Louis Missouri\n\n\n\ngeoprocessing\n\n\nfoss4gna\n\n\npresentation\n\n\nuse Case and applications\n\n\n\n\n\n\n\n\n\nSep 10, 2024\n\n\nCorey T. White\n\n\n\n\n\n\n\n\n\n\n\n\nGRASS GIS as Geocomputational Engine\n\n\nFOSS4G NA 2024, St. Louis Missouri\n\n\n\ngeoprocessing\n\n\nfoss4gna\n\n\npresentation\n\n\nuse Case and applications\n\n\n\n\n\n\n\n\n\nSep 10, 2024\n\n\nCorey T. White\n\n\n\n\n\n\n\n\n\n\n\n\nIntroduction to Actinia\n\n\n\n\n\n\ngeospatial\n\n\nGRASS v8.5\n\n\njupyter\n\n\nlidar\n\n\nSTAC\n\n\n\n…\n\n\n\n\n\nSep 10, 2024\n\n\nCorey T. White\n\n\n\n\n\n\n\n\n\n\n\n\nSTAC Tutorial\n\n\n\n\n\n\nstac\n\n\ngrass-addon\n\n\ntutorial\n\n\n\n\n\n\n\n\n\nAug 26, 2024\n\n\nCorey T. White\n\n\n\n\n\n\n\n\n\n\n\n\nGeoprocessing with GRASS GIS and Jupyter Notebooks\n\n\n\n\n\n\ngeospatial\n\n\nGRASS v8.5\n\n\njupyter\n\n\nlidar\n\n\nSTAC\n\n\n\nThis tutorial demonstrates how to use GRASS GIS in Jupyter Notebooks.\n\n\n\n\n\nAug 22, 2024\n\n\nCorey T. White\n\n\n\n\n\n\nNo matching items"
+    "text": "OpenPlains Inc.: A First-Year Retrospective\n\n\nFOSS4G NA 2024, St. Louis Missouri\n\n\n\ngeoprocessing\n\n\nfoss4gna\n\n\npresentation\n\n\nuse Case and applications\n\n\n\n\n\n\n\n\n\nSep 10, 2024\n\n\nCorey T. White\n\n\n\n\n\n\n\n\n\n\n\n\nGRASS GIS as Geocomputational Engine\n\n\nFOSS4G NA 2024, St. Louis Missouri\n\n\n\ngeoprocessing\n\n\nfoss4gna\n\n\npresentation\n\n\nuse Case and applications\n\n\n\n\n\n\n\n\n\nSep 10, 2024\n\n\nCorey T. White\n\n\n\n\n\n\n\n\n\n\n\n\nIntroduction to Actinia\n\n\n\n\n\n\ngeospatial\n\n\nGRASS v8.5\n\n\njupyter\n\n\nlidar\n\n\nSTAC\n\n\n\n…\n\n\n\n\n\nSep 10, 2024\n\n\nCorey T. White\n\n\n\n\n\n\n\n\n\n\n\n\nDeveloping web-application with GRASS GIS\n\n\nFOSS4G NA 2024, St. Louis Missouri\n\n\n\nworkshop\n\n\nfoss4gna\n\n\nwebdev\n\n\ngrass\n\n\n\n\n\n\n\n\n\nSep 9, 2024\n\n\nCorey T. White\n\n\n\n\n\n\n\n\n\n\n\n\nSTAC Tutorial\n\n\n\n\n\n\nstac\n\n\ngrass-addon\n\n\ntutorial\n\n\n\n\n\n\n\n\n\nAug 26, 2024\n\n\nCorey T. White\n\n\n\n\n\n\n\n\n\n\n\n\nGeoprocessing with GRASS GIS and Jupyter Notebooks\n\n\n\n\n\n\ngeospatial\n\n\nGRASS v8.5\n\n\njupyter\n\n\nlidar\n\n\nSTAC\n\n\n\nThis tutorial demonstrates how to use GRASS GIS in Jupyter Notebooks.\n\n\n\n\n\nAug 22, 2024\n\n\nCorey T. White\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "content/presentations/foss4gna_2024_case_studies.html#whose-using-grass",
@@ -180,5 +180,26 @@
     "title": "Geoprocessing with GRASS GIS and Jupyter Notebooks",
     "section": "Funding",
     "text": "Funding\n\nPathways to Enable Open-Source Ecosystems (POSE) Phase II\nNSF Award # 2303651"
+  },
+  {
+    "objectID": "content/workshops/foss4gna_2024/workshop.html",
+    "href": "content/workshops/foss4gna_2024/workshop.html",
+    "title": "Developing web-application with GRASS GIS",
+    "section": "",
+    "text": "Welcome to the Developing Web Applications with GRASS GIS workshop! During this workshop you will learn how to create geospatial web applications using GRASS GIS, Actinia, and OpenPlains."
+  },
+  {
+    "objectID": "content/workshops/foss4gna_2024/workshop.html#setup",
+    "href": "content/workshops/foss4gna_2024/workshop.html#setup",
+    "title": "Developing web-application with GRASS GIS",
+    "section": "Setup",
+    "text": "Setup"
+  },
+  {
+    "objectID": "content/workshops/foss4gna_2024/workshop.html#overview",
+    "href": "content/workshops/foss4gna_2024/workshop.html#overview",
+    "title": "Developing web-application with GRASS GIS",
+    "section": "Overview",
+    "text": "Overview\n\nGRASS GIS - is a raster and vector based geospatial processing engine.\nActinia - is the GRASS GIS REST API for scalable, distributed, high performance geospatial processing.\nOpenPlains: Grasslands - is an interactive geospatial modeling framework.\n\n\nWhat is Geoprocessing\n\n\nWhat is a REST API\n\n\nWhat is an interactive geosptial modeling framework?"
   }
 ]
