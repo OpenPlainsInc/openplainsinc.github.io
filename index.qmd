@@ -1,0 +1,13 @@
+---
+title: "OpenPlains - Learning"
+listing:
+    contents: 
+        - content/notebooks
+        - content/presentations
+        - content/workshops
+    sort: "date desc"
+    type: default
+    categories: true
+page-layout: full
+title-block-banner: false
+---

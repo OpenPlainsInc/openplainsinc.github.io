@@ -1,0 +1,68 @@
+Dataset Information:
+
+Dataset Name: 3D Landscape Reconstruction and Land Use Modeling, Chaco Canyon, NM 2016
+Dataset Short Name: NM16_Dorshow
+DOI: https://doi.org/10.5069/G9XG9P8D
+
+Data Access Acknowledgement: This material is based on [data, processing] services provided by the OpenTopography Facility with support from the National Science Foundation under NSF Award Numbers 1833703, 1833643, and 1833632.
+
+Dataset Acknowledgement: Lidar data acquisition and processing completed by the National Center for Airborne Laser Mapping (NCALM). NCALM funding provided by NSF's Division of Earth Sciences, Instrumentation and Facilities Program. EAR-1339015.
+
+Dataset Citation: Dorshow, W. (2019).  3D Landscape Reconstruction and Land Use Modeling, Chaco Canyon, NM 2016. National Center for Airborne Laser Mapping (NCALM). Distributed by OpenTopography.  https://doi.org/10.5069/G9XG9P8D.. Accessed: 2024-08-19
+
+Horizontal Coordinates: NAD83 (2011) (EPOCH:2010) / UTM Zone 13N Meters [EPSG: 6342]
+Vertical Coordinates: NAVD88 [EPSG: 5703]
+
+Job Description:
+	User:[Guest] ctwhite@ncsu.edu
+	Job ID: pc1724096516919
+	Title: 
+	Description:
+
+Job Processing Result:
+	Submission Time: 2024-08-19 19:41:57
+	Completion Time: N/A
+	Duration: -1 seconds
+	Number of Points: 34,419,684
+	Status: 3D Visualization
+
+Data Selection Coordinates: 
+	Xmin: 232980.931492
+	Xmax: 234168.158398
+	Ymin: 3994186.077738
+	Ymax: 3995245.218633
+	Classifications: all
+	Exclude Noise: No
+
+Point Cloud Results:
+	Download point cloud data format: laz
+
+DEM Generation (Local Gridding):
+	Calculate Zmin grid: No
+	Calculate Zmax grid: No
+	Calculate Zmean grid: No
+	Calculate Zidw grid: No
+	Calculate point count: No
+
+DEM Generation (TIN):
+	Calculate TIN: No
+
+Derivative Products:
+	Generate hillshade and slope grids: N/A
+
+Visualization:
+	Images & Google Earth KML: No
+
+Raster Visualization: None
+
+3D Point Cloud Visualization: Yes
+Hydrologic Terrain Analysis (TauDEM) Products:
+	Hydrologically correct DEM with pits filled: No
+	D-Infinity Flow Direction : No
+	D-Infinity Specific Catchment Area: No
+	Topographic Wetness Index: No
+	D8 Flow Direction: No
+	tauDemD8FlowDir: No
+
+Contour Lines:
+	Generate contour lines: No

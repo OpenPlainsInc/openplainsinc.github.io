@@ -1,0 +1,12 @@
+{
+  "hash": "94ca74e1c5e7bac16cb35e9bda7f8122",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: STAC Tutorial\nformat: html\nauthor: Corey T. White\ndate: '2024-08-26'\ncategories:\n  - stac\n  - grass-addon\n  - tutorial\npage-layout: full\ntitle-block-banner: true\n---\n\n",
+    "supporting": [
+      "t_stac_tutorial_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}

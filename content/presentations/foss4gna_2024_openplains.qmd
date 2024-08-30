@@ -1,0 +1,23 @@
+---
+format:
+    revealjs:
+        theme: [simple, ../../theme.scss]
+author: Corey T. White
+title: "OpenPlains Inc.: A First-Year Retrospective"
+subtitle: FOSS4G NA 2024, St. Louis Missouri
+date: September 10, 2024
+categories: [geoprocessing, foss4gna, presentation, use Case and applications]
+draft: false
+---
+
+## GRASS as a Geoprocessing Engine
+
+- GRASS is a geoprocessing engine
+- Not your papi's GIS
+
+## GRASS in the Wild
+
+- Desktop
+- HPC
+- Cloud
+

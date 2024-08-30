@@ -1,0 +1,26 @@
+project:
+  type: website
+  output-dir: docs
+website:
+  navbar:
+    title: "OpenPlains Learning"
+    background: primary
+    search: true
+    left:
+      - text: "Home"
+        href: index.qmd
+    tools:
+      - icon: github
+        menu: 
+          - text: "Source Code"
+            href: "https://github.com/OpenPlainsInc/openplainsinc.github.io/"
+          - text: "Report an Issue"
+            href: "https://github.com/OpenPlainsInc/openplainsinc.github.io/issues"
+
+execute:
+  freeze: auto
+format:
+  html:
+    theme: [pandoc, theme.scss]
+    toc: true
+    toc-title: Table of Contents
