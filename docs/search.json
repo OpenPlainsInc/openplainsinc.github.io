@@ -236,5 +236,96 @@
     "title": "Geoprocessing with GRASS GIS and Jupyter Notebooks",
     "section": "Funding",
     "text": "Funding\n\nPathways to Enable Open-Source Ecosystems (POSE) Phase II\nNSF Award # 2303651"
+  },
+  {
+    "objectID": "content/presentations/foss4gna_2024_openplains.html#from-academia-to-startup",
+    "href": "content/presentations/foss4gna_2024_openplains.html#from-academia-to-startup",
+    "title": "OpenPlains Inc.: A First-Year Retrospective",
+    "section": "From Academia to Startup",
+    "text": "From Academia to Startup\n\nGRASS is a geoprocessing engine\nNot your papi’s GIS"
+  },
+  {
+    "objectID": "content/presentations/foss4gna_2024_openplains.html#nsf-i-corps",
+    "href": "content/presentations/foss4gna_2024_openplains.html#nsf-i-corps",
+    "title": "OpenPlains Inc.: A First-Year Retrospective",
+    "section": "NSF I-Corps",
+    "text": "NSF I-Corps\n\nDesktop\nHPC\nCloud"
+  },
+  {
+    "objectID": "content/presentations/foss4gna_2024_openplains.html#riot-accelerator-program",
+    "href": "content/presentations/foss4gna_2024_openplains.html#riot-accelerator-program",
+    "title": "OpenPlains Inc.: A First-Year Retrospective",
+    "section": "Riot Accelerator Program",
+    "text": "Riot Accelerator Program"
+  },
+  {
+    "objectID": "content/presentations/foss4gna_2024_openplains.html#funding",
+    "href": "content/presentations/foss4gna_2024_openplains.html#funding",
+    "title": "OpenPlains Inc.: A First-Year Retrospective",
+    "section": "Funding",
+    "text": "Funding"
+  },
+  {
+    "objectID": "content/presentations/foss4gna_2024_openplains.html#failures",
+    "href": "content/presentations/foss4gna_2024_openplains.html#failures",
+    "title": "OpenPlains Inc.: A First-Year Retrospective",
+    "section": "Failures",
+    "text": "Failures"
+  },
+  {
+    "objectID": "content/presentations/foss4gna_2024_openplains.html#success",
+    "href": "content/presentations/foss4gna_2024_openplains.html#success",
+    "title": "OpenPlains Inc.: A First-Year Retrospective",
+    "section": "Success",
+    "text": "Success"
+  },
+  {
+    "objectID": "content/presentations/foss4gna_2024_openplains.html#community",
+    "href": "content/presentations/foss4gna_2024_openplains.html#community",
+    "title": "OpenPlains Inc.: A First-Year Retrospective",
+    "section": "Community",
+    "text": "Community"
+  },
+  {
+    "objectID": "content/presentations/foss4gna_2024_openplains.html#conflict",
+    "href": "content/presentations/foss4gna_2024_openplains.html#conflict",
+    "title": "OpenPlains Inc.: A First-Year Retrospective",
+    "section": "Conflict",
+    "text": "Conflict"
+  },
+  {
+    "objectID": "content/presentations/foss4gna_2024_case_studies.html#grass---sooo-fast-you-usally-dont-need-scale",
+    "href": "content/presentations/foss4gna_2024_case_studies.html#grass---sooo-fast-you-usally-dont-need-scale",
+    "title": "GRASS GIS as Geocomputational Engine",
+    "section": "GRASS - sooo fast you usally don’t need scale",
+    "text": "GRASS - sooo fast you usally don’t need scale"
+  },
+  {
+    "objectID": "content/presentations/foss4gna_2024_case_studies.html#geoprocessing-on-the-cloud",
+    "href": "content/presentations/foss4gna_2024_case_studies.html#geoprocessing-on-the-cloud",
+    "title": "GRASS GIS as Geocomputational Engine",
+    "section": "Geoprocessing on the Cloud",
+    "text": "Geoprocessing on the Cloud"
+  },
+  {
+    "objectID": "content/presentations/foss4gna_2024_case_studies.html#high-performance-compute-hpc",
+    "href": "content/presentations/foss4gna_2024_case_studies.html#high-performance-compute-hpc",
+    "title": "GRASS GIS as Geocomputational Engine",
+    "section": "High Performance Compute (HPC)",
+    "text": "High Performance Compute (HPC)\n\nNational Urban Forcast Model\nNation Hydrological Models"
+  },
+  {
+    "objectID": "content/presentations/foss4gna_2024_case_studies.html#whose-using-grass",
+    "href": "content/presentations/foss4gna_2024_case_studies.html#whose-using-grass",
+    "title": "GRASS GIS as Geocomputational Engine",
+    "section": "Whose using GRASS",
+    "text": "Whose using GRASS\nCivil and Environmental\n\nResearchers\nModelers\nData Engineers"
+  },
+  {
+    "objectID": "content/presentations/foss4gna_2024_case_studies.html#features",
+    "href": "content/presentations/foss4gna_2024_case_studies.html#features",
+    "title": "GRASS GIS as Geocomputational Engine",
+    "section": "Features",
+    "text": "Features\n\nLidar\nHydrologly\nMap Calculations\nGeomorphology\nRemote Sensing\nMachine Learning"
   }
 ]

@@ -10,6 +10,23 @@ categories: [geoprocessing, foss4gna, presentation, use Case and applications]
 draft: false
 ---
 
+## Whose using GRASS
+
+### Civil and Environmental
+
+- Researchers
+- Modelers
+- Data Engineers
+
+## Features
+
+- Lidar
+- Hydrologly
+- Map Calculations
+- Geomorphology
+- Remote Sensing
+- Machine Learning
+
 ## GRASS as a Geoprocessing Engine
 
 - GRASS is a geoprocessing engine
@@ -20,4 +37,14 @@ draft: false
 - Desktop
 - HPC
 - Cloud
+
+## GRASS - sooo fast you usally don't need scale
+
+## Geoprocessing on the Cloud
+
+
+## High Performance Compute (HPC)
+
+- National Urban Forcast Model
+- Nation Hydrological Models
 

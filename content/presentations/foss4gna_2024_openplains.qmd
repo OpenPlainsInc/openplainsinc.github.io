@@ -10,14 +10,27 @@ categories: [geoprocessing, foss4gna, presentation, use Case and applications]
 draft: false
 ---
 
-## GRASS as a Geoprocessing Engine
+## From Academia to Startup
 
 - GRASS is a geoprocessing engine
 - Not your papi's GIS
 
-## GRASS in the Wild
+## NSF I-Corps
 
 - Desktop
 - HPC
 - Cloud
+
+## Riot Accelerator Program
+
+## Funding
+
+## Failures
+
+## Success
+
+## Community
+
+## Conflict
+
 
