@@ -57,9 +57,9 @@ format:
 
 :::{.columns}
 :::{.column width=60%}
-* Applied Research Scientist for the Center of Geospatial Analytics at NC State University
-* Founder & CEO of OpenPlains Inc.
-* GRASS GIS: Contributor
+* [Center of Geospatial Analytics at NC State University](https://cnr.ncsu.edu/geospatial/) - Applied Research Scientist
+* [OpenPlains Inc](https://openplains.com) - Founder & CEO
+* [GRASS GIS](https://grass.osgeo.org/) - Contributor & Active Community Member
 :::
 
 :::{.column width=40%}
@@ -85,6 +85,11 @@ format:
 - <span class="highlight">GRASS</span> is a development framework
 :::
 :::
+
+::: aside
+psst <span class="highlight">GRASS</span> is not your Papi's Desktop GIS
+:::
+
 
 ## What is GRASS used For?
 
@@ -118,11 +123,23 @@ format:
 :::
 :::
 
-## GRASS as a Geoprocessing Engine
+## GRASS as a Geoprocessing Engine {.smaller}
 
+:::{.columns}
+:::{.column width=50%}
 - Fast, trusted, science based tools
     - +400 core tools
     - +400 contributor addons
+- Modern Tooling
+    - Jupyter Notebooks
+    - R Studio
+    - Python and C API
+    - GUI
+:::
+:::{.column width=50%}
+![](images/GRASS_Jupyter_Notebooks.png)
+:::
+:::
 
 ## GRASS in the Wild {.smaller}
 
@@ -229,7 +246,7 @@ HPC - High Performance Computing
 
 ![](images/thunder-cats-thundera.gif)
 
-## HPC Case-Study: 
+## HPC Case-Study
 
 ### North Carolina State University
 
