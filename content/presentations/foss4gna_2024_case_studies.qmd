@@ -15,6 +15,7 @@ author:
     email: "corey.white@openplains.com"
     affiliations:
       - ref: cga
+      - ref: op
   - name: "Vaclav Petras"
     degrees: PhD
     url: "https://github.com/wenzeslaus"
@@ -22,13 +23,26 @@ author:
     email: "vpetras@ncsu.edu"
     affiliations:
       - ref: cga
+  - name: "Markus Neteler"
+    degrees: PhD
+    url: "https://github.com/neteler"
+    orcid: "0000-0003-1916-1966"
+    email: " neteler@mundialis.de"
+    affiliations:
+      - ref: md
 date: "September 10, 2024"
 acknowledgements: |
     This talk was funded by the [US National Science Foundation (NSF)](https://www.nsf.gov/), award [2303651](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2303651).
 affiliations:
   - id: cga
-    name: Center for Geospatial Analytics at North Carolina State University
+    name: Center for Geospatial Analytics at NC State University
     url: "https://cnr.ncsu.edu/geospatial/"
+  - id: op
+    name: OpenPlains Inc.
+    url: "https://openplains.com"
+  - id: md
+    name: Mundialis
+    url: "https://www.mundialis.de/en/"
 format:
   revealjs:
     theme: [simple, ../themes/grass.scss]
@@ -106,8 +120,9 @@ format:
 
 ## GRASS as a Geoprocessing Engine
 
-- GRASS is a geoprocessing engine
-- Not your papi's GIS
+- Fast, trusted, science based tools
+    - +400 core tools
+    - +400 contributor addons
 
 ## GRASS in the Wild {.smaller}
 
@@ -140,30 +155,47 @@ format:
 :::
 
 
-## Desktop
+## Desktop-based Geoprocessing
 
+:::{.columns}
+:::{.column width=60%}
 ### So fast you usally don't need scale
 
-## Geoprocessing on the Cloud
+- Handles large raster base calcuations with ease
 
-- Actinia REST API
-- Apache AirFlow
-- OpenPlains
+:::
+:::{.column width=40%}
+![](images/lawnmower-garden.gif)
+:::
+:::
+
 
 ## Case Study: (?)
 
 Who should be here...
 
-## Case Study: Mudialis
+## Cloud-based Geoprocessing
 
-### Free Data With Free Software
+- Actinia REST API
+- Apache AirFlow
+- OpenPlains
+
+## Cloud Case Study
+
+### Mudialis
+
+#### Free Data With Free Software
 
 - GRASS GIS
 - GRASS GIS Addons
 - Actinia
 
 
-## Desktop Case Study: Mudialis (GRASS GIS addons)
+## Cloud Case Study
+
+### Mudialis 
+
+#### GRASS GIS addons
 
 Identification of building, green roofs and tree detection, from aerial imagery
 
@@ -172,7 +204,11 @@ Identification of building, green roofs and tree detection, from aerial imagery
 - m.analyse.trees [(source)](https://github.com/mundialis/rvr_interface)
 
 
-## Cloud Case Study: Mudialis (Worshops) {.smaller}
+## Cloud Case Study {.smaller}
+
+###  Mudialis 
+
+#### Worshops 
 
 - Image classification workshop with actinia
 
@@ -187,12 +223,15 @@ https://github.com/mundialis/fossgis2024/blob/main/notebooks/actinia_Klassifikat
 - Transformation potential of large-scale parking lots for sustainable urban redevelopment
     - See: https://pretalx.com/media/fossgis2024/submissions/SJRPCR/resources/fossgis_2024_Transformationspotenziale_grossfla_77A3ogf.pdf
 
-## High Performance Compute (HPC)
+## HPC-Based Geoprocessing
 
+HPC - High Performance Computing
 
 ![](images/thunder-cats-thundera.gif)
 
-## HPC Case-Study: North Carolina State University
+## HPC Case-Study: 
+
+### North Carolina State University
 
 - National Urban Forcast Model
 - Nation Hydrological Models
