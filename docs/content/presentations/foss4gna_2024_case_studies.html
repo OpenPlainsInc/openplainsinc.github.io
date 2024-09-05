@@ -10,7 +10,8 @@
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.4.550">
 
-  <meta name="author" content="Corey T. White &amp; Vaclav Petras">
+  <meta name="author" content="Corey T. White">
+  <meta name="author" content="Vaclav Petras">
   <meta name="dcterms.date" content="2024-09-10">
   <title>GRASS GIS as Geocomputational Engine</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -326,38 +327,93 @@
   <div class="reveal">
     <div class="slides">
 
-<section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">GRASS GIS as Geocomputational Engine</h1>
-  <p class="subtitle">FOSS4G NA 2024, St.&nbsp;Louis Missouri</p>
-
-<div class="quarto-title-authors">
-<div class="quarto-title-author">
-<div class="quarto-title-author-name">
-Corey T. White &amp; Vaclav Petras 
+<section id="title-slide" data-color="grass-color-primary" class="quarto-title-block center">
+    <h1 class="title">GRASS GIS as Geocomputational Engine</h1>
+            <p class="subtitle">FOSS4G NA 2024, St.&nbsp;Louis Missouri</p>
+            <p class="date">2024-09-10</p>
+      <div class="quarto-title-authors">
+    <div class="quarto-title-author">
+  <div class="quarto-title-author-name">
+  <a href="https://github.com/cwhite911">Corey T. White</a> <a href="https://orcid.org/0000-0002-2903-9924" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a>
+  </div>
+    <div class="quarto-title-author-email">
+  <a href="mailto:corey.white@openplains.com">corey.white@openplains.com</a>
+  </div>
+                <p class="quarto-title-affiliation">
+                <a href="https://cnr.ncsu.edu/geospatial/">
+                Center for Geospatial Analytics at North Carolina State University
+                </a>
+              </p>
+          </div>
+    <div class="quarto-title-author">
+  <div class="quarto-title-author-name">
+  <a href="https://github.com/wenzeslaus">Vaclav Petras</a> <a href="https://orcid.org/0000-0001-5566-9236" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a>
+  </div>
+    <div class="quarto-title-author-email">
+  <a href="mailto:vpetras@ncsu.edu">vpetras@ncsu.edu</a>
+  </div>
+                <p class="quarto-title-affiliation">
+                <a href="https://cnr.ncsu.edu/geospatial/">
+                Center for Geospatial Analytics at North Carolina State University
+                </a>
+              </p>
+          </div>
+    </div>
+  
+      <div class="quarto-title-acknowledgements"><p>This talk was funded by the <a href="https://www.nsf.gov/">US National Science Foundation (NSF)</a>, award <a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=2303651">2303651</a>.</p></div>
+  </section>
+<section id="corey-white" class="slide level2">
+<h2>Corey White</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<ul>
+<li>Applied Research Scientist for the Center of Geospatial Analytics at NC State University</li>
+<li>Founder &amp; CEO of OpenPlains Inc.</li>
+<li>GRASS GIS: Contributor</li>
+</ul>
+</div><div class="column" style="width:40%;">
+<div class="circle-image-container">
+<p><img data-src="../images/corey_headshot.jpeg" class="circle-image"></p>
 </div>
 </div>
 </div>
-
-  <p class="date">2024-09-10</p>
 </section>
-<section id="whose-using-grass" class="slide level2">
-<h2>Whose using GRASS</h2>
+<section id="what-is-grass" class="slide level2">
+<h2>What is GRASS?</h2>
+<ul>
+<li>GRASS is geospatial computational engine</li>
+<li>GRASS is a modeling platform</li>
+<li>GRASS is a development framework</li>
+</ul>
+</section>
+<section id="what-is-grass-used-for" class="slide level2">
+<h2>What is GRASS used For?</h2>
+<ul>
+<li>Advanced geospatial modeling and analysis</li>
+<li>Data Science</li>
+<li>Data Engineering</li>
+</ul>
+</section>
+<section id="who-is-using-grass" class="slide level2">
+<h2>Who is using GRASS</h2>
 <h3 id="civil-and-environmental">Civil and Environmental</h3>
 <ul>
 <li>Researchers</li>
 <li>Modelers</li>
 <li>Data Engineers</li>
+<li>Climate Scientists</li>
+<li>Startups</li>
 </ul>
 </section>
 <section id="features" class="slide level2">
 <h2>Features</h2>
 <ul>
-<li>Lidar</li>
 <li>Hydrologly</li>
 <li>Map Calculations</li>
 <li>Geomorphology</li>
 <li>Remote Sensing</li>
 <li>Machine Learning</li>
+<li>Lidar</li>
 </ul>
 </section>
 <section id="grass-as-a-geoprocessing-engine" class="slide level2">
@@ -367,22 +423,50 @@ Corey T. White &amp; Vaclav Petras
 <li>Not your papi’s GIS</li>
 </ul>
 </section>
-<section id="grass-in-the-wild" class="slide level2">
+<section id="grass-in-the-wild" class="slide level2 smaller">
 <h2>GRASS in the Wild</h2>
+<div class="columns">
+<div class="column" style="width:33%;">
+<h3 data-background-color="white" id="desktop">Desktop</h3>
 <ul>
-<li>Desktop</li>
-<li>HPC</li>
-<li>Cloud</li>
+<li>Civil Engineering Firms</li>
+<li>Lidar/Raster Processing</li>
+<li>Power desktops to simplify processing</li>
 </ul>
+</div><div class="column" style="width:33%;">
+<h3 id="cloud">Cloud</h3>
+<ul>
+<li>Environmental Engineering Companies</li>
+<li>Government</li>
+</ul>
+</div><div class="column" style="width:33%;">
+<h3 id="hpc">HPC</h3>
+<ul>
+<li>Environmental Researchers
+<ul>
+<li>Academia</li>
+<li>Governmental</li>
+</ul></li>
+<li>National Scale Data Processing</li>
+</ul>
+</div>
+</div>
 </section>
-<section id="grass---sooo-fast-you-usally-dont-need-scale" class="slide level2">
-<h2>GRASS - sooo fast you usally don’t need scale</h2>
+<section id="desktop-1" class="slide level2">
+<h2>Desktop</h2>
+<h3 id="so-fast-you-usally-dont-need-scale">So fast you usally don’t need scale</h3>
 </section>
 <section id="geoprocessing-on-the-cloud" class="slide level2">
 <h2>Geoprocessing on the Cloud</h2>
 <ul>
 <li>Actinia REST API</li>
+<li>Apache AirFlow</li>
+<li>OpenPlains</li>
 </ul>
+</section>
+<section id="case-study" class="slide level2">
+<h2>Case Study: (?)</h2>
+<p>Who should be here…</p>
 </section>
 <section id="case-study-mudialis" class="slide level2">
 <h2>Case Study: Mudialis</h2>
@@ -393,8 +477,8 @@ Corey T. White &amp; Vaclav Petras
 <li>Actinia</li>
 </ul>
 </section>
-<section id="case-study-mudialis-grass-gis-addons" class="slide level2">
-<h2>Case Study: Mudialis (GRASS GIS addons)</h2>
+<section id="desktop-case-study-mudialis-grass-gis-addons" class="slide level2">
+<h2>Desktop Case Study: Mudialis (GRASS GIS addons)</h2>
 <p>Identification of building, green roofs and tree detection, from aerial imagery</p>
 <ul>
 <li>m.analyse.buildings <a href="https://github.com/mundialis/rvr_interface">(source)</a></li>
@@ -402,8 +486,8 @@ Corey T. White &amp; Vaclav Petras
 <li>m.analyse.trees <a href="https://github.com/mundialis/rvr_interface">(source)</a></li>
 </ul>
 </section>
-<section id="case-study-mudialis-worshops" class="slide level2 smaller">
-<h2>Case Study: Mudialis (Worshops)</h2>
+<section id="cloud-case-study-mudialis-worshops" class="slide level2 smaller">
+<h2>Cloud Case Study: Mudialis (Worshops)</h2>
 <ul>
 <li><p>Image classification workshop with actinia</p></li>
 <li><p>Jupyter notebook with screenshots, see: https://github.com/mundialis/fossgis2024/blob/main/notebooks/actinia_Klassifikation.ipynb</p></li>
@@ -421,8 +505,8 @@ Corey T. White &amp; Vaclav Petras
 <h2>High Performance Compute (HPC)</h2>
 
 <img data-src="images/thunder-cats-thundera.gif" class="r-stretch"></section>
-<section id="case-study-north-carolina-state-university" class="slide level2">
-<h2>Case-Study: North Carolina State University</h2>
+<section id="hpc-case-study-north-carolina-state-university" class="slide level2">
+<h2>HPC Case-Study: North Carolina State University</h2>
 <ul>
 <li>National Urban Forcast Model</li>
 <li>Nation Hydrological Models</li>
@@ -430,7 +514,7 @@ Corey T. White &amp; Vaclav Petras
 
 <div class="quarto-auto-generated-content">
 <div class="footer footer-default">
-
+<p><a href="../..">Return Home</a></p>
 </div>
 </div>
 </section>
@@ -475,7 +559,7 @@ Corey T. White &amp; Vaclav Petras
         controlsTutorial: false,
 
         // Determines where controls appear, "edges" or "bottom-right"
-        controlsLayout: 'edges',
+        controlsLayout: 'bottom-right',
 
         // Visibility rule for backwards navigation arrows; "faded", "hidden"
         // or "visible"

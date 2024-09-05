@@ -1,48 +1,144 @@
 ---
+draft: true
+title: "GRASS GIS as Geocomputational Engine"
+title-slide-attributes:
+    data-color: grass-color-primary
+page-layout: full
+title-block-banner: true    
+image: images/flooding_background.png
+subtitle: "FOSS4G NA 2024, St. Louis Missouri"
+author:
+  - name: "Corey T. White"
+    degrees: PhD
+    url: "https://github.com/cwhite911"
+    orcid: "0000-0002-2903-9924"
+    email: "corey.white@openplains.com"
+    affiliations:
+      - ref: cga
+  - name: "Vaclav Petras"
+    degrees: PhD
+    url: "https://github.com/wenzeslaus"
+    orcid: "0000-0001-5566-9236"
+    email: "vpetras@ncsu.edu"
+    affiliations:
+      - ref: cga
+date: "September 10, 2024"
+acknowledgements: |
+    This talk was funded by the [US National Science Foundation (NSF)](https://www.nsf.gov/), award [2303651](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2303651).
+affiliations:
+  - id: cga
+    name: Center for Geospatial Analytics at North Carolina State University
+    url: "https://cnr.ncsu.edu/geospatial/"
 format:
-    revealjs:
-        theme: [simple, ../../theme.scss]
-author: Corey T. White & Vaclav Petras
-title: GRASS GIS as Geocomputational Engine
-subtitle: FOSS4G NA 2024, St. Louis Missouri
-date: September 10, 2024
-categories: [geoprocessing, foss4gna, presentation, use Case and applications]
-draft: false
+  revealjs:
+    theme: [simple, ../themes/grass.scss]
+    footer: "[Return Home](/)"
+
+    template-partials:
+      - ../templates/title-slide.html
+    controls-layout: bottom-right
 ---
 
-## Whose using GRASS
+## Corey White
+
+:::{.columns}
+:::{.column width=60%}
+* Applied Research Scientist for the Center of Geospatial Analytics at NC State University
+* Founder & CEO of OpenPlains Inc.
+* GRASS GIS: Contributor
+:::
+
+:::{.column width=40%}
+<div class="circle-image-container">
+![](../images/corey_headshot.jpeg){.circle-image}
+</div>
+:::
+
+:::
+
+
+
+
+## What is GRASS?
+
+- GRASS is geospatial computational engine
+- GRASS is a modeling platform
+- GRASS is a development framework
+
+## What is GRASS used For?
+
+- Advanced geospatial modeling and analysis
+- Data Science
+- Data Engineering
+
+## Who is using GRASS
 
 ### Civil and Environmental
 
 - Researchers
 - Modelers
 - Data Engineers
+- Climate Scientists
+- Startups
 
 ## Features
 
-- Lidar
 - Hydrologly
 - Map Calculations
 - Geomorphology
 - Remote Sensing
 - Machine Learning
+- Lidar
 
 ## GRASS as a Geoprocessing Engine
 
 - GRASS is a geoprocessing engine
 - Not your papi's GIS
 
-## GRASS in the Wild
+## GRASS in the Wild {.smaller}
 
-- Desktop
-- HPC
-- Cloud
+:::{.columns}
+:::{.column width=33%}
+### Desktop {background-color="white"}
 
-## GRASS - sooo fast you usally don't need scale
+* Civil Engineering Firms
+* Lidar/Raster Processing
+* Power desktops to simplify processing
+
+:::
+:::{.column width=33%}
+### Cloud 
+
+* Environmental Engineering Companies
+* Government
+
+:::
+:::{.column width=33%}
+### HPC
+
+* Environmental Researchers
+    * Academia
+    * Governmental
+
+* National Scale Data Processing
+
+:::
+:::
+
+
+## Desktop
+
+### So fast you usally don't need scale
 
 ## Geoprocessing on the Cloud
 
 - Actinia REST API
+- Apache AirFlow
+- OpenPlains
+
+## Case Study: (?)
+
+Who should be here...
 
 ## Case Study: Mudialis
 
@@ -53,7 +149,7 @@ draft: false
 - Actinia
 
 
-## Case Study: Mudialis (GRASS GIS addons)
+## Desktop Case Study: Mudialis (GRASS GIS addons)
 
 Identification of building, green roofs and tree detection, from aerial imagery
 
@@ -62,7 +158,7 @@ Identification of building, green roofs and tree detection, from aerial imagery
 - m.analyse.trees [(source)](https://github.com/mundialis/rvr_interface)
 
 
-## Case Study: Mudialis (Worshops) {.smaller}
+## Cloud Case Study: Mudialis (Worshops) {.smaller}
 
 - Image classification workshop with actinia
 
@@ -82,7 +178,7 @@ https://github.com/mundialis/fossgis2024/blob/main/notebooks/actinia_Klassifikat
 
 ![](images/thunder-cats-thundera.gif)
 
-## Case-Study: North Carolina State University
+## HPC Case-Study: North Carolina State University
 
 - National Urban Forcast Model
 - Nation Hydrological Models

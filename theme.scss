@@ -6,19 +6,21 @@ $banner-bg: #f0e3ce;
 $grass-color-light: #f0e3ce;
 // $grass-color-light: rgb(207, 207, 207);
 $grass-color-black: #0a0a0a;
+$grass-color-dark-grey: #A0A0A0;
+$grass-color-light-grey: #CCCCCC;
+$grass-color-light-green: #EFF4E8;
+$grass-color-dark-green: #B8C6A5;
+$grass-color-soft-green: #9ED29C;
+$grass-color-primary:  #088B36;
 
-$savan-white:#fbfbfb;
+$op-white:#fbfbfb;
 // https://www.color-hex.com/color-palette/36240
-$savan-primary: #657e96;
-// $primary-light:
-// $primary-dark:
-$savan-secondary: #d07944;
-$savan-secondary-light:rgb(207, 207, 207);
-// $secondary-dark:
-$savan-orange: #d49441;
-$savan-tan: #f0e3ce;
-$savan-brown: #a76a3a;
-$buff: #e0c879ff;
+$op-primary: #657e96;
+$op-secondary: #d07944;
+$op-tan: #f0e3ce;
+$op-brown: #a76a3a;
+$op-mustard: #d49441;
+$op-light-grey:rgb(207, 207, 207);
 
 // Revealjs theme colors
 $link-color: $primary;
@@ -32,3 +34,13 @@ $presentation-heading-color: $primary;
   }
 }
 
+.reveal {
+  .quarto-title-block { 
+
+    .quarto-title-acknowledgements {
+      color: $grass-color-dark-grey !important;
+      font-size: 0.6em;
+    }
+  }
+
+}
