@@ -16,6 +16,9 @@ Welcome to the **Developing Web Applications with GRASS GIS workshop**! During t
 
 ## Setup
 
+- Docker
+- Postman / Insomnia
+- JupyterHub
 
 ## Overview
 

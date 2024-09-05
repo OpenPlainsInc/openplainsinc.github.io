@@ -74,7 +74,7 @@
     "href": "index.html",
     "title": "OpenPlains - Learning",
     "section": "",
-    "text": "OpenPlains Inc.: A First-Year Retrospective\n\n\nFOSS4G NA 2024, St. Louis Missouri\n\n\n\ngeoprocessing\n\n\nfoss4gna\n\n\npresentation\n\n\nuse Case and applications\n\n\n\n\n\n\n\n\n\nSep 10, 2024\n\n\nCorey T. White\n\n\n\n\n\n\n\n\n\n\n\n\nGRASS GIS as Geocomputational Engine\n\n\nFOSS4G NA 2024, St. Louis Missouri\n\n\n\ngeoprocessing\n\n\nfoss4gna\n\n\npresentation\n\n\nuse Case and applications\n\n\n\n\n\n\n\n\n\nSep 10, 2024\n\n\nCorey T. White\n\n\n\n\n\n\n\n\n\n\n\n\nIntroduction to Actinia\n\n\n\n\n\n\ngeospatial\n\n\nGRASS v8.5\n\n\njupyter\n\n\nlidar\n\n\nSTAC\n\n\n\n…\n\n\n\n\n\nSep 10, 2024\n\n\nCorey T. White\n\n\n\n\n\n\n\n\n\n\n\n\nDeveloping web-application with GRASS GIS\n\n\nFOSS4G NA 2024, St. Louis Missouri\n\n\n\nworkshop\n\n\nfoss4gna\n\n\nwebdev\n\n\ngrass\n\n\n\n\n\n\n\n\n\nSep 9, 2024\n\n\nCorey T. White\n\n\n\n\n\n\n\n\n\n\n\n\nSTAC Tutorial\n\n\n\n\n\n\nstac\n\n\ngrass-addon\n\n\ntutorial\n\n\n\n\n\n\n\n\n\nAug 26, 2024\n\n\nCorey T. White\n\n\n\n\n\n\n\n\n\n\n\n\nGeoprocessing with GRASS GIS and Jupyter Notebooks\n\n\n\n\n\n\ngeospatial\n\n\nGRASS v8.5\n\n\njupyter\n\n\nlidar\n\n\nSTAC\n\n\n\nThis tutorial demonstrates how to use GRASS GIS in Jupyter Notebooks.\n\n\n\n\n\nAug 22, 2024\n\n\nCorey T. White\n\n\n\n\n\n\nNo matching items"
+    "text": "OpenPlains Inc.: A First-Year Retrospective\n\n\nFOSS4G NA 2024, St. Louis Missouri\n\n\n\ngeoprocessing\n\n\nfoss4gna\n\n\npresentation\n\n\nuse Case and applications\n\n\n\n\n\n\n\n\n\nSep 10, 2024\n\n\nCorey T. White\n\n\n\n\n\n\n\n\n\n\n\n\nGRASS GIS as Geocomputational Engine\n\n\nFOSS4G NA 2024, St. Louis Missouri\n\n\n\ngeoprocessing\n\n\nfoss4gna\n\n\npresentation\n\n\nuse Case and applications\n\n\n\n\n\n\n\n\n\nSep 10, 2024\n\n\nCorey T. White & Vaclav Petras\n\n\n\n\n\n\n\n\n\n\n\n\nIntroduction to Actinia\n\n\n\n\n\n\ngeospatial\n\n\nGRASS v8.5\n\n\njupyter\n\n\nlidar\n\n\nSTAC\n\n\n\n…\n\n\n\n\n\nSep 10, 2024\n\n\nCorey T. White\n\n\n\n\n\n\n\n\n\n\n\n\nDeveloping web-application with GRASS GIS\n\n\nFOSS4G NA 2024, St. Louis Missouri\n\n\n\nworkshop\n\n\nfoss4gna\n\n\nwebdev\n\n\ngrass\n\n\n\n\n\n\n\n\n\nSep 9, 2024\n\n\nCorey T. White\n\n\n\n\n\n\n\n\n\n\n\n\nSTAC Tutorial\n\n\n\n\n\n\nstac\n\n\ngrass-addon\n\n\ntutorial\n\n\n\n\n\n\n\n\n\nAug 26, 2024\n\n\nCorey T. White\n\n\n\n\n\n\n\n\n\n\n\n\nGeoprocessing with GRASS GIS and Jupyter Notebooks\n\n\n\n\n\n\ngeospatial\n\n\nGRASS v8.5\n\n\njupyter\n\n\nlidar\n\n\nSTAC\n\n\n\nThis tutorial demonstrates how to use GRASS GIS in Jupyter Notebooks.\n\n\n\n\n\nAug 22, 2024\n\n\nCorey T. White\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "content/presentations/foss4gna_2024_case_studies.html#whose-using-grass",
@@ -116,14 +116,14 @@
     "href": "content/presentations/foss4gna_2024_case_studies.html#geoprocessing-on-the-cloud",
     "title": "GRASS GIS as Geocomputational Engine",
     "section": "Geoprocessing on the Cloud",
-    "text": "Geoprocessing on the Cloud"
+    "text": "Geoprocessing on the Cloud\n\nActinia REST API"
   },
   {
     "objectID": "content/presentations/foss4gna_2024_case_studies.html#high-performance-compute-hpc",
     "href": "content/presentations/foss4gna_2024_case_studies.html#high-performance-compute-hpc",
     "title": "GRASS GIS as Geocomputational Engine",
     "section": "High Performance Compute (HPC)",
-    "text": "High Performance Compute (HPC)\n\nNational Urban Forcast Model\nNation Hydrological Models"
+    "text": "High Performance Compute (HPC)"
   },
   {
     "objectID": "content/notebooks/us_doi/grass_jupyter.html#grass-v8.5-preview",
@@ -193,7 +193,7 @@
     "href": "content/workshops/foss4gna_2024/workshop.html#setup",
     "title": "Developing web-application with GRASS GIS",
     "section": "Setup",
-    "text": "Setup"
+    "text": "Setup\n\nDocker\nPostman / Insomnia\nJupyterHub"
   },
   {
     "objectID": "content/workshops/foss4gna_2024/workshop.html#overview",
@@ -201,5 +201,33 @@
     "title": "Developing web-application with GRASS GIS",
     "section": "Overview",
     "text": "Overview\n\nGRASS GIS - is a raster and vector based geospatial processing engine.\nActinia - is the GRASS GIS REST API for scalable, distributed, high performance geospatial processing.\nOpenPlains: Grasslands - is an interactive geospatial modeling framework.\n\n\nWhat is Geoprocessing\n\n\nWhat is a REST API\n\n\nWhat is an interactive geosptial modeling framework?"
+  },
+  {
+    "objectID": "content/presentations/foss4gna_2024_case_studies.html#case-study-mudialis",
+    "href": "content/presentations/foss4gna_2024_case_studies.html#case-study-mudialis",
+    "title": "GRASS GIS as Geocomputational Engine",
+    "section": "Case Study: Mudialis",
+    "text": "Case Study: Mudialis\nFree Data With Free Software\n\nGRASS GIS\nGRASS GIS Addons\nActinia"
+  },
+  {
+    "objectID": "content/presentations/foss4gna_2024_case_studies.html#case-study-mudialis-grass-gis-addons",
+    "href": "content/presentations/foss4gna_2024_case_studies.html#case-study-mudialis-grass-gis-addons",
+    "title": "GRASS GIS as Geocomputational Engine",
+    "section": "Case Study: Mudialis (GRASS GIS addons)",
+    "text": "Case Study: Mudialis (GRASS GIS addons)\nIdentification of building, green roofs and tree detection, from aerial imagery\n\nm.analyse.buildings (source)\nr.extract.greenroofs (source)\nm.analyse.trees (source)"
+  },
+  {
+    "objectID": "content/presentations/foss4gna_2024_case_studies.html#case-study-mudialis-worshops",
+    "href": "content/presentations/foss4gna_2024_case_studies.html#case-study-mudialis-worshops",
+    "title": "GRASS GIS as Geocomputational Engine",
+    "section": "Case Study: Mudialis (Worshops)",
+    "text": "Case Study: Mudialis (Worshops)\n\nImage classification workshop with actinia\nJupyter notebook with screenshots, see: https://github.com/mundialis/fossgis2024/blob/main/notebooks/actinia_Klassifikation.ipynb\nactinia and leafmap in Jupyter notebook\n\nSee: https://mundialis.github.io/fossgis2024/actinia-wachsen-blaetter-mit-leafmap/#/step-1\n\nTransformation potential of large-scale parking lots for sustainable urban redevelopment\n\nSee: https://pretalx.com/media/fossgis2024/submissions/SJRPCR/resources/fossgis_2024_Transformationspotenziale_grossfla_77A3ogf.pdf"
+  },
+  {
+    "objectID": "content/presentations/foss4gna_2024_case_studies.html#case-study-north-carolina-state-university",
+    "href": "content/presentations/foss4gna_2024_case_studies.html#case-study-north-carolina-state-university",
+    "title": "GRASS GIS as Geocomputational Engine",
+    "section": "Case-Study: North Carolina State University",
+    "text": "Case-Study: North Carolina State University\n\nNational Urban Forcast Model\nNation Hydrological Models"
   }
 ]

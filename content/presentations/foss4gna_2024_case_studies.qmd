@@ -2,7 +2,7 @@
 format:
     revealjs:
         theme: [simple, ../../theme.scss]
-author: Corey T. White
+author: Corey T. White & Vaclav Petras
 title: GRASS GIS as Geocomputational Engine
 subtitle: FOSS4G NA 2024, St. Louis Missouri
 date: September 10, 2024
@@ -42,8 +42,47 @@ draft: false
 
 ## Geoprocessing on the Cloud
 
+- Actinia REST API
+
+## Case Study: Mudialis
+
+### Free Data With Free Software
+
+- GRASS GIS
+- GRASS GIS Addons
+- Actinia
+
+
+## Case Study: Mudialis (GRASS GIS addons)
+
+Identification of building, green roofs and tree detection, from aerial imagery
+
+- m.analyse.buildings [(source)](https://github.com/mundialis/rvr_interface)
+- r.extract.greenroofs [(source)](https://github.com/mundialis/rvr_interface)
+- m.analyse.trees [(source)](https://github.com/mundialis/rvr_interface)
+
+
+## Case Study: Mudialis (Worshops) {.smaller}
+
+- Image classification workshop with actinia
+
+- Jupyter notebook with screenshots, see:
+https://github.com/mundialis/fossgis2024/blob/main/notebooks/actinia_Klassifikation.ipynb
+
+
+- actinia and leafmap in Jupyter notebook
+    - See: https://mundialis.github.io/fossgis2024/actinia-wachsen-blaetter-mit-leafmap/#/step-1
+
+
+- Transformation potential of large-scale parking lots for sustainable urban redevelopment
+    - See: https://pretalx.com/media/fossgis2024/submissions/SJRPCR/resources/fossgis_2024_Transformationspotenziale_grossfla_77A3ogf.pdf
 
 ## High Performance Compute (HPC)
+
+
+![](images/thunder-cats-thundera.gif)
+
+## Case-Study: North Carolina State University
 
 - National Urban Forcast Model
 - Nation Hydrological Models
