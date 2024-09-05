@@ -61,9 +61,16 @@ format:
 
 ## What is GRASS?
 
-- GRASS is geospatial computational engine
-- GRASS is a modeling platform
-- GRASS is a development framework
+:::{.columns}
+:::{.column width=50%}
+![](images/mcdonnells-curry.gif)
+:::
+:::{.column width=50%}
+- <span class="highlight">GRASS</span> is geospatial computational engine
+- <span class="highlight">GRASS</span> is a modeling platform
+- <span class="highlight">GRASS</span> is a development framework
+:::
+:::
 
 ## What is GRASS used For?
 
@@ -83,12 +90,19 @@ format:
 
 ## Features
 
+:::{.columns}
+:::{.column width=50%}
 - Hydrologly
 - Map Calculations
 - Geomorphology
 - Remote Sensing
 - Machine Learning
 - Lidar
+:::
+:::{.column width=40%}
+![](images/depth.webp)
+:::
+:::
 
 ## GRASS as a Geoprocessing Engine
 

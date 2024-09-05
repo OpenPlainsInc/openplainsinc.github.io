@@ -26,6 +26,11 @@ $op-light-grey:rgb(207, 207, 207);
 $link-color: $grass-color-primary;
 $presentation-heading-color: $grass-color-primary;
 
+.highlight {
+    color: $grass-color-primary;
+    font-weight: bold;
+  }
+
 .circle-image-container {
     position: relative;
     // width: 100%;
