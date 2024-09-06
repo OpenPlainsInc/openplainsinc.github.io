@@ -562,42 +562,52 @@
 </section>
 <section id="cloud-case-study" class="slide level2">
 <h2>Cloud Case Study</h2>
-<h3 id="mudialis">Mudialis</h3>
-<h4 id="free-data-with-free-software">Free Data With Free Software</h4>
+<h5 id="mudialis-free-data-with-free-software">Mudialis: Free Data With Free Software</h5>
 <ul>
 <li>GRASS GIS</li>
 <li>GRASS GIS Addons</li>
 <li>Actinia</li>
 </ul>
 </section>
-<section id="cloud-case-study-1" class="slide level2">
+<section id="cloud-case-study-1" class="slide level2 smaller">
 <h2>Cloud Case Study</h2>
-<h3 id="mudialis-1">Mudialis</h3>
-<h4 id="grass-gis-addons">GRASS GIS addons</h4>
-<p>Identification of building, green roofs and tree detection, from aerial imagery</p>
+<h5 id="mudialis-detecting-buildings-green-roofs-and-trees">Mudialis: Detecting buildings, green roofs and trees</h5>
+<div class="columns">
+<div class="column" style="width:50%;">
 <ul>
-<li>m.analyse.buildings <a href="https://github.com/mundialis/rvr_interface">(source)</a></li>
-<li>r.extract.greenroofs <a href="https://github.com/mundialis/rvr_interface">(source)</a></li>
-<li>m.analyse.trees <a href="https://github.com/mundialis/rvr_interface">(source)</a></li>
+<li>Official cadastral plans are lagging behind reality.</li>
+<li>Detection based on point clouds and 7.5 cm aerial imagery (RGB-NIR)</li>
 </ul>
-</section>
+<h5 id="new-grass-gis-addons">New GRASS GIS addons</h5>
+<ul>
+<li>m.analyse.buildings</li>
+<li>r.extract.greenroofs</li>
+<li>m.analyse.trees</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><img data-src="images/rvr_herne_building_identification.png"></p>
+</div>
+</div>
+
+<aside><div>
+<p>Source code: <a href="https://github.com/mundialis/rvr_interface/">https://github.com/mundialis/rvr_interface/</a></p>
+</div></aside></section>
 <section id="cloud-case-study-2" class="slide level2 smaller">
 <h2>Cloud Case Study</h2>
-<h3 id="mudialis-2">Mudialis</h3>
-<h4 id="worshops">Worshops</h4>
-<ul>
-<li><p>Image classification workshop with actinia</p></li>
-<li><p>Jupyter notebook with screenshots, see: https://github.com/mundialis/fossgis2024/blob/main/notebooks/actinia_Klassifikation.ipynb</p></li>
-<li><p>actinia and leafmap in Jupyter notebook</p>
-<ul>
-<li>See: https://mundialis.github.io/fossgis2024/actinia-wachsen-blaetter-mit-leafmap/#/step-1</li>
-</ul></li>
-<li><p>Transformation potential of large-scale parking lots for sustainable urban redevelopment</p>
-<ul>
-<li>See: https://pretalx.com/media/fossgis2024/submissions/SJRPCR/resources/fossgis_2024_Transformationspotenziale_grossfla_77A3ogf.pdf</li>
-</ul></li>
-</ul>
-</section>
+<h5 id="mudialis-image-classification-workshop-with-actinia">Mudialis: Image classification workshop with actinia</h5>
+<div class="columns">
+<div class="column" style="width:30%;">
+<p><img data-src="images/bonn_DOP_nDOM.png"></p>
+</div><div class="column" style="width:33%;">
+<p><img data-src="images/actinia_random_forest.png"></p>
+</div><div class="column" style="width:33%;">
+<p><img data-src="images/actinia_leafmap_incora.jpg"></p>
+</div>
+</div>
+
+<aside><div>
+<p>Machine learning based image classification using an aerial image and surface model. Visualization with <a href="https://leafmap.org/">leafmap</a></p>
+</div></aside></section>
 <section id="hpc-based-geoprocessing" class="slide level2">
 <h2>HPC-Based Geoprocessing</h2>
 <p>HPC - High Performance Computing</p>
@@ -605,11 +615,41 @@
 <img data-src="images/thunder-cats-thundera.gif" class="r-stretch"></section>
 <section id="hpc-case-study" class="slide level2">
 <h2>HPC Case-Study</h2>
-<h3 id="north-carolina-state-university">North Carolina State University</h3>
+<h5 id="ncsu-henry2-cluster">NCSU Henry2 cluster</h5>
 <ul>
-<li>National Urban Forcast Model</li>
-<li>Nation Hydrological Models</li>
+<li>Nodes: 933</li>
+<li>Cores: 13844</li>
+<li>Python, R, GRASS GIS</li>
 </ul>
+</section>
+<section id="hpc-case-study-1" class="slide level2" data-background-image="images/animation_CONUS.gif">
+<h2>HPC Case-Study</h2>
+<h5 id="ncsu-conus-urban-growth-model">NCSU: CONUS Urban Growth Model</h5>
+</section>
+<section id="hpc-case-study-2" class="slide level2">
+<h2>HPC Case-Study</h2>
+<h5 id="ncsu-conus-urban-growth-model-1">NCSU: CONUS Urban Growth Model</h5>
+<h3 id="example-scaling-urban-growth-model">Example: Scaling urban growth model</h3>
+<ul>
+<li><a href="https://grass.osgeo.org/grass84/manuals/addons/r.futures.html">r.futures addon</a>: FUTURES urban growth model</li>
+<li>30-m resolution (16 billion cells) on HPC</li>
+<li>50 stochastic runs annually from 2020 to 2100</li>
+</ul>
+</section>
+<section id="summary" class="slide level2 text-center">
+<h2>Summary</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p><img data-src="../images/logos/grassgis_logo_colorlogo_text_whitebg.png"></p>
+</div><div class="column" style="width:60%;">
+<h3 id="section"></h3>
+<h3 id="section-1"></h3>
+<h3 class="text-muted" id="grass-is-not-your-papis-desktop-gis"><span class="highlight">GRASS</span> is not your Papi’s Desktop GIS</h3>
+</div>
+</div>
+</section>
+<section id="questions" class="slide level2 text-center" data-background-video="images/grass_prauge.mp4" data-background-video-muted="true">
+<h2>Questions</h2>
 
 <div class="quarto-auto-generated-content">
 <div class="footer footer-default">

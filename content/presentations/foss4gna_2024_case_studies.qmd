@@ -1,5 +1,5 @@
 ---
-draft: true
+draft: false
 title: "GRASS GIS as Geocomputational Engine"
 title-slide-attributes:
     data-color: grass-color-primary
@@ -229,11 +229,6 @@ Civil Engineeering firm based out of New Mexico
 :::
 :::
 
-
-
-
-
-
 ## Cloud-based Geoprocessing
 
 ### Tools
@@ -244,46 +239,53 @@ Civil Engineeering firm based out of New Mexico
 
 ## Cloud Case Study
 
-### Mudialis
-
-#### Free Data With Free Software
+##### Mudialis: Free Data With Free Software
 
 - GRASS GIS
 - GRASS GIS Addons
 - Actinia
 
+## Cloud Case Study {.smaller}
+#####  Mudialis: Detecting buildings, green roofs and trees
 
-## Cloud Case Study
+:::{.columns}
+:::{.column width=50%}
+- Official cadastral plans are lagging behind reality.
+- Detection based on point clouds and 7.5 cm aerial imagery (RGB-NIR)
 
-### Mudialis 
+##### New GRASS GIS addons
+- m.analyse.buildings
+- r.extract.greenroofs
+- m.analyse.trees
+:::
+:::{.column width=50%}
+![](images/rvr_herne_building_identification.png)
+:::
+:::
 
-#### GRASS GIS addons
-
-Identification of building, green roofs and tree detection, from aerial imagery
-
-- m.analyse.buildings [(source)](https://github.com/mundialis/rvr_interface)
-- r.extract.greenroofs [(source)](https://github.com/mundialis/rvr_interface)
-- m.analyse.trees [(source)](https://github.com/mundialis/rvr_interface)
-
+:::aside
+Source code: [https://github.com/mundialis/rvr_interface/](https://github.com/mundialis/rvr_interface/)
+:::
 
 ## Cloud Case Study {.smaller}
 
-###  Mudialis 
+#####  Mudialis: Image classification workshop with actinia
 
-#### Worshops 
+:::{.columns}
+:::{.column width=30%}
+![](images/bonn_DOP_nDOM.png)
+:::
+:::{.column width=33%}
+![](images/actinia_random_forest.png)
+:::
+:::{.column width=33%}
+![](images/actinia_leafmap_incora.jpg)
+:::
+:::
 
-- Image classification workshop with actinia
-
-- Jupyter notebook with screenshots, see:
-https://github.com/mundialis/fossgis2024/blob/main/notebooks/actinia_Klassifikation.ipynb
-
-
-- actinia and leafmap in Jupyter notebook
-    - See: https://mundialis.github.io/fossgis2024/actinia-wachsen-blaetter-mit-leafmap/#/step-1
-
-
-- Transformation potential of large-scale parking lots for sustainable urban redevelopment
-    - See: https://pretalx.com/media/fossgis2024/submissions/SJRPCR/resources/fossgis_2024_Transformationspotenziale_grossfla_77A3ogf.pdf
+:::aside
+Machine learning based image classification using an aerial image and surface model. Visualization with [leafmap](https://leafmap.org/)
+:::
 
 ## HPC-Based Geoprocessing
 
@@ -293,8 +295,39 @@ HPC - High Performance Computing
 
 ## HPC Case-Study
 
-### North Carolina State University
+##### NCSU Henry2 cluster
 
-- National Urban Forcast Model
-- Nation Hydrological Models
+- Nodes: 933
+- Cores: 13844
+- Python, R, GRASS GIS
+
+## HPC Case-Study { background-image="images/animation_CONUS.gif"}
+
+##### NCSU: CONUS Urban Growth Model
+
+## HPC Case-Study
+
+##### NCSU: CONUS Urban Growth Model
+
+### Example: Scaling urban growth model
+
+- [r.futures addon](https://grass.osgeo.org/grass84/manuals/addons/r.futures.html): FUTURES urban growth model
+- 30-m resolution (16 billion cells) on HPC
+- 50 stochastic runs annually from 2020 to 2100
+
+## Summary {.text-center}
+
+:::{.columns}
+:::{.column width=40%}
+![](../images/logos/grassgis_logo_colorlogo_text_whitebg.png)
+:::
+:::{.column width=60%}
+###
+###
+### <span class="highlight">GRASS</span> is not your Papi's Desktop GIS {.text-muted}
+:::
+:::
+
+
+## Questions {.text-center background-video="images/grass_prauge.mp4" background-video-muted=true}
 
