@@ -8,7 +8,7 @@ title-block-banner: true
 image: images/flooding_background.png
 subtitle: "FOSS4G NA 2024, St. Louis Missouri"
 author:
-  - name: "Corey T. White"
+  - name: "Corey White"
     degrees: PhD
     url: "https://github.com/cwhite911"
     orcid: "0000-0002-2903-9924"
@@ -187,11 +187,56 @@ psst <span class="highlight">GRASS</span> is not your Papi's Desktop GIS
 :::
 
 
-## Case Study: (?)
+## Desktop Case Study
 
-Who should be here...
+### [Bohannan Huston](bhinc.com)
+
+:::{.columns}
+:::{.column width=50%}
+
+Civil Engineeering firm based out of New Mexico
+
+
+##### Modeling & Anaylsis
+- 1m QL1 Lidar Data
+- Vegitation Analysis
+- Flow Lines Deliniation
+
+:::
+:::{.column width=50%}
+![](images/bohan.png)
+:::
+:::
+
+## Desktop Case Study
+
+### [Bohannan Huston](bhinc.com)
+
+:::{.columns}
+:::{.column width=50%}
+
+#### Setup
+
+- MacOS
+
+:::
+:::{.column width=50%}
+#### Technique
+
+- bash scripts
+- Grided
+- Parrell
+:::
+:::
+
+
+
+
+
 
 ## Cloud-based Geoprocessing
+
+### Tools
 
 - Actinia REST API
 - Apache AirFlow
