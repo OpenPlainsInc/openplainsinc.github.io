@@ -189,7 +189,7 @@ psst <span class="highlight">GRASS</span> is not your Papi's Desktop GIS
 
 ## Desktop Case Study
 
-### [Bohannan Huston](bhinc.com)
+##### [Bohannan Huston](bhinc.com)
 
 :::{.columns}
 :::{.column width=50%}
@@ -210,7 +210,7 @@ Civil Engineeering firm based out of New Mexico
 
 ## Desktop Case Study
 
-### [Bohannan Huston](bhinc.com)
+##### [Bohannan Huston](bhinc.com): Tech Specs
 
 :::{.columns}
 :::{.column width=50%}
@@ -287,7 +287,7 @@ Source code: [https://github.com/mundialis/rvr_interface/](https://github.com/mu
 Machine learning based image classification using an aerial image and surface model. Visualization with [leafmap](https://leafmap.org/)
 :::
 
-## HPC-Based Geoprocessing
+## HPC-Based Geoprocessing {.text-center}
 
 HPC - High Performance Computing
 
@@ -301,9 +301,9 @@ HPC - High Performance Computing
 - Cores: 13844
 - Python, R, GRASS GIS
 
-## HPC Case-Study { background-image="images/animation_CONUS.gif"}
+## <span class="text-white">HPC Case-Study</span> { background-image="images/animation_CONUS.gif"}
 
-##### NCSU: CONUS Urban Growth Model
+##### <span class="text-white">NCSU: CONUS Urban Growth Model</span>
 
 ## HPC Case-Study
 
@@ -315,19 +315,21 @@ HPC - High Performance Computing
 - 30-m resolution (16 billion cells) on HPC
 - 50 stochastic runs annually from 2020 to 2100
 
-## Summary {.text-center}
+## <span class="text-center">Summary</span>
 
 :::{.columns}
 :::{.column width=40%}
 ![](../images/logos/grassgis_logo_colorlogo_text_whitebg.png)
 :::
 :::{.column width=60%}
-###
-###
+- <span class="highlight">GRASS</span> is geospatial computational engine
+- <span class="highlight">GRASS</span> is a modeling platform
+- <span class="highlight">GRASS</span> is a development framework
+
 ### <span class="highlight">GRASS</span> is not your Papi's Desktop GIS {.text-muted}
 :::
 :::
 
 
-## Questions {.text-center background-video="images/grass_prauge.mp4" background-video-muted=true}
+## <span class="text-white">Questions</span> {.text-center background-video="images/grass_prauge.mp4" background-video-muted=true}
 

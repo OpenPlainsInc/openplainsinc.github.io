@@ -221,7 +221,7 @@
     "href": "content/presentations/foss4gna_2024_case_studies.html#desktop-case-study-1",
     "title": "",
     "section": "Desktop Case Study",
-    "text": "Desktop Case Study\nBohannan Huston\n\n\nSetup\n\nMacOS\n\n\nTechnique\n\nbash scripts\nGrided\nParrell"
+    "text": "Desktop Case Study\nBohannan Huston: Tech Specs\n\n\nSetup\n\nMacOS\n\n\nTechnique\n\nbash scripts\nGrided\nParrell"
   },
   {
     "objectID": "content/presentations/foss4gna_2024_case_studies.html#cloud-based-geoprocessing",
@@ -298,7 +298,7 @@
     "href": "content/presentations/foss4gna_2024_case_studies.html#summary",
     "title": "",
     "section": "Summary",
-    "text": "Summary\n\n\n\n\n\n\nGRASS is not your Papi’s Desktop GIS"
+    "text": "Summary\n\n\n\n\n\nGRASS is geospatial computational engine\nGRASS is a modeling platform\nGRASS is a development framework\n\nGRASS is not your Papi’s Desktop GIS"
   },
   {
     "objectID": "content/presentations/foss4gna_2024_case_studies.html#questions",
