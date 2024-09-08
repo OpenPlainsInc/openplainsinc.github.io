@@ -1,6 +1,8 @@
 ---
 format: html
-author: Corey T. White
+author: 
+    - Corey T. White
+    - Vaclav Petras
 title: Developing web-application with GRASS GIS 
 subtitle: FOSS4G NA 2024, St. Louis Missouri
 date: September 9, 2024
