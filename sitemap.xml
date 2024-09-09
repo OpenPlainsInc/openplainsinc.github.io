@@ -1,27 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/content/presentations/foss4gna_2024_case_studies.html</loc>
-    <lastmod>2024-08-30T15:33:14.411Z</lastmod>
+    <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/content/workshops/foss4gna_2024/intro_actinia.html</loc>
+    <lastmod>2024-09-09T17:32:40.783Z</lastmod>
   </url>
   <url>
-    <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/content/workshops/foss4gna_2024/intro_actinia.html</loc>
-    <lastmod>2024-08-30T15:33:14.411Z</lastmod>
+    <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/content/workshops/foss4gna_2024/workshop.html</loc>
+    <lastmod>2024-09-09T17:32:40.807Z</lastmod>
   </url>
   <url>
     <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/content/notebooks/us_doi/grass_jupyter.html</loc>
-    <lastmod>2024-08-30T15:33:14.283Z</lastmod>
-  </url>
-  <url>
-    <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/index.html</loc>
-    <lastmod>2024-08-30T15:33:14.675Z</lastmod>
-  </url>
-  <url>
-    <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/content/notebooks/stac_tutorial/t_stac_tutorial.html</loc>
-    <lastmod>2024-08-30T15:33:14.219Z</lastmod>
+    <lastmod>2024-09-09T17:32:40.523Z</lastmod>
   </url>
   <url>
     <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/content/presentations/foss4gna_2024_openplains.html</loc>
-    <lastmod>2024-08-30T15:33:14.411Z</lastmod>
+    <lastmod>2024-09-09T17:32:40.635Z</lastmod>
+  </url>
+  <url>
+    <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/index.html</loc>
+    <lastmod>2024-09-09T17:32:41.239Z</lastmod>
+  </url>
+  <url>
+    <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/content/presentations/foss4gna_2024_case_studies.html</loc>
+    <lastmod>2024-09-09T17:32:40.635Z</lastmod>
+  </url>
+  <url>
+    <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/content/notebooks/stac_tutorial/t_stac_tutorial.html</loc>
+    <lastmod>2024-09-09T17:32:40.455Z</lastmod>
+  </url>
+  <url>
+    <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/content/workshops/foss4gna_2024/process_chains.html</loc>
+    <lastmod>2024-09-09T17:32:40.807Z</lastmod>
+  </url>
+  <url>
+    <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/content/workshops/foss4gna_2024/intro_grass.html</loc>
+    <lastmod>2024-09-09T17:32:40.803Z</lastmod>
   </url>
 </urlset>
