@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Corey T. White">
+<meta name="author" content="Vaclav Petras">
 <meta name="dcterms.date" content="2024-09-10">
 <meta name="description" content="Learn how to use actinia to create a cloud-based processing environment for GRASS GIS.">
 
@@ -177,9 +178,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="quarto-title-meta column-page-left">
 
       <div>
-      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-heading">Authors</div>
       <div class="quarto-title-meta-contents">
                <p>Corey T. White </p>
+               <p>Vaclav Petras </p>
             </div>
     </div>
       
@@ -202,14 +204,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of Contents</h2>
    
   <ul>
-  <li><a href="#rest-api-for-grass-gis" id="toc-rest-api-for-grass-gis" class="nav-link active" data-scroll-target="#rest-api-for-grass-gis">REST API for GRASS GIS</a></li>
+  <li><a href="#a-rest-api-for-grass-gis" id="toc-a-rest-api-for-grass-gis" class="nav-link active" data-scroll-target="#a-rest-api-for-grass-gis">A REST API for GRASS GIS</a></li>
   <li><a href="#import-python-libraries" id="toc-import-python-libraries" class="nav-link" data-scroll-target="#import-python-libraries">Import Python Libraries</a></li>
   <li><a href="#setup-environment" id="toc-setup-environment" class="nav-link" data-scroll-target="#setup-environment">Setup Environment</a></li>
   <li><a href="#actinia-rest-api" id="toc-actinia-rest-api" class="nav-link" data-scroll-target="#actinia-rest-api">actinia REST API</a>
   <ul>
   <li><a href="#tools" id="toc-tools" class="nav-link" data-scroll-target="#tools">Tools</a></li>
   </ul></li>
-  <li><a href="#acinia-basics" id="toc-acinia-basics" class="nav-link" data-scroll-target="#acinia-basics">Acinia Basics</a>
+  <li><a href="#acinia-basics" id="toc-acinia-basics" class="nav-link" data-scroll-target="#acinia-basics">Acinia Basics</a></li>
+  <li><a href="#user-roles" id="toc-user-roles" class="nav-link" data-scroll-target="#user-roles">User Roles</a>
   <ul>
   <li><a href="#grass-projects" id="toc-grass-projects" class="nav-link" data-scroll-target="#grass-projects">GRASS Projects</a></li>
   <li><a href="#mapsets" id="toc-mapsets" class="nav-link" data-scroll-target="#mapsets">Mapsets</a></li>
@@ -218,19 +221,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#raster-layers" id="toc-raster-layers" class="nav-link" data-scroll-target="#raster-layers">Raster Layers</a></li>
   <li><a href="#vector-layers" id="toc-vector-layers" class="nav-link" data-scroll-target="#vector-layers">Vector Layers</a></li>
   </ul></li>
+  <li><a href="#processing" id="toc-processing" class="nav-link" data-scroll-target="#processing">Processing</a>
+  <ul class="collapse">
+  <li><a href="#syncronous-processing" id="toc-syncronous-processing" class="nav-link" data-scroll-target="#syncronous-processing">Syncronous Processing</a></li>
+  <li><a href="#asyncronous-processing" id="toc-asyncronous-processing" class="nav-link" data-scroll-target="#asyncronous-processing">Asyncronous Processing</a></li>
+  </ul></li>
+  <li><a href="#process-chains" id="toc-process-chains" class="nav-link" data-scroll-target="#process-chains">Process Chains</a></li>
   </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+<main class="content quarto-banner-title-block page-columns page-full column-page-left" id="quarto-document-content">
 
 
 
 
 
-<section id="rest-api-for-grass-gis" class="level2">
-<h2 class="anchored" data-anchor-id="rest-api-for-grass-gis">REST API for GRASS GIS</h2>
+<div id="cell-1" class="cell" data-execution_count="58">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>figlet <span class="st">"actinia 101"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            _   _       _         _  ___  _ 
+  __ _  ___| |_(_)_ __ (_) __ _  / |/ _ \/ |
+ / _` |/ __| __| | '_ \| |/ _` | | | | | | |
+| (_| | (__| |_| | | | | | (_| | | | |_| | |
+ \__,_|\___|\__|_|_| |_|_|\__,_| |_|\___/|_|
+                                            </code></pre>
+</div>
+</div>
+<section id="a-rest-api-for-grass-gis" class="level2">
+<h2 class="anchored" data-anchor-id="a-rest-api-for-grass-gis">A REST API for GRASS GIS</h2>
 <ul>
 <li><a href="https://grass.osgeo.org/">GRASS GIS</a> is a Geospatial Processing Engine</li>
 <li>Open Source (GPL v2)</li>
@@ -256,33 +276,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="import-python-libraries" class="level2">
 <h2 class="anchored" data-anchor-id="import-python-libraries">Import Python Libraries</h2>
-<div id="cell-4" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> subprocess</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pprint <span class="im">import</span> pprint</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> requests.auth <span class="im">import</span> HTTPBasicAuth</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-5" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> subprocess</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pprint <span class="im">import</span> pprint</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> requests.auth <span class="im">import</span> HTTPBasicAuth</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="setup-environment" class="level2">
 <h2 class="anchored" data-anchor-id="setup-environment">Setup Environment</h2>
-<div id="cell-6" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>gisbase <span class="op">=</span> subprocess.check_output([<span class="st">"grass"</span>, <span class="st">"--config"</span>, <span class="st">"path"</span>], text<span class="op">=</span><span class="va">True</span>).strip()</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>GISBASE <span class="op">=</span> gisbase</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>ACTINIA_USER <span class="op">=</span> <span class="st">'actinia-gdi'</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>ACTINIA_PASSWORD <span class="op">=</span> <span class="st">'actinia-gdi'</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>AUTH <span class="op">=</span> <span class="st">'actinia-gdi:actinia-gdi'</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>ACTINIA_URL <span class="op">=</span> <span class="st">'http://localhost:8088'</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>ACTINIA_URL <span class="op">=</span> <span class="st">'https://openplains.app/actinia'</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>ACTINIA_VERSION <span class="op">=</span> <span class="st">'v3'</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>ACTINIA_BASEURL <span class="op">=</span> <span class="st">'http://localhost:8088'</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>ACTINIA_BASEURL <span class="op">=</span> <span class="st">'https://openplains.app/actinia'</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>ACTINIA_URL <span class="op">=</span> ACTINIA_BASEURL <span class="op">+</span> <span class="st">"/api/"</span> <span class="op">+</span> ACTINIA_VERSION</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>ACTINIA_AUTH <span class="op">=</span> HTTPBasicAuth(ACTINIA_USER, ACTINIA_PASSWORD)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-7" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>gisbase <span class="op">=</span> subprocess.check_output([<span class="st">"grass"</span>, <span class="st">"--config"</span>, <span class="st">"path"</span>], text<span class="op">=</span><span class="va">True</span>).strip()</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>GISBASE <span class="op">=</span> gisbase</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>ACTINIA_USER <span class="op">=</span> <span class="st">'actinia-gdi'</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>ACTINIA_PASSWORD <span class="op">=</span> <span class="st">'actinia-gdi'</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>AUTH <span class="op">=</span> <span class="st">'actinia-gdi:actinia-gdi'</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>ACTINIA_URL <span class="op">=</span> <span class="st">'http://localhost:8088'</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ACTINIA_URL = 'https://openplains.app/actinia'</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>ACTINIA_VERSION <span class="op">=</span> <span class="st">'v3'</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>ACTINIA_BASEURL <span class="op">=</span> <span class="st">'http://localhost:8088'</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># ACTINIA_BASEURL = 'https://openplains.app/actinia'</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>ACTINIA_URL <span class="op">=</span> ACTINIA_BASEURL <span class="op">+</span> <span class="st">"/api/"</span> <span class="op">+</span> ACTINIA_VERSION</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>ACTINIA_AUTH <span class="op">=</span> HTTPBasicAuth(ACTINIA_USER, ACTINIA_PASSWORD)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="actinia-rest-api" class="level2">
@@ -294,55 +314,111 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><a href="https://github.com/actinia-org/actinia-python-client">actinia-python-client</a></li>
 <li><a href="https://github.com/OpenPlainsInc/actinia_openapi_python_client">actinia_openapi_python_client</a></li>
 </ul>
-<div id="cell-8" class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip3 install actinia<span class="op">-</span>python<span class="op">-</span>client</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip3 install git<span class="op">+</span>https:<span class="op">//</span>github.com<span class="op">/</span>openplainsinc<span class="op">/</span>actinia_openapi_python_client.git<span class="op">@</span>v0<span class="fl">.0.4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-9" class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip3 install actinia<span class="op">-</span>python<span class="op">-</span>client</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip3 install git<span class="op">+</span>https:<span class="op">//</span>github.com<span class="op">/</span>openplainsinc<span class="op">/</span>actinia_openapi_python_client.git<span class="op">@</span>v0<span class="fl">.0.4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
 <section id="acinia-basics" class="level2">
 <h2 class="anchored" data-anchor-id="acinia-basics">Acinia Basics</h2>
-<div id="cell-10" class="cell" data-execution_count="30">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/version"</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>pprint(response.json())</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># pprint(response.json().get('version'))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></pre>
+<div id="cell-11" class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/version"</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pprint(response.json())</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'version'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'4.9.1'</code></pre>
 </div>
 </div>
-<section id="grass-projects" class="level3">
+</section>
+<section id="user-roles" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="user-roles">User Roles</h2>
+<ol type="1">
+<li><strong>Superadmin</strong>
+<ul>
+<li>Create, modify and delete users</li>
+<li>Read/write access to all databases</li>
+<li>Can access all API calls</li>
+</ul></li>
+<li><strong>Admin</strong>
+<ul>
+<li>All API Calls</li>
+<li>Create, modify and delete users with the maximum user-role user of the same user grou</li>
+<li>Access to persistent databases that were granted by a <strong>superadmin</strong></li>
+</ul></li>
+<li><strong>User</strong>
+<ul>
+<li>Can run computational tasks in ephemeral and user specific databases</li>
+<li>Create, modify and delete locations in a user specific database</li>
+<li>Create, modify and delete mapsets in user specific databases</li>
+<li>Limited access to API calls</li>
+<li>Has limited access to persistent databases</li>
+</ul></li>
+<li><strong>Guest</strong>
+<ul>
+<li>Has very limited access to API calls</li>
+<li>Limited access to persistent databases</li>
+</ul></li>
+</ol>
+
+<div class="no-row-height column-margin column-container"><div class="margin-aside">
+<p>https://actinia-org.github.io/actinia-core/actinia_concepts/</p>
+</div></div><section id="grass-projects" class="level3">
 <h3 class="anchored" data-anchor-id="grass-projects">GRASS Projects</h3>
 <p>Let’s start by requesting a list of GRASS projects from actinia.</p>
-<div id="cell-12" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/locations"</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> {}</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {}</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url, auth<span class="op">=</span>ACTINIA_AUTH, headers<span class="op">=</span>headers)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'locations'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+  A["/api/v3/locations"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<div id="cell-14" class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/locations"</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> {}</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {}</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url, auth<span class="op">=</span>ACTINIA_AUTH, headers<span class="op">=</span>headers)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'locations'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>['nc_spm_08',
- 'test_location',
- 'Durham',
- 'myloc',
- 'sarahs_durham',
- 'Test_Location']</code></pre>
+<pre><code>None</code></pre>
 </div>
 </div>
 <p>Now we will get extra information about a specific project.</p>
-<div id="cell-14" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08'</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/locations/</span><span class="sc">{</span>location_id<span class="sc">}</span><span class="ss">/info"</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> {}</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {}</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url, auth<span class="op">=</span>ACTINIA_AUTH, headers<span class="op">=</span>headers)</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'process_results'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+  A["/api/v3/locations/"]
+  A --- C["{location_id}"]
+  C --- D["/info"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<div id="cell-16" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08'</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/locations/</span><span class="sc">{</span>location_id<span class="sc">}</span><span class="ss">/info"</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> {}</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {}</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url, auth<span class="op">=</span>ACTINIA_AUTH, headers<span class="op">=</span>headers)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'process_results'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>{'projection': 'PROJCRS["NAD83(HARN) / North '
                'Carolina",BASEGEOGCRS["NAD83(HARN)",DATUM["NAD83 (High '
@@ -407,26 +483,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="mapsets" class="level3">
 <h3 class="anchored" data-anchor-id="mapsets">Mapsets</h3>
 <p>We will now get a list of mapsets for a specific project.</p>
-<div id="cell-16" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># mapset = 'nc_spm_08'</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08'</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/locations/</span><span class="sc">{</span>location_id<span class="sc">}</span><span class="ss">/mapsets"</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> {}</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {}</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url, auth<span class="op">=</span>ACTINIA_AUTH, headers<span class="op">=</span>headers)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'process_results'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>['PERMANENT']</code></pre>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+  A["/api/v3/locations/"]
+  A --- B("{location_id}")
+  B --- C["/mapsets"]
+</pre>
+</div>
+<p></p></figure><p></p>
 </div>
 </div>
-<p>Now let’s get extra information about a specific mapset <code>PERMANENT</code>.</p>
-<div id="cell-18" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>mapset_id <span class="op">=</span> <span class="st">'PERMANENT'</span></span>
+</div>
+<div id="cell-18" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># mapset = 'nc_spm_08'</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08'</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/locations/</span><span class="sc">{</span>location_id<span class="sc">}</span><span class="ss">/mapsets/</span><span class="sc">{</span>mapset_id<span class="sc">}</span><span class="ss">/info"</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/locations/</span><span class="sc">{</span>location_id<span class="sc">}</span><span class="ss">/mapsets"</span></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> {}</span>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {}</span>
@@ -434,6 +509,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url, auth<span class="op">=</span>ACTINIA_AUTH, headers<span class="op">=</span>headers)</span>
 <span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'process_results'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>['PERMANENT']</code></pre>
+</div>
+</div>
+<p>Now let’s get extra information about a specific mapset <code>PERMANENT</code>.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+  A["/api/v3/locations/"]
+  A --- B("{location_id}")
+  B --- C["/mapsets/"]
+  C --- D("{mapset_id}")
+  D --- E["/info"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<div id="cell-20" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mapset_id <span class="op">=</span> <span class="st">'PERMANENT'</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08'</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/locations/</span><span class="sc">{</span>location_id<span class="sc">}</span><span class="ss">/mapsets/</span><span class="sc">{</span>mapset_id<span class="sc">}</span><span class="ss">/info"</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> {}</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {}</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url, auth<span class="op">=</span>ACTINIA_AUTH, headers<span class="op">=</span>headers)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'process_results'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>{'projection': 'PROJCRS["NAD83(HARN) / North '
                'Carolina",BASEGEOGCRS["NAD83(HARN)",DATUM["NAD83 (High '
@@ -500,28 +608,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="raster-layers" class="level4">
 <h4 class="anchored" data-anchor-id="raster-layers">Raster Layers</h4>
 <p>Let’s see all of the mapsets raster layers.</p>
-<div id="cell-20" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mapset_id <span class="op">=</span> <span class="st">'PERMANENT'</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08'</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/locations/</span><span class="sc">{</span>location_id<span class="sc">}</span><span class="ss">/mapsets/</span><span class="sc">{</span>mapset_id<span class="sc">}</span><span class="ss">/raster_layers"</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> {}</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {}</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url, auth<span class="op">=</span>ACTINIA_AUTH, headers<span class="op">=</span>headers)</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'process_results'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[]</code></pre>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+  A["/api/v3/locations/"]
+  A --- B("{location_id}")
+  B --- C["/mapsets/"]
+  C --- D("{mapset_id}")
+  D --- E["/raster_layers"]
+</pre>
+</div>
+<p></p></figure><p></p>
 </div>
 </div>
-</section>
-<section id="vector-layers" class="level4">
-<h4 class="anchored" data-anchor-id="vector-layers">Vector Layers</h4>
-<div id="cell-22" class="cell" data-execution_count="20">
+</div>
+<div id="cell-22" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>mapset_id <span class="op">=</span> <span class="st">'PERMANENT'</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08'</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/locations/</span><span class="sc">{</span>location_id<span class="sc">}</span><span class="ss">/mapsets/</span><span class="sc">{</span>mapset_id<span class="sc">}</span><span class="ss">/vector_layers"</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/locations/</span><span class="sc">{</span>location_id<span class="sc">}</span><span class="ss">/mapsets/</span><span class="sc">{</span>mapset_id<span class="sc">}</span><span class="ss">/raster_layers"</span></span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> {}</span>
 <span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {}</span>
@@ -533,9 +640,209 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>[]</code></pre>
 </div>
 </div>
-
-
 </section>
+<section id="vector-layers" class="level4">
+<h4 class="anchored" data-anchor-id="vector-layers">Vector Layers</h4>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+  A["/api/v3/locations/"]
+  A --- B("{location_id}")
+  B --- C["/mapsets/"]
+  C --- D("{mapset_id}")
+  D --- E["/vector_layers"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<div id="cell-24" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>mapset_id <span class="op">=</span> <span class="st">'PERMANENT'</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08'</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/locations/</span><span class="sc">{</span>location_id<span class="sc">}</span><span class="ss">/mapsets/</span><span class="sc">{</span>mapset_id<span class="sc">}</span><span class="ss">/vector_layers"</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> {}</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {}</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url, auth<span class="op">=</span>ACTINIA_AUTH, headers<span class="op">=</span>headers)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'process_results'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[]</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="processing" class="level3">
+<h3 class="anchored" data-anchor-id="processing">Processing</h3>
+<section id="syncronous-processing" class="level4">
+<h4 class="anchored" data-anchor-id="syncronous-processing">Syncronous Processing</h4>
+<p>Emphemeral process</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+  A["/api/v3/locations/"]
+  A --- B("{location_id}")
+  B --- C["/mapsets/"]
+  C --- D("{mapset_id}")
+  D --- E["/processing"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<div id="cell-26" class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mapset_id <span class="op">=</span> <span class="st">'PERMANENT'</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08'</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/locations/</span><span class="sc">{</span>location_id<span class="sc">}</span><span class="ss">/mapsets/</span><span class="sc">{</span>mapset_id<span class="sc">}</span><span class="ss">/processing"</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> {}</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {}</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> {}</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.post( url, auth<span class="op">=</span>ACTINIA_AUTH, json<span class="op">=</span>data)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'process_results'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>None</code></pre>
+</div>
+</div>
+</section>
+<section id="asyncronous-processing" class="level4">
+<h4 class="anchored" data-anchor-id="asyncronous-processing">Asyncronous Processing</h4>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+  A["/api/v3/locations/"]
+  A --- B("{location_id}")
+  B --- C["/mapsets/"]
+  C --- D("{mapset_id}")
+  D --- E["/processing_async"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<div id="cell-28" class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>mapset_id <span class="op">=</span> <span class="st">'PERMANENT'</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08'</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/locations/</span><span class="sc">{</span>location_id<span class="sc">}</span><span class="ss">/mapsets/</span><span class="sc">{</span>mapset_id<span class="sc">}</span><span class="ss">/processing_async"</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> {}</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {}</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> {}</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.post( url, auth<span class="op">=</span>ACTINIA_AUTH, headers<span class="op">=</span>headers, json<span class="op">=</span>data)</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'process_results'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="process-chains" class="level3">
+<h3 class="anchored" data-anchor-id="process-chains">Process Chains</h3>
+<p>Let’s build our own process chain.</p>
+<div id="cell-30" class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pc <span class="op">=</span> {</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"list"</span>: [</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>        {</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>             <span class="st">"id"</span>: <span class="st">"computational_region"</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>             <span class="st">"module"</span>: <span class="st">"g.region"</span>,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>             <span class="st">"inputs"</span>: [</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>                 {<span class="st">"param"</span>: <span class="st">"raster"</span>,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"value"</span>: <span class="st">"elevation@PERMANENT"</span>},</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>                 {<span class="st">"param"</span>: <span class="st">"res"</span>,</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"value"</span>: <span class="st">"10"</span>}</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>             ],</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>             <span class="st">"stdout"</span>: {<span class="st">"id"</span>: <span class="st">"region"</span>, <span class="st">"format"</span>: <span class="st">"kv"</span>, <span class="st">"delimiter"</span>: <span class="st">"="</span>},</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>             <span class="st">"flags"</span>: <span class="st">"g"</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>         },</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>        {</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>          <span class="st">"id"</span>: <span class="st">"create_hillshading"</span>,</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>          <span class="st">"module"</span>: <span class="st">"r.relief"</span>,</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>          <span class="st">"inputs"</span>: [</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>              {</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"param"</span>: <span class="st">"input"</span>,</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"value"</span>: <span class="st">"elevation"</span></span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>              }</span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>          ],</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>          <span class="st">"outputs"</span>: [</span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>              {</span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"param"</span>: <span class="st">"output"</span>,</span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"value"</span>: <span class="st">"hillshade"</span></span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>              }</span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>          ]</span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>      {</span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>          <span class="st">"id"</span>: <span class="st">"exporter_1"</span>,</span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>          <span class="st">"module"</span>: <span class="st">"exporter"</span>,</span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>          <span class="st">"outputs"</span>: [</span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>              {</span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"export"</span>: {<span class="st">"type"</span>: <span class="st">"raster"</span>, <span class="st">"format"</span>: <span class="st">"COG"</span>},</span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"param"</span>: <span class="st">"map"</span>,</span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"value"</span>: <span class="st">"hillshade"</span></span>
+<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a>              }</span>
+<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>          ]</span>
+<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb23-43"><a href="#cb23-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">"version"</span>: <span class="st">"1"</span></span>
+<span id="cb23-44"><a href="#cb23-44" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-32" class="cell" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>sys.path.append(</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    subprocess.check_output([<span class="st">"grass"</span>, <span class="st">"--config"</span>, <span class="st">"python_path"</span>], text<span class="op">=</span><span class="va">True</span>).strip()</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># create a temporary folder where to place our GRASS project</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tempfile</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>tempdir <span class="op">=</span> tempfile.TemporaryDirectory()</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> grass.script <span class="im">as</span> gs</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> grass.jupyter <span class="im">as</span> gj</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>gs.create_project(path<span class="op">=</span>tempdir.name, name<span class="op">=</span><span class="st">"foss4g2024_p2"</span>, epsg<span class="op">=</span><span class="st">"2817"</span>, overwrite<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>session <span class="op">=</span> gj.init(Path(tempdir.name,<span class="st">"foss4g2024_p2"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-33" class="cell" data-execution_count="57">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>step_1_raw <span class="op">=</span> <span class="op">!</span>g.region raster<span class="op">=</span>elevation res<span class="op">=</span><span class="dv">10</span> <span class="op">--</span>json</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>step_1 <span class="op">=</span> <span class="st">''</span>.join(step_1_raw)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>step_1_json <span class="op">=</span> json.loads(step_1)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>pprint(step_1_json)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{'id': 'g.region_1804289383',
+ 'inputs': [{'param': 'raster', 'value': 'elevation'},
+            {'param': 'res', 'value': '10'},
+            {'param': 'format', 'value': 'plain'}],
+ 'module': 'g.region'}</code></pre>
+</div>
+</div>
+<div id="cell-34" class="cell" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>r.info elevation <span class="op">-</span>g <span class="op">--</span>json</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{
+  "module": "r.info",
+  "id": "r.info_1804289383",
+  "flags":"g",
+  "inputs":[
+     {"param": "map", "value": "elevation"},
+     {"param": "format", "value": "plain"}
+   ]}</code></pre>
+</div>
+</div>
+
+
 </section>
 </section>
 

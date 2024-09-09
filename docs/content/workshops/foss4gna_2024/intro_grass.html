@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Corey T. White">
+<meta name="author" content="Vaclav Petras">
 <meta name="dcterms.date" content="2024-09-10">
 <meta name="description" content="Learn the basics of GRASS GIS, a powerful open-source geospatial procesing engine.">
 
@@ -178,9 +179,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="quarto-title-meta column-page-left">
 
       <div>
-      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-heading">Authors</div>
       <div class="quarto-title-meta-contents">
                <p>Corey T. White </p>
+               <p>Vaclav Petras </p>
             </div>
     </div>
       
@@ -1676,6 +1678,48 @@ cells:      378636</code></pre>
 </section>
 <section id="add-your-python-code-here" class="level1">
 <h1>Add your python code here</h1>
+<div id="cell-55" class="cell" data-execution_count="237">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>r.info streets_slope_dir <span class="op">--</span>json</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{
+  "module": "r.info",
+  "id": "r.info_1804289383",
+  "inputs":[
+     {"param": "map", "value": "streets_slope_dir"},
+     {"param": "format", "value": "plain"}
+   ]}</code></pre>
+</div>
+</div>
+<div id="cell-56" class="cell" data-execution_count="242">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>process <span class="op">=</span> gs.parse_command(<span class="st">"r.info"</span>, <span class="bu">map</span><span class="op">=</span><span class="st">"streets_slope_dir"</span>, <span class="bu">help</span><span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>process</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Outputs basic information about a raster map.
+
+Usage:
+ r.info [-grseh] map=name format=name [--help] [--verbose] [--quiet]
+   [--ui]
+
+Flags:
+  -g   Print raster array information in shell script style
+  -r   Print range in shell script style
+  -s   Print stats in shell script style
+  -e   Print extended metadata information in shell script style
+  -h   Print raster history instead of info
+
+Parameters:
+     map   Name of raster map
+  format   Output format
+           options: plain,json
+           default: plain
+
+ERROR: r.info: Sorry, &lt;help&gt; is not a valid parameter</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>CalledModuleError: Module run `r.info map=streets_slope_dir help=True` ended with an error.
+The subprocess ended with a non-zero return code: 1. See errors above the traceback or in the error output.</code></pre>
+</div>
+</div>
 
 
 </section>
