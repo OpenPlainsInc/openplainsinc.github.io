@@ -14,20 +14,19 @@ draft: false
 
 Welcome to the **Developing Web Applications with GRASS GIS workshop**! During this workshop you will learn how to create geospatial web applications using GRASS GIS, Actinia, and OpenPlains. 
 
-- During the workshop we will learn how to develop web application using OpenPlains.
+- During the workshop we will learn how to develop web application using GRASS GIS.
 
 ## Overview
 
 * [GRASS GIS](https://grass.osgeo.org/) - is a raster and vector based geospatial processing engine.
 * [Actinia](https://actinia-org.github.io/actinia-core/) - is the GRASS GIS REST API for scalable, distributed, high performance geospatial processing.
-<!-- * [OpenPlains: Grasslands]() - is an interactive geospatial modeling framework. -->
 
 [Part 1. GRASS GIS 101](intro_grass.ipynb)
+
+- https://colab.research.google.com/github/OpenPlainsInc/openplainsinc.github.io/blob/main/content/workshops/foss4gna_2024/intro_grass.ipynb
+
 [Part 2. Introduction to Actinia](intro_actinia.ipynb)
-### What is Geoprocessing
+[Part 3. Process Chains](process_chains.ipynb)
 
-### What is a REST API
-
-### What is an interactive geosptial modeling framework?
 
 
