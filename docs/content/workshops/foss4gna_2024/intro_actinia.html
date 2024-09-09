@@ -307,7 +307,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="actinia-rest-api" class="level2">
 <h2 class="anchored" data-anchor-id="actinia-rest-api">actinia REST API</h2>
-<p><a href="https://github.com/actinia-org">actinia</a></p>
+<p><a href="https://github.com/actinia-org">actinia</a> <a href="https://github.com/actinia-org/actinia-docker/tree/main">Docker Image</a></p>
 <section id="tools" class="level3">
 <h3 class="anchored" data-anchor-id="tools">Tools</h3>
 <ul>
@@ -322,13 +322,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="acinia-basics" class="level2">
 <h2 class="anchored" data-anchor-id="acinia-basics">Acinia Basics</h2>
-<div id="cell-11" class="cell" data-execution_count="35">
+<div id="cell-11" class="cell" data-execution_count="59">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/version"</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pprint(response.json())</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'version'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>'4.9.1'</code></pre>
+<pre><code>'4.14.1'</code></pre>
 </div>
 </div>
 </section>
@@ -380,17 +380,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-14" class="cell" data-execution_count="36">
+<div id="cell-14" class="cell" data-execution_count="62">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/locations"</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> {}</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {}</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url, auth<span class="op">=</span>ACTINIA_AUTH, headers<span class="op">=</span>headers)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'locations'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url, auth<span class="op">=</span>ACTINIA_AUTH)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'locations'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>None</code></pre>
+<pre><code>['nc_spm_08']</code></pre>
 </div>
 </div>
 <p>Now we will get extra information about a specific project.</p>
@@ -531,23 +528,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-20" class="cell" data-execution_count="16">
+<div id="cell-20" class="cell" data-execution_count="63">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mapset_id <span class="op">=</span> <span class="st">'PERMANENT'</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08'</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/locations/</span><span class="sc">{</span>location_id<span class="sc">}</span><span class="ss">/mapsets/</span><span class="sc">{</span>mapset_id<span class="sc">}</span><span class="ss">/info"</span></span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> {}</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {}</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url, auth<span class="op">=</span>ACTINIA_AUTH, headers<span class="op">=</span>headers)</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'process_results'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url, auth<span class="op">=</span>ACTINIA_AUTH, headers<span class="op">=</span>headers)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'process_results'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>{'projection': 'PROJCRS["NAD83(HARN) / North '
                'Carolina",BASEGEOGCRS["NAD83(HARN)",DATUM["NAD83 (High '
                'Accuracy Reference Network)",ELLIPSOID["GRS '
                '1980",6378137,298.257222101,LENGTHUNIT["metre",1]]],PRIMEM["Greenwich",0,ANGLEUNIT["degree",0.0174532925199433]],ID["EPSG",4152]],CONVERSION["SPCS83 '
-               'North Carolina zone (meters)",METHOD["Lambert Conic Conformal '
+               'North Carolina zone (meter)",METHOD["Lambert Conic Conformal '
                '(2SP)",ID["EPSG",9802]],PARAMETER["Latitude of false '
                'origin",33.75,ANGLEUNIT["degree",0.0174532925199433],ID["EPSG",8821]],PARAMETER["Longitude '
                'of false '
