@@ -168,6 +168,7 @@ OpenPlains is dependent on GRASS GIS
 ## Discussion & Questions  {.text-center}
 
 - How can companies support thier open source community?
+- How can you growing your own open source community?
 
 ## <span class="text-white"><span> {background-image="images/Banner-Beige.png" .text-center}
 
