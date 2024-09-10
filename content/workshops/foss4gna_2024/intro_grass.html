@@ -250,7 +250,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>GRASS GIS 101</h1>
 <p>This notebook is a quick introduction to GRASS and Jupyter Notebooks.</p>
 <p>By default all cells are running Python:</p>
-<div id="cell-2" class="cell" data-execution_count="4">
+<div id="cell-2" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>v <span class="op">=</span> sys.version_info</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"We are using Python </span><span class="sc">{</span>v<span class="sc">.</span>major<span class="sc">}</span><span class="ss">.</span><span class="sc">{</span>v<span class="sc">.</span>minor<span class="sc">}</span><span class="ss">.</span><span class="sc">{</span>v<span class="sc">.</span>micro<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -317,7 +317,7 @@ General Public License for more details.</code></pre>
 </section>
 <section id="grass-project-setup" class="level2">
 <h2 class="anchored" data-anchor-id="grass-project-setup">GRASS Project Setup</h2>
-<div id="cell-10" class="cell" data-execution_count="2">
+<div id="cell-10" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import standard Python packages</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> subprocess</span>
@@ -380,7 +380,7 @@ General Public License for more details.</code></pre>
 </section>
 <section id="streets" class="level4">
 <h4 class="anchored" data-anchor-id="streets">Streets</h4>
-<div id="cell-23" class="cell" data-execution_count="39">
+<div id="cell-23" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>streets_url<span class="op">=</span><span class="st">"/vsizip//vsicurl/https://www.stlouis-mo.gov/data/upload/data-files/streets.zip"</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># streets_url="http://maps.stlouisco.com/arcgis/rest/services/OpenData/OpenData/FeatureServer/1/query?outFields=*&amp;where=1%3D1&amp;f=geojson"</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"v.import"</span>,</span>
@@ -393,7 +393,7 @@ General Public License for more details.</code></pre>
 </section>
 <section id="st.-louis-arch-park-boundary" class="level4">
 <h4 class="anchored" data-anchor-id="st.-louis-arch-park-boundary">St.&nbsp;Louis Arch Park Boundary</h4>
-<div id="cell-25" class="cell" data-execution_count="38">
+<div id="cell-25" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>neigh_url<span class="op">=</span><span class="st">"https://services1.arcgis.com/fBc8EJBxQRMcHlei/arcgis/rest/services/NPS_Land_Resources_Division_Boundary_and_Tract_Data_Service/FeatureServer/2/query?outFields=*&amp;where=1%3D1&amp;f=geojson"</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"v.import"</span>,</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>   <span class="bu">input</span><span class="op">=</span>neigh_url,</span>
@@ -403,43 +403,8 @@ General Public License for more details.</code></pre>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>   extent<span class="op">=</span><span class="st">"region"</span></span>
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-26" class="cell" data-execution_count="40">
+<div id="cell-26" class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"v.info"</span>, <span class="bu">map</span><span class="op">=</span><span class="st">"stl_park"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> +----------------------------------------------------------------------------+
- | Name:            stl_park                                                  |
- | Mapset:          PERMANENT                                                 |
- | Project:         foss4g2024                                                |
- | Database:        /tmp/tmpwm1goiyz                                          |
- | Title:                                                                     |
- | Map scale:       1:1                                                       |
- | Name of creator: coreywhite                                                |
- | Organization:                                                              |
- | Source date:     Mon Sep  9 11:42:50 2024                                  |
- | Timestamp (first layer): none                                              |
- |----------------------------------------------------------------------------|
- | Map format:      native                                                    |
- |----------------------------------------------------------------------------|
- |   Type of map: vector (level: 2)                                           |
- |                                                                            |
- |   Number of points:       0               Number of centroids:  2          |
- |   Number of lines:        0               Number of boundaries: 2          |
- |   Number of areas:        2               Number of islands:    2          |
- |                                                                            |
- |   Map is 3D:              No                                               |
- |   Number of dblinks:      1                                                |
- |                                                                            |
- |   Projection: NAD83(HARN) / Missouri West                                  |
- |                                                                            |
- |               N:   282163.03312074    S:   280784.79192239                 |
- |               E:  1226943.25359814    W:  1225454.29098793                 |
- |                                                                            |
- |   Digitization threshold: 0                                                |
- |   Comment:                                                                 |
- |                                                                            |
- +----------------------------------------------------------------------------+
-</code></pre>
-</div>
 </div>
 </section>
 </section>
@@ -447,15 +412,15 @@ General Public License for more details.</code></pre>
 <h3 class="anchored" data-anchor-id="visualize-data">Visualize data</h3>
 <section id="folium-web-map" class="level4">
 <h4 class="anchored" data-anchor-id="folium-web-map">Folium Web Map</h4>
-<div id="cell-28" class="cell" data-execution_count="42">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> gj.InteractiveMap(map_backend<span class="op">=</span><span class="st">"folium"</span>)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># help(map.add_vector)        </span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.add_vector(<span class="st">"stl_boundary"</span>)</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.add_vector(<span class="st">"stl_park"</span>)</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.add_layer_control()</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="42">
+<div id="cell-28" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> gj.InteractiveMap(map_backend<span class="op">=</span><span class="st">"folium"</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># help(map.add_vector)        </span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.add_vector(<span class="st">"stl_boundary"</span>)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># map.add_vector("stl_park")</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.add_layer_control()</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="21">
 <iframe srcdoc="<!DOCTYPE html>
 <html>
 <head>
@@ -483,7 +448,7 @@ General Public License for more details.</code></pre>
             <meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; />
             <style>
-                #map_0c989aac09161050e8879abc72857926 {
+                #map_bef660f0d87dfc3e70794cc320e3ebef {
                     position: relative;
                     width: 400.0px;
                     height: 400.0px;
@@ -497,14 +462,14 @@ General Public License for more details.</code></pre>
 <body>
     
     
-            <div class=&quot;folium-map&quot; id=&quot;map_0c989aac09161050e8879abc72857926&quot; ></div>
+            <div class=&quot;folium-map&quot; id=&quot;map_bef660f0d87dfc3e70794cc320e3ebef&quot; ></div>
         
 </body>
 <script>
     
     
-            var map_0c989aac09161050e8879abc72857926 = L.map(
-                &quot;map_0c989aac09161050e8879abc72857926&quot;,
+            var map_bef660f0d87dfc3e70794cc320e3ebef = L.map(
+                &quot;map_bef660f0d87dfc3e70794cc320e3ebef&quot;,
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -518,77 +483,55 @@ General Public License for more details.</code></pre>
 
         
     
-            var tile_layer_5fee0a898ea2c16f228a8caaf2a66e25 = L.tileLayer(
+            var tile_layer_d1774a86c28e85555363d09a71a535e0 = L.tileLayer(
                 &quot;https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png&quot;,
                 {&quot;attribution&quot;: &quot;\u0026copy; \u003ca href=\&quot;https://www.openstreetmap.org/copyright\&quot;\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\&quot;https://carto.com/attributions\&quot;\u003eCARTO\u003c/a\u003e&quot;, &quot;detectRetina&quot;: false, &quot;maxNativeZoom&quot;: 20, &quot;maxZoom&quot;: 20, &quot;minZoom&quot;: 0, &quot;noWrap&quot;: false, &quot;opacity&quot;: 1, &quot;subdomains&quot;: &quot;abcd&quot;, &quot;tms&quot;: false}
             );
         
     
-            tile_layer_5fee0a898ea2c16f228a8caaf2a66e25.addTo(map_0c989aac09161050e8879abc72857926);
+            tile_layer_d1774a86c28e85555363d09a71a535e0.addTo(map_bef660f0d87dfc3e70794cc320e3ebef);
         
     
 
-        function geo_json_e448d61a0cd0033ae0384d7e0f81ad46_onEachFeature(feature, layer) {
+        function geo_json_383072ce316f70284e141c480c78ae88_onEachFeature(feature, layer) {
             layer.on({
             });
         };
-        var geo_json_e448d61a0cd0033ae0384d7e0f81ad46 = L.geoJson(null, {
-                onEachFeature: geo_json_e448d61a0cd0033ae0384d7e0f81ad46_onEachFeature,
+        var geo_json_383072ce316f70284e141c480c78ae88 = L.geoJson(null, {
+                onEachFeature: geo_json_383072ce316f70284e141c480c78ae88_onEachFeature,
             
         });
 
-        function geo_json_e448d61a0cd0033ae0384d7e0f81ad46_add (data) {
-            geo_json_e448d61a0cd0033ae0384d7e0f81ad46
+        function geo_json_383072ce316f70284e141c480c78ae88_add (data) {
+            geo_json_383072ce316f70284e141c480c78ae88
                 .addData(data);
         }
-            geo_json_e448d61a0cd0033ae0384d7e0f81ad46_add({&quot;crs&quot;: {&quot;properties&quot;: {&quot;name&quot;: &quot;urn:ogc:def:crs:OGC:1.3:CRS84&quot;}, &quot;type&quot;: &quot;name&quot;}, &quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [[[-90.25039997092868, 38.54261303703606], [-90.24999038461242, 38.54320222074187], [-90.24891300363151, 38.5447520034492], [-90.24353114311707, 38.551353541883785], [-90.23805918232608, 38.55806562231503], [-90.22421199960873, 38.575050996510896], [-90.22314056724284, 38.575765282251524], [-90.22211199762727, 38.57645100316565], [-90.21987104092489, 38.577405481349736], [-90.21671199465678, 38.57875099934287], [-90.21011099992361, 38.583951004531635], [-90.20251100226, 38.58865100222706], [-90.20108699056557, 38.5899216534255], [-90.19601100329946, 38.59445100404219], [-90.19181099386142, 38.59895099921857], [-90.18499434438948, 38.6107151207811], [-90.18450999756527, 38.61155100471138], [-90.18228364181365, 38.618424985988085], [-90.1788100004902, 38.6291500039001], [-90.17800999545905, 38.63375000623903], [-90.17776032036784, 38.64124030610073], [-90.1777100042107, 38.64275000371266], [-90.18110999945169, 38.65954999830473], [-90.18261000505647, 38.66535000011724], [-90.18558875015312, 38.67271849965796], [-90.18640999757733, 38.67474999860686], [-90.19005174537917, 38.68004708830824], [-90.19520999658359, 38.68754999640127], [-90.20221000188926, 38.69344999949418], [-90.20920999775002, 38.70274999773725], [-90.21201000749075, 38.71175000074137], [-90.21190999695598, 38.71794999438822], [-90.21141000240898, 38.72134999568071], [-90.20991000449436, 38.72605000440344], [-90.20521000433891, 38.73215000039183], [-90.19130899856448, 38.742948998713544], [-90.18340899570565, 38.746848995493586], [-90.17630899995277, 38.75444899537436], [-90.17510899615351, 38.760249003301844], [-90.17130900179133, 38.766548995152846], [-90.16640899616601, 38.77264900020019], [-90.16630272834982, 38.77270511852874], [-90.16644780314604, 38.772741851997004], [-90.17512026893681, 38.77339924329507], [-90.18419400106876, 38.77433954990133], [-90.18387091133138, 38.77062312435544], [-90.1844290243911, 38.768177115407845], [-90.1850624074692, 38.76482934221145], [-90.18628475762583, 38.761369816175424], [-90.18805797466365, 38.759068564942176], [-90.18831770952131, 38.75873525186169], [-90.18925852231294, 38.75779386855844], [-90.19198859314197, 38.7547752855472], [-90.1954613494667, 38.75153209011265], [-90.19732635967095, 38.74929115494876], [-90.20199472453768, 38.745084933369164], [-90.20413669299387, 38.743177154903684], [-90.20795420291472, 38.73971407181026], [-90.21264898186993, 38.736234181672145], [-90.21798185822988, 38.73355909113116], [-90.21835237347607, 38.73338949327348], [-90.21977892725992, 38.73230254994923], [-90.22177040056097, 38.730123256898565], [-90.2243055712445, 38.72912867515165], [-90.2280525152914, 38.7281571056828], [-90.25175051043735, 38.718856559647776], [-90.30182443157553, 38.65566054934111], [-90.30360893571115, 38.644950544845436], [-90.3048123601694, 38.642444356859734], [-90.30645464228488, 38.633466637806045], [-90.30782134961008, 38.63243989520099], [-90.30870714892846, 38.63021624392049], [-90.31103118068037, 38.61836104191081], [-90.31090640942747, 38.618278668447736], [-90.32051233931719, 38.594145651841835], [-90.31631986781308, 38.584816213191964], [-90.31623114940773, 38.584619093631204], [-90.31360003241676, 38.578747221070714], [-90.29710352029772, 38.56242547977534], [-90.29694475535163, 38.56227969639838], [-90.29460625223219, 38.56055849468861], [-90.2923988474547, 38.558960099062936], [-90.28977424786251, 38.557043472290154], [-90.28719273420883, 38.55553369998821], [-90.28385534390887, 38.55393764377658], [-90.27933579536617, 38.551504616756645], [-90.27903674310396, 38.551293336109865], [-90.2779176562681, 38.55052068893691], [-90.27410123784617, 38.5493540434702], [-90.27234584466653, 38.54838725642846], [-90.27230800409569, 38.54831282775163], [-90.27225854592301, 38.548141400156425], [-90.27218925278513, 38.54675712307783], [-90.27179615420906, 38.54573731788314], [-90.27158307930748, 38.544830570531474], [-90.27171696988663, 38.544541097068425], [-90.27052165665935, 38.54162431450748], [-90.27138390225407, 38.540107483796334], [-90.27139256087521, 38.53928177849805], [-90.27104294466747, 38.538651978569476], [-90.27033335155625, 38.53819138126985], [-90.26907778344662, 38.53753161025834], [-90.26851954000516, 38.53695651898108], [-90.26817209196703, 38.535805140464], [-90.2670552333591, 38.53427506313935], [-90.2654343335719, 38.533688663690675], [-90.26443496874383, 38.533698956593376], [-90.26374739540813, 38.533816971390415], [-90.2631016319029, 38.534047920445], [-90.26062855940548, 38.53314561896148], [-90.25778549015052, 38.53198918224163], [-90.25777784976513, 38.53200017227033], [-90.25039997092868, 38.54261303703606]]], &quot;type&quot;: &quot;Polygon&quot;}, &quot;properties&quot;: {&quot;AREA_SQMI&quot;: 62.11, &quot;LAYER&quot;: &quot;--CITY_LIMIT_BOUND_2002--&quot;, &quot;SHAPE_area&quot;: 1845207807.69, &quot;SHAPE_len&quot;: 218275.771282, &quot;cat&quot;: 1}, &quot;type&quot;: &quot;Feature&quot;}], &quot;name&quot;: &quot;stl_boundary_PERMANENT&quot;, &quot;type&quot;: &quot;FeatureCollection&quot;});
+            geo_json_383072ce316f70284e141c480c78ae88_add({&quot;crs&quot;: {&quot;properties&quot;: {&quot;name&quot;: &quot;urn:ogc:def:crs:OGC:1.3:CRS84&quot;}, &quot;type&quot;: &quot;name&quot;}, &quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [[[-90.25039997092868, 38.54261303703606], [-90.24999038461242, 38.54320222074187], [-90.24891300363151, 38.5447520034492], [-90.24353114311707, 38.551353541883785], [-90.23805918232608, 38.55806562231503], [-90.22421199960873, 38.575050996510896], [-90.22314056724284, 38.575765282251524], [-90.22211199762727, 38.57645100316565], [-90.21987104092489, 38.577405481349736], [-90.21671199465678, 38.57875099934287], [-90.21011099992361, 38.583951004531635], [-90.20251100226, 38.58865100222706], [-90.20108699056557, 38.5899216534255], [-90.19601100329946, 38.59445100404219], [-90.19181099386142, 38.59895099921857], [-90.18499434438948, 38.6107151207811], [-90.18450999756527, 38.61155100471138], [-90.18228364181365, 38.618424985988085], [-90.1788100004902, 38.6291500039001], [-90.17800999545905, 38.63375000623903], [-90.17776032036784, 38.64124030610073], [-90.1777100042107, 38.64275000371266], [-90.18110999945169, 38.65954999830473], [-90.18261000505647, 38.66535000011724], [-90.18558875015312, 38.67271849965796], [-90.18640999757733, 38.67474999860686], [-90.19005174537917, 38.68004708830824], [-90.19520999658359, 38.68754999640127], [-90.20221000188926, 38.69344999949418], [-90.20920999775002, 38.70274999773725], [-90.21201000749075, 38.71175000074137], [-90.21190999695598, 38.71794999438822], [-90.21141000240898, 38.72134999568071], [-90.20991000449436, 38.72605000440344], [-90.20521000433891, 38.73215000039183], [-90.19130899856448, 38.742948998713544], [-90.18340899570565, 38.746848995493586], [-90.17630899995277, 38.75444899537436], [-90.17510899615351, 38.760249003301844], [-90.17130900179133, 38.766548995152846], [-90.16640899616601, 38.77264900020019], [-90.16630272834982, 38.77270511852874], [-90.16644780314604, 38.772741851997004], [-90.17512026893681, 38.77339924329507], [-90.18419400106876, 38.77433954990133], [-90.18387091133138, 38.77062312435544], [-90.1844290243911, 38.768177115407845], [-90.1850624074692, 38.76482934221145], [-90.18628475762583, 38.761369816175424], [-90.18805797466365, 38.759068564942176], [-90.18831770952131, 38.75873525186169], [-90.18925852231294, 38.75779386855844], [-90.19198859314197, 38.7547752855472], [-90.1954613494667, 38.75153209011265], [-90.19732635967095, 38.74929115494876], [-90.20199472453768, 38.745084933369164], [-90.20413669299387, 38.743177154903684], [-90.20795420291472, 38.73971407181026], [-90.21264898186993, 38.736234181672145], [-90.21798185822988, 38.73355909113116], [-90.21835237347607, 38.73338949327348], [-90.21977892725992, 38.73230254994923], [-90.22177040056097, 38.730123256898565], [-90.2243055712445, 38.72912867515165], [-90.2280525152914, 38.7281571056828], [-90.25175051043735, 38.718856559647776], [-90.30182443157553, 38.65566054934111], [-90.30360893571115, 38.644950544845436], [-90.3048123601694, 38.642444356859734], [-90.30645464228488, 38.633466637806045], [-90.30782134961008, 38.63243989520099], [-90.30870714892846, 38.63021624392049], [-90.31103118068037, 38.61836104191081], [-90.31090640942747, 38.618278668447736], [-90.32051233931719, 38.594145651841835], [-90.31631986781308, 38.584816213191964], [-90.31623114940773, 38.584619093631204], [-90.31360003241676, 38.578747221070714], [-90.29710352029772, 38.56242547977534], [-90.29694475535163, 38.56227969639838], [-90.29460625223219, 38.56055849468861], [-90.2923988474547, 38.558960099062936], [-90.28977424786251, 38.557043472290154], [-90.28719273420883, 38.55553369998821], [-90.28385534390887, 38.55393764377658], [-90.27933579536617, 38.551504616756645], [-90.27903674310396, 38.551293336109865], [-90.2779176562681, 38.55052068893691], [-90.27410123784617, 38.5493540434702], [-90.27234584466653, 38.54838725642846], [-90.27230800409569, 38.54831282775163], [-90.27225854592301, 38.548141400156425], [-90.27218925278513, 38.54675712307783], [-90.27179615420906, 38.54573731788314], [-90.27158307930748, 38.544830570531474], [-90.27171696988663, 38.544541097068425], [-90.27052165665935, 38.54162431450748], [-90.27138390225407, 38.540107483796334], [-90.27139256087521, 38.53928177849805], [-90.27104294466747, 38.538651978569476], [-90.27033335155625, 38.53819138126985], [-90.26907778344662, 38.53753161025834], [-90.26851954000516, 38.53695651898108], [-90.26817209196703, 38.535805140464], [-90.2670552333591, 38.53427506313935], [-90.2654343335719, 38.533688663690675], [-90.26443496874383, 38.533698956593376], [-90.26374739540813, 38.533816971390415], [-90.2631016319029, 38.534047920445], [-90.26062855940548, 38.53314561896148], [-90.25778549015052, 38.53198918224163], [-90.25777784976513, 38.53200017227033], [-90.25039997092868, 38.54261303703606]]], &quot;type&quot;: &quot;Polygon&quot;}, &quot;properties&quot;: {&quot;AREA_SQMI&quot;: 62.11, &quot;LAYER&quot;: &quot;--CITY_LIMIT_BOUND_2002--&quot;, &quot;SHAPE_area&quot;: 1845207807.69, &quot;SHAPE_len&quot;: 218275.771282, &quot;cat&quot;: 1}, &quot;type&quot;: &quot;Feature&quot;}], &quot;name&quot;: &quot;stl_boundary_PERMANENT&quot;, &quot;type&quot;: &quot;FeatureCollection&quot;});
 
         
     
-            geo_json_e448d61a0cd0033ae0384d7e0f81ad46.addTo(map_0c989aac09161050e8879abc72857926);
+            geo_json_383072ce316f70284e141c480c78ae88.addTo(map_bef660f0d87dfc3e70794cc320e3ebef);
         
     
-
-        function geo_json_962b077823c33087a989e36b5f99eb67_onEachFeature(feature, layer) {
-            layer.on({
-            });
-        };
-        var geo_json_962b077823c33087a989e36b5f99eb67 = L.geoJson(null, {
-                onEachFeature: geo_json_962b077823c33087a989e36b5f99eb67_onEachFeature,
-            
-        });
-
-        function geo_json_962b077823c33087a989e36b5f99eb67_add (data) {
-            geo_json_962b077823c33087a989e36b5f99eb67
-                .addData(data);
-        }
-            geo_json_962b077823c33087a989e36b5f99eb67_add({&quot;crs&quot;: {&quot;properties&quot;: {&quot;name&quot;: &quot;urn:ogc:def:crs:OGC:1.3:CRS84&quot;}, &quot;type&quot;: &quot;name&quot;}, &quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [[[-90.18728787615758, 38.62563617015305], [-90.18692158899877, 38.62426610755883], [-90.1879516628806, 38.62395578633254], [-90.18884510031269, 38.62171624853274], [-90.18942586024549, 38.62032116719754], [-90.18820199280749, 38.61991297887703], [-90.18624049623179, 38.619260187868846], [-90.18578122805118, 38.62027520914853], [-90.18532967460229, 38.621315530149936], [-90.1827544472279, 38.62759209080744], [-90.1830172394828, 38.629289158096746], [-90.18478935682349, 38.629479583936245], [-90.1859858391201, 38.62941720556974], [-90.18639225042939, 38.62792227768745], [-90.18728787615758, 38.62563617015305]]], &quot;type&quot;: &quot;Polygon&quot;}, &quot;properties&quot;: {&quot;AreaID&quot;: 266, &quot;CREATED_BY&quot;: &quot;Lands&quot;, &quot;CreationDate&quot;: 1943512600, &quot;Creator&quot;: &quot;NPS_WASO_LANDS&quot;, &quot;DATE_EDIT&quot;: -266188800, &quot;EditDate&quot;: 1943512600, &quot;Editor&quot;: &quot;NPS_WASO_LANDS&quot;, &quot;GIS_Notes&quot;: &quot;Lands - http://landsnet.nps.gov/tractsnet/documents/JEFF/Metadata/jeff_metadata.xml&quot;, &quot;GNIS_ID&quot;: &quot;765817&quot;, &quot;GlobalID&quot;: &quot;ee421c17-95cd-42f5-bdd4-5e3e24c4c708&quot;, &quot;METADATA&quot;: &quot;https://irma.nps.gov/DataStore/Reference/Profile/2171833&quot;, &quot;OBJECTID&quot;: 252, &quot;PARKNAME&quot;: &quot;Gateway Arch&quot;, &quot;REGION&quot;: &quot;MW&quot;, &quot;STATE&quot;: &quot;IL&quot;, &quot;Shape__Area&quot;: 1290994.17578125, &quot;Shape__Length&quot;: 9270.23040291533, &quot;UNIT_CODE&quot;: &quot;JEFF&quot;, &quot;UNIT_NAME&quot;: &quot;Gateway Arch National Park&quot;, &quot;UNIT_TYPE&quot;: &quot;National Park&quot;, &quot;cat&quot;: 1}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;geometry&quot;: {&quot;coordinates&quot;: [[[-90.1724742519822, 38.62215672434252], [-90.17213758497329, 38.62365485061114], [-90.17381096848119, 38.62451212956535], [-90.17353102738748, 38.62575761600344], [-90.17374086754968, 38.62814583241424], [-90.17588101837418, 38.62819457918933], [-90.17619296823798, 38.62705023600615], [-90.17653138965669, 38.62595287678453], [-90.17682781214089, 38.624963008641835], [-90.1773069016482, 38.62405685709055], [-90.17743303140229, 38.62302502093341], [-90.17780805018569, 38.62197561278323], [-90.17834744629299, 38.62054280360043], [-90.17873199260818, 38.61948307826703], [-90.17912610418459, 38.61851717112243], [-90.17934488797368, 38.61739408791744], [-90.177995168361, 38.617056941802126], [-90.1768403813683, 38.61681685113823], [-90.17582142054488, 38.616739319225736], [-90.1750166612044, 38.62029456836874], [-90.17295441856959, 38.62000942869794], [-90.1724742519822, 38.62215672434252]]], &quot;type&quot;: &quot;Polygon&quot;}, &quot;properties&quot;: {&quot;AreaID&quot;: 266, &quot;CREATED_BY&quot;: &quot;Lands&quot;, &quot;CreationDate&quot;: 1943512600, &quot;Creator&quot;: &quot;NPS_WASO_LANDS&quot;, &quot;DATE_EDIT&quot;: -266188800, &quot;EditDate&quot;: 1943512600, &quot;Editor&quot;: &quot;NPS_WASO_LANDS&quot;, &quot;GIS_Notes&quot;: &quot;Lands - http://landsnet.nps.gov/tractsnet/documents/JEFF/Metadata/jeff_metadata.xml&quot;, &quot;GNIS_ID&quot;: &quot;765817&quot;, &quot;GlobalID&quot;: &quot;ee421c17-95cd-42f5-bdd4-5e3e24c4c708&quot;, &quot;METADATA&quot;: &quot;https://irma.nps.gov/DataStore/Reference/Profile/2171833&quot;, &quot;OBJECTID&quot;: 252, &quot;PARKNAME&quot;: &quot;Gateway Arch&quot;, &quot;REGION&quot;: &quot;MW&quot;, &quot;STATE&quot;: &quot;IL&quot;, &quot;Shape__Area&quot;: 1290994.17578125, &quot;Shape__Length&quot;: 9270.23040291533, &quot;UNIT_CODE&quot;: &quot;JEFF&quot;, &quot;UNIT_NAME&quot;: &quot;Gateway Arch National Park&quot;, &quot;UNIT_TYPE&quot;: &quot;National Park&quot;, &quot;cat&quot;: 1}, &quot;type&quot;: &quot;Feature&quot;}], &quot;name&quot;: &quot;stl_park_PERMANENT&quot;, &quot;type&quot;: &quot;FeatureCollection&quot;});
-
-        
-    
-            geo_json_962b077823c33087a989e36b5f99eb67.addTo(map_0c989aac09161050e8879abc72857926);
-        
-    
-            map_0c989aac09161050e8879abc72857926.fitBounds(
+            map_bef660f0d87dfc3e70794cc320e3ebef.fitBounds(
                 [[38.52916887, -90.32397296], [38.77890923, -90.16623791]],
                 {}
             );
         
     
-            var layer_control_f2d0d7a0e6ad436ea09635a61843df86_layers = {
+            var layer_control_ee400535d3d5a03269dbd4951bd024fd_layers = {
                 base_layers : {
-                    &quot;cartodbpositron&quot; : tile_layer_5fee0a898ea2c16f228a8caaf2a66e25,
+                    &quot;cartodbpositron&quot; : tile_layer_d1774a86c28e85555363d09a71a535e0,
                 },
                 overlays :  {
-                    &quot;stl_boundary&quot; : geo_json_e448d61a0cd0033ae0384d7e0f81ad46,
-                    &quot;stl_park&quot; : geo_json_962b077823c33087a989e36b5f99eb67,
+                    &quot;stl_boundary&quot; : geo_json_383072ce316f70284e141c480c78ae88,
                 },
             };
-            let layer_control_f2d0d7a0e6ad436ea09635a61843df86 = L.control.layers(
-                layer_control_f2d0d7a0e6ad436ea09635a61843df86_layers.base_layers,
-                layer_control_f2d0d7a0e6ad436ea09635a61843df86_layers.overlays,
+            let layer_control_ee400535d3d5a03269dbd4951bd024fd = L.control.layers(
+                layer_control_ee400535d3d5a03269dbd4951bd024fd_layers.base_layers,
+                layer_control_ee400535d3d5a03269dbd4951bd024fd_layers.overlays,
                 {&quot;autoZIndex&quot;: true, &quot;collapsed&quot;: true, &quot;position&quot;: &quot;topright&quot;}
-            ).addTo(map_0c989aac09161050e8879abc72857926);
+            ).addTo(map_bef660f0d87dfc3e70794cc320e3ebef);
 
         
 </script>
@@ -599,11 +542,11 @@ General Public License for more details.</code></pre>
 <section id="map-figure" class="level4">
 <h4 class="anchored" data-anchor-id="map-figure">Map Figure</h4>
 <div id="cell-30" class="cell" data-execution_count="41">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> gj.Map(width<span class="op">=</span><span class="dv">300</span>)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"stl_streets"</span>, color<span class="op">=</span><span class="st">"grey"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>)</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"stl_park"</span>, color<span class="op">=</span><span class="st">"green"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>)</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"stl_boundary"</span>, color<span class="op">=</span><span class="st">"red"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>)</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> gj.Map(width<span class="op">=</span><span class="dv">300</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"stl_streets"</span>, color<span class="op">=</span><span class="st">"grey"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"stl_park"</span>, color<span class="op">=</span><span class="st">"green"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"stl_boundary"</span>, color<span class="op">=</span><span class="st">"red"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="41">
 <div>
 <figure class="figure">
@@ -617,7 +560,7 @@ General Public License for more details.</code></pre>
 <section id="import-raster-data" class="level3">
 <h3 class="anchored" data-anchor-id="import-raster-data">Import Raster Data</h3>
 <div id="cell-32" class="cell" data-execution_count="43">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"g.region"</span>, vector<span class="op">=</span><span class="st">"stl_boundary"</span>, res<span class="op">=</span><span class="dv">30</span>, flags<span class="op">=</span><span class="st">"ap"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"g.region"</span>, vector<span class="op">=</span><span class="st">"stl_boundary"</span>, res<span class="op">=</span><span class="dv">30</span>, flags<span class="op">=</span><span class="st">"ap"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>projection: 99 (NAD83(HARN) / Missouri West)
 zone:       0
@@ -637,14 +580,14 @@ cells:      378636</code></pre>
 <section id="export-stac-catalog" class="level4">
 <h4 class="anchored" data-anchor-id="export-stac-catalog">Export STAC Catalog</h4>
 <div id="cell-34" class="cell" data-execution_count="45">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"g.extension"</span>, extension<span class="op">=</span><span class="st">"t.stac"</span>, url<span class="op">=</span><span class="st">"https://github.com/cwhite911/grass-addons"</span>, branch<span class="op">=</span><span class="st">"t.stac-lazy-load"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"g.extension"</span>, extension<span class="op">=</span><span class="st">"t.stac"</span>, url<span class="op">=</span><span class="st">"https://github.com/cwhite911/grass-addons"</span>, branch<span class="op">=</span><span class="st">"t.stac-lazy-load"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>https://stacindex.org/catalogs</p>
 <div id="cell-36" class="cell" data-execution_count="47">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"t.stac.catalog"</span>,</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>               url<span class="op">=</span><span class="st">"https://earth-search.aws.element84.com/v1/"</span>,</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>               <span class="bu">format</span><span class="op">=</span><span class="st">"plain"</span>,</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>               flags<span class="op">=</span><span class="st">"b"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"t.stac.catalog"</span>,</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>               url<span class="op">=</span><span class="st">"https://earth-search.aws.element84.com/v1/"</span>,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>               <span class="bu">format</span><span class="op">=</span><span class="st">"plain"</span>,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>               flags<span class="op">=</span><span class="st">"b"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>---------------------------------------------------------------------------
 Catalog: Earth Search by Element 84
@@ -671,12 +614,12 @@ sentinel-1-grd: Sentinel-1 Level-1C Ground Range Detected (GRD)
 </div>
 </div>
 <div id="cell-37" class="cell" data-execution_count="48">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"t.stac.collection"</span>,</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>               url<span class="op">=</span><span class="st">"https://earth-search.aws.element84.com/v1/"</span>,</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>               collection<span class="op">=</span><span class="st">"cop-dem-glo-30"</span>,</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>               <span class="bu">format</span><span class="op">=</span><span class="st">"plain"</span>,</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>               flags<span class="op">=</span><span class="st">"b"</span></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>            )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"t.stac.collection"</span>,</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>               url<span class="op">=</span><span class="st">"https://earth-search.aws.element84.com/v1/"</span>,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>               collection<span class="op">=</span><span class="st">"cop-dem-glo-30"</span>,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>               <span class="bu">format</span><span class="op">=</span><span class="st">"plain"</span>,</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>               flags<span class="op">=</span><span class="st">"b"</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>            )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Collection ID: cop-dem-glo-30
 STAC Version: 1.0.0
@@ -715,17 +658,17 @@ Band: {'sampling': 'point', 'data_type': 'float32', 'spatial_resolution': 30, 'u
 <h3 class="anchored" data-anchor-id="import-evelvation-data">Import Evelvation Data</h3>
 <p>The <code>t.stac.item</code> module will download the Copernicus DEM GLO-30 data from the STAC catalog.</p>
 <div id="cell-39" class="cell" data-execution_count="49">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"t.stac.item"</span>,</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>               url<span class="op">=</span><span class="st">"https://earth-search.aws.element84.com/v1/"</span>,</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>               collection<span class="op">=</span><span class="st">"cop-dem-glo-30"</span>,</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>               <span class="bu">format</span><span class="op">=</span><span class="st">"plain"</span>,</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>               extent<span class="op">=</span><span class="st">"region"</span>,</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>               method<span class="op">=</span><span class="st">"bicubic"</span>,</span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>               resolution<span class="op">=</span><span class="st">"value"</span>,</span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>               memory<span class="op">=</span><span class="st">"5000"</span>,</span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>               resolution_value<span class="op">=</span><span class="dv">30</span>,</span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>               flags<span class="op">=</span><span class="st">"d"</span></span>
-<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>            )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"t.stac.item"</span>,</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>               url<span class="op">=</span><span class="st">"https://earth-search.aws.element84.com/v1/"</span>,</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>               collection<span class="op">=</span><span class="st">"cop-dem-glo-30"</span>,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>               <span class="bu">format</span><span class="op">=</span><span class="st">"plain"</span>,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>               extent<span class="op">=</span><span class="st">"region"</span>,</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>               method<span class="op">=</span><span class="st">"bicubic"</span>,</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>               resolution<span class="op">=</span><span class="st">"value"</span>,</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>               memory<span class="op">=</span><span class="st">"5000"</span>,</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>               resolution_value<span class="op">=</span><span class="dv">30</span>,</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>               flags<span class="op">=</span><span class="st">"d"</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>            )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Downloading Asset: {'href': 's3://copernicus-dem-30m/Copernicus_DSM_COG_10_N38_00_W091_00_DEM/Copernicus_DSM_COG_10_N38_00_W091_00_DEM.tif', 'type': 'image/tiff; application=geotiff; profile=cloud-optimized', 'title': 'Data', 'raster:bands': [{'sampling': 'point', 'data_type': 'float32', 'spatial_resolution': 30, 'unit': 'meter'}], 'roles': ['data'], 'collection_id': 'cop-dem-glo-30', 'item_id': 'Copernicus_DSM_COG_10_N38_00_W091_00_DEM', 'file_name': 'cop-dem-glo-30.Copernicus_DSM_COG_10_N38_00_W091_00_DEM.data', 'datetime': '2021-04-22T00:00:00Z'}
 Import Url: /vsis3/copernicus-dem-30m/Copernicus_DSM_COG_10_N38_00_W091_00_DEM/Copernicus_DSM_COG_10_N38_00_W091_00_DEM.tif
@@ -734,33 +677,33 @@ Importing: cop-dem-glo-30.Copernicus_DSM_COG_10_N38_00_W091_00_DEM.data</code></
 </div>
 <p>Let’s rename our elevation raster to <code>cop-dem-glo-30</code>.</p>
 <div id="cell-41" class="cell" data-execution_count="50">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"g.rename"</span>, raster<span class="op">=</span><span class="st">"cop-dem-glo-30.Copernicus_DSM_COG_10_N38_00_W091_00_DEM.data,cop-dem-glo-30"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"g.rename"</span>, raster<span class="op">=</span><span class="st">"cop-dem-glo-30.Copernicus_DSM_COG_10_N38_00_W091_00_DEM.data,cop-dem-glo-30"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="cell-42" class="cell" data-execution_count="52">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> gj.InteractiveMap(width<span class="op">=</span><span class="dv">500</span>, height<span class="op">=</span><span class="dv">500</span>, map_backend<span class="op">=</span><span class="st">"ipyleaflet"</span>, use_region<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.add_raster(<span class="st">"cop-dem-glo-30"</span>)</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.add_vector(<span class="st">"stl_boundary"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, line_color<span class="op">=</span><span class="st">"red"</span>)</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.add_vector(<span class="st">"stl_park"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, line_color<span class="op">=</span><span class="st">"green"</span>)</span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.add_layer_control()</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> gj.InteractiveMap(width<span class="op">=</span><span class="dv">500</span>, height<span class="op">=</span><span class="dv">500</span>, map_backend<span class="op">=</span><span class="st">"ipyleaflet"</span>, use_region<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.add_raster(<span class="st">"cop-dem-glo-30"</span>)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.add_vector(<span class="st">"stl_boundary"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, line_color<span class="op">=</span><span class="st">"red"</span>)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.add_vector(<span class="st">"stl_park"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, line_color<span class="op">=</span><span class="st">"green"</span>)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.add_layer_control()</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id":"382a6beda7e947a4b5f2a231ae04e8e2","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"g.region"</span>, raster<span class="op">=</span><span class="st">"cop-dem-glo-30"</span>, res<span class="op">=</span><span class="dv">30</span>, flags<span class="op">=</span><span class="st">"ap"</span>)</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.colors"</span>, <span class="bu">map</span><span class="op">=</span><span class="st">"cop-dem-glo-30"</span>, color<span class="op">=</span><span class="st">"elevation"</span>)</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.relief"</span>, <span class="bu">input</span><span class="op">=</span><span class="st">"cop-dem-glo-30"</span>, output<span class="op">=</span><span class="st">"relief"</span>, overwrite<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> gj.Map(width<span class="op">=</span><span class="dv">300</span>)</span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_shade(shade<span class="op">=</span><span class="st">"relief"</span>, color<span class="op">=</span><span class="st">"cop-dem-glo-30"</span>)</span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"stl_boundary"</span>, color<span class="op">=</span><span class="st">"red"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>)</span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"stl_park"</span>, color<span class="op">=</span><span class="st">"purple"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>)</span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="co"># map.d_vect(map="stl_streets", color="grey", fill_color="none", width=0.25)</span></span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_legend(raster<span class="op">=</span><span class="st">"cop-dem-glo-30"</span>, at<span class="op">=</span><span class="st">"5,50,2,5"</span>, flags<span class="op">=</span><span class="st">"b"</span>)</span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="cell-43" class="cell quarto-layout-panel" data-layout="[1]" data-execution_count="58">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"g.region"</span>, raster<span class="op">=</span><span class="st">"cop-dem-glo-30"</span>, res<span class="op">=</span><span class="dv">30</span>, flags<span class="op">=</span><span class="st">"ap"</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.colors"</span>, <span class="bu">map</span><span class="op">=</span><span class="st">"cop-dem-glo-30"</span>, color<span class="op">=</span><span class="st">"elevation"</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.relief"</span>, <span class="bu">input</span><span class="op">=</span><span class="st">"cop-dem-glo-30"</span>, output<span class="op">=</span><span class="st">"relief"</span>, overwrite<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> gj.Map(width<span class="op">=</span><span class="dv">300</span>)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_shade(shade<span class="op">=</span><span class="st">"relief"</span>, color<span class="op">=</span><span class="st">"cop-dem-glo-30"</span>)</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"stl_boundary"</span>, color<span class="op">=</span><span class="st">"red"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>)</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"stl_park"</span>, color<span class="op">=</span><span class="st">"purple"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>)</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="co"># map.d_vect(map="stl_streets", color="grey", fill_color="none", width=0.25)</span></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_legend(raster<span class="op">=</span><span class="st">"cop-dem-glo-30"</span>, at<span class="op">=</span><span class="st">"5,50,2,5"</span>, flags<span class="op">=</span><span class="st">"b"</span>)</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-43" class="cell quarto-layout-panel" data-execution_count="58" data-layout="[1]">
 <div class="quarto-layout-row">
 <div class="cell-output cell-output-stdout quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
 <pre><code>projection: 99 (NAD83(HARN) / Missouri West)
@@ -791,14 +734,14 @@ cells:      378636</code></pre>
 </div>
 <p>Let’s calculate the slope of the elevation raster.</p>
 <div id="cell-45" class="cell" data-execution_count="60">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.slope.aspect"</span>, elevation<span class="op">=</span><span class="st">"cop-dem-glo-30"</span>, slope<span class="op">=</span><span class="st">"slope"</span>, aspect<span class="op">=</span><span class="st">"aspect"</span>, overwrite<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.colors"</span>, <span class="bu">map</span><span class="op">=</span><span class="st">"slope"</span>, color<span class="op">=</span><span class="st">"sepia"</span>, flags<span class="op">=</span><span class="st">"e"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.slope.aspect"</span>, elevation<span class="op">=</span><span class="st">"cop-dem-glo-30"</span>, slope<span class="op">=</span><span class="st">"slope"</span>, aspect<span class="op">=</span><span class="st">"aspect"</span>, overwrite<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.colors"</span>, <span class="bu">map</span><span class="op">=</span><span class="st">"slope"</span>, color<span class="op">=</span><span class="st">"sepia"</span>, flags<span class="op">=</span><span class="st">"e"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> gj.Map(width<span class="op">=</span><span class="dv">300</span>)</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_shade(shade<span class="op">=</span><span class="st">"relief"</span>, color<span class="op">=</span><span class="st">"slope"</span>, brighten<span class="op">=</span><span class="dv">30</span>)</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"stl_boundary"</span>, color<span class="op">=</span><span class="st">"red"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>)</span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="cell-46" class="cell quarto-layout-panel" data-layout="[1]" data-execution_count="61">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> gj.Map(width<span class="op">=</span><span class="dv">300</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_shade(shade<span class="op">=</span><span class="st">"relief"</span>, color<span class="op">=</span><span class="st">"slope"</span>, brighten<span class="op">=</span><span class="dv">30</span>)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"stl_boundary"</span>, color<span class="op">=</span><span class="st">"red"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-46" class="cell quarto-layout-panel" data-execution_count="61" data-layout="[1]">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
@@ -813,16 +756,16 @@ cells:      378636</code></pre>
 </section>
 <section id="distance-to-the-nearest-street" class="level3">
 <h3 class="anchored" data-anchor-id="distance-to-the-nearest-street">Distance to the nearest street</h3>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.mask"</span>, vector<span class="op">=</span><span class="st">"stl_boundary"</span>)</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"v.to.rast"</span>, <span class="bu">input</span><span class="op">=</span><span class="st">"stl_streets"</span>, output<span class="op">=</span><span class="st">"stl_streets"</span>, use<span class="op">=</span><span class="st">"value"</span>, <span class="bu">type</span><span class="op">=</span><span class="st">"line"</span>, overwrite<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.grow.distance"</span>, <span class="bu">input</span><span class="op">=</span><span class="st">"stl_streets"</span>, distance<span class="op">=</span><span class="st">"dist_to_road"</span>)</span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.colors"</span>, <span class="bu">map</span><span class="op">=</span><span class="st">"dist_to_road"</span>, color<span class="op">=</span><span class="st">"plasma"</span>, flags<span class="op">=</span><span class="st">"e"</span>)</span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>map1 <span class="op">=</span> gj.Map(width<span class="op">=</span><span class="dv">300</span>)</span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>map1.d_shade(shade<span class="op">=</span><span class="st">"relief"</span>, color<span class="op">=</span><span class="st">"dist_to_road"</span>)</span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>map1.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"stl_boundary"</span>, color<span class="op">=</span><span class="st">"red"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>)</span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>map1.d_legend(raster<span class="op">=</span><span class="st">"dist_to_road"</span>, at<span class="op">=</span><span class="st">"95,65,5,15"</span>, <span class="bu">range</span><span class="op">=</span><span class="st">"0,100"</span>, flags<span class="op">=</span><span class="st">"ds"</span>)</span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>map1.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="cell-48" class="cell quarto-layout-panel" data-layout="[1,1]" data-execution_count="62">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.mask"</span>, vector<span class="op">=</span><span class="st">"stl_boundary"</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"v.to.rast"</span>, <span class="bu">input</span><span class="op">=</span><span class="st">"stl_streets"</span>, output<span class="op">=</span><span class="st">"stl_streets"</span>, use<span class="op">=</span><span class="st">"value"</span>, <span class="bu">type</span><span class="op">=</span><span class="st">"line"</span>, overwrite<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.grow.distance"</span>, <span class="bu">input</span><span class="op">=</span><span class="st">"stl_streets"</span>, distance<span class="op">=</span><span class="st">"dist_to_road"</span>)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.colors"</span>, <span class="bu">map</span><span class="op">=</span><span class="st">"dist_to_road"</span>, color<span class="op">=</span><span class="st">"plasma"</span>, flags<span class="op">=</span><span class="st">"e"</span>)</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>map1 <span class="op">=</span> gj.Map(width<span class="op">=</span><span class="dv">300</span>)</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>map1.d_shade(shade<span class="op">=</span><span class="st">"relief"</span>, color<span class="op">=</span><span class="st">"dist_to_road"</span>)</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>map1.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"stl_boundary"</span>, color<span class="op">=</span><span class="st">"red"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>)</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>map1.d_legend(raster<span class="op">=</span><span class="st">"dist_to_road"</span>, at<span class="op">=</span><span class="st">"95,65,5,15"</span>, <span class="bu">range</span><span class="op">=</span><span class="st">"0,100"</span>, flags<span class="op">=</span><span class="st">"ds"</span>)</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>map1.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-48" class="cell quarto-layout-panel" data-execution_count="62" data-layout="[1,1]">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <p><img src="intro_grass_files/figure-html/cell-30-output-1.png" class="img-fluid"></p>
@@ -832,14 +775,14 @@ cells:      378636</code></pre>
 <section id="road-density" class="level4">
 <h4 class="anchored" data-anchor-id="road-density">Road Density</h4>
 <div id="cell-50" class="cell" data-execution_count="63">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.neighbors"</span>, flags<span class="op">=</span><span class="st">""</span>, <span class="bu">input</span><span class="op">=</span><span class="st">"stl_streets"</span>, output<span class="op">=</span><span class="st">"road_dens"</span>, size<span class="op">=</span><span class="dv">37</span>, method<span class="op">=</span><span class="st">"count"</span>, memory<span class="op">=</span><span class="dv">30000</span>, nprocs<span class="op">=</span><span class="dv">24</span>)</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.colors"</span>, <span class="bu">map</span><span class="op">=</span><span class="st">"road_dens"</span>, color<span class="op">=</span><span class="st">"plasma"</span>, flags<span class="op">=</span><span class="st">""</span>)</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>map2 <span class="op">=</span> gj.Map(width<span class="op">=</span><span class="dv">300</span>)</span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>map2.d_shade(shade<span class="op">=</span><span class="st">"relief"</span>, color<span class="op">=</span><span class="st">"road_dens"</span>)</span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>map2.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"stl_boundary"</span>, color<span class="op">=</span><span class="st">"red"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>)</span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>map2.d_legend(raster<span class="op">=</span><span class="st">"road_dens"</span>, at<span class="op">=</span><span class="st">"95,65,5,15"</span>, flags<span class="op">=</span><span class="st">"s"</span>)</span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>map2.d_barscale(at<span class="op">=</span><span class="st">"55,5,5,5"</span>, flags<span class="op">=</span><span class="st">"n"</span>)</span>
-<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>map2.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.neighbors"</span>, flags<span class="op">=</span><span class="st">""</span>, <span class="bu">input</span><span class="op">=</span><span class="st">"stl_streets"</span>, output<span class="op">=</span><span class="st">"road_dens"</span>, size<span class="op">=</span><span class="dv">37</span>, method<span class="op">=</span><span class="st">"count"</span>, memory<span class="op">=</span><span class="dv">30000</span>, nprocs<span class="op">=</span><span class="dv">24</span>)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.colors"</span>, <span class="bu">map</span><span class="op">=</span><span class="st">"road_dens"</span>, color<span class="op">=</span><span class="st">"plasma"</span>, flags<span class="op">=</span><span class="st">""</span>)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>map2 <span class="op">=</span> gj.Map(width<span class="op">=</span><span class="dv">300</span>)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>map2.d_shade(shade<span class="op">=</span><span class="st">"relief"</span>, color<span class="op">=</span><span class="st">"road_dens"</span>)</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>map2.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"stl_boundary"</span>, color<span class="op">=</span><span class="st">"red"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>)</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>map2.d_legend(raster<span class="op">=</span><span class="st">"road_dens"</span>, at<span class="op">=</span><span class="st">"95,65,5,15"</span>, flags<span class="op">=</span><span class="st">"s"</span>)</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>map2.d_barscale(at<span class="op">=</span><span class="st">"55,5,5,5"</span>, flags<span class="op">=</span><span class="st">"n"</span>)</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>map2.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="63">
 <div>
 <figure class="figure">
@@ -849,12 +792,12 @@ cells:      378636</code></pre>
 </div>
 </div>
 <div id="cell-51" class="cell" data-execution_count="64">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.geomorphon"</span>, elevation<span class="op">=</span><span class="st">"cop-dem-glo-30"</span>, search<span class="op">=</span><span class="dv">15</span>, flat<span class="op">=</span><span class="fl">0.1</span>, forms<span class="op">=</span><span class="st">"geomorphon"</span>, overwrite<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> gj.Map(width<span class="op">=</span><span class="dv">300</span>)</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_shade(shade<span class="op">=</span><span class="st">"relief"</span>, color<span class="op">=</span><span class="st">"geomorphon"</span>)</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"stl_boundary"</span>, color<span class="op">=</span><span class="st">"red"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>)</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_legend(raster<span class="op">=</span><span class="st">"geomorphon"</span>, at<span class="op">=</span><span class="st">"95,65,2,5"</span>, flags<span class="op">=</span><span class="st">""</span>)</span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.geomorphon"</span>, elevation<span class="op">=</span><span class="st">"cop-dem-glo-30"</span>, search<span class="op">=</span><span class="dv">15</span>, flat<span class="op">=</span><span class="fl">0.1</span>, forms<span class="op">=</span><span class="st">"geomorphon"</span>, overwrite<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> gj.Map(width<span class="op">=</span><span class="dv">300</span>)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_shade(shade<span class="op">=</span><span class="st">"relief"</span>, color<span class="op">=</span><span class="st">"geomorphon"</span>)</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"stl_boundary"</span>, color<span class="op">=</span><span class="st">"red"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>)</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_legend(raster<span class="op">=</span><span class="st">"geomorphon"</span>, at<span class="op">=</span><span class="st">"95,65,2,5"</span>, flags<span class="op">=</span><span class="st">""</span>)</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="64">
 <div>
 <figure class="figure">
@@ -866,19 +809,19 @@ cells:      378636</code></pre>
 <p>Let’s run some bash commands to calculate flow accumulation.</p>
 <p>We can start by downloading the new <code>r.flowaccumulation</code> module from the <a href="https://github.com/OSGeo/grass-addons/">GRASS Addons repository</a>.</p>
 <div id="cell-53" class="cell" data-execution_count="66">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>bash</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>g.extension extension<span class="op">=</span>r.flowaccumulation</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate positive flow accumulation and drainage directions using r.watershed</span></span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="co"># for comparison, use -s (SFD)</span></span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>r.watershed <span class="op">-</span>sa elevation<span class="op">=</span>cop<span class="op">-</span>dem<span class="op">-</span>glo<span class="op">-</span><span class="dv">30</span> accumulation<span class="op">=</span>flow_accum drainage<span class="op">=</span>drain_directions</span>
-<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate flow accumulation using r.flowaccumulation</span></span>
-<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>r.flowaccumulation <span class="bu">input</span><span class="op">=</span>drain_directions output<span class="op">=</span>flow_accum_new</span>
-<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a><span class="co"># copy color table</span></span>
-<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>r.colors <span class="bu">map</span><span class="op">=</span>flow_accum_new raster<span class="op">=</span>flow_accum</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>bash</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>g.extension extension<span class="op">=</span>r.flowaccumulation</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate positive flow accumulation and drainage directions using r.watershed</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="co"># for comparison, use -s (SFD)</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>r.watershed <span class="op">-</span>sa elevation<span class="op">=</span>cop<span class="op">-</span>dem<span class="op">-</span>glo<span class="op">-</span><span class="dv">30</span> accumulation<span class="op">=</span>flow_accum drainage<span class="op">=</span>drain_directions</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate flow accumulation using r.flowaccumulation</span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>r.flowaccumulation <span class="bu">input</span><span class="op">=</span>drain_directions output<span class="op">=</span>flow_accum_new</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a><span class="co"># copy color table</span></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>r.colors <span class="bu">map</span><span class="op">=</span>flow_accum_new raster<span class="op">=</span>flow_accum</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Fetching &lt;r.flowaccumulation&gt; from &lt;https://github.com/OSGeo/grass-addons/&gt;
 (be patient)...
@@ -919,17 +862,17 @@ Color table for raster map &lt;flow_accum_new&gt; set to 'flow_accum'</code></pr
 </div>
 </div>
 <div id="cell-54" class="cell" data-execution_count="76">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>map3d <span class="op">=</span> gj.Map3D(width<span class="op">=</span><span class="dv">500</span>, height<span class="op">=</span><span class="dv">500</span>)</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>map3d.render(</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>    elevation_map<span class="op">=</span><span class="st">"cop-dem-glo-30"</span>,</span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>    color_map<span class="op">=</span><span class="st">"flow_accum_new"</span>,</span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>    zexag<span class="op">=</span><span class="dv">4</span>, </span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>    perspective<span class="op">=</span><span class="dv">12</span>, </span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">10000</span>, </span>
-<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>    resolution_fine<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>    arrow_position<span class="op">=</span>[<span class="dv">100</span>,<span class="dv">50</span>],</span>
-<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>map3d.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>map3d <span class="op">=</span> gj.Map3D(width<span class="op">=</span><span class="dv">500</span>, height<span class="op">=</span><span class="dv">500</span>)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>map3d.render(</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>    elevation_map<span class="op">=</span><span class="st">"cop-dem-glo-30"</span>,</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    color_map<span class="op">=</span><span class="st">"flow_accum_new"</span>,</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>    zexag<span class="op">=</span><span class="dv">4</span>, </span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    perspective<span class="op">=</span><span class="dv">12</span>, </span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">10000</span>, </span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>    resolution_fine<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>    arrow_position<span class="op">=</span>[<span class="dv">100</span>,<span class="dv">50</span>],</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>map3d.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="76">
 <div>
 <figure class="figure">
@@ -939,11 +882,11 @@ Color table for raster map &lt;flow_accum_new&gt; set to 'flow_accum'</code></pr
 </div>
 </div>
 <div id="cell-55" class="cell" data-execution_count="88">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.mask"</span>, flags<span class="op">=</span><span class="st">"r"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.mask"</span>, flags<span class="op">=</span><span class="st">"r"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s zoom in on the Arch Park area.</p>
 <div id="cell-57" class="cell" data-execution_count="79">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"g.region"</span>, vector<span class="op">=</span><span class="st">"stl_park"</span>, flags<span class="op">=</span><span class="st">"ap"</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"g.region"</span>, vector<span class="op">=</span><span class="st">"stl_park"</span>, flags<span class="op">=</span><span class="st">"ap"</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>projection: 99 (NAD83(HARN) / Missouri West)
 zone:       0
@@ -961,13 +904,13 @@ cells:      2397</code></pre>
 </div>
 </div>
 <div id="cell-58" class="cell" data-execution_count="97">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.mask"</span>, vector<span class="op">=</span><span class="st">"stl_boundary"</span>)</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> gj.Map(width<span class="op">=</span><span class="dv">500</span>, use_region<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_shade(shade<span class="op">=</span><span class="st">"relief"</span>, color<span class="op">=</span><span class="st">"flow_accum_new"</span>)</span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"stl_boundary"</span>, color<span class="op">=</span><span class="st">"red"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>)</span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"stl_park"</span>, color<span class="op">=</span><span class="st">"red"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, width<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_legend(raster<span class="op">=</span><span class="st">"cop-dem-glo-30"</span>, at<span class="op">=</span><span class="st">"5,50,80,75"</span>, flags<span class="op">=</span><span class="st">"b"</span>)</span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.mask"</span>, vector<span class="op">=</span><span class="st">"stl_boundary"</span>)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> gj.Map(width<span class="op">=</span><span class="dv">500</span>, use_region<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_shade(shade<span class="op">=</span><span class="st">"relief"</span>, color<span class="op">=</span><span class="st">"flow_accum_new"</span>)</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"stl_boundary"</span>, color<span class="op">=</span><span class="st">"red"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>)</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"stl_park"</span>, color<span class="op">=</span><span class="st">"red"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, width<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_legend(raster<span class="op">=</span><span class="st">"cop-dem-glo-30"</span>, at<span class="op">=</span><span class="st">"5,50,80,75"</span>, flags<span class="op">=</span><span class="st">"b"</span>)</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="97">
 <div>
 <figure class="figure">
@@ -977,14 +920,14 @@ cells:      2397</code></pre>
 </div>
 </div>
 <div id="cell-59" class="cell" data-execution_count="101">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.mask"</span>, vector<span class="op">=</span><span class="st">"stl_boundary"</span>)</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"g.region"</span>, raster<span class="op">=</span><span class="st">"flow_accum_new"</span>, res<span class="op">=</span><span class="dv">30</span>, flags<span class="op">=</span><span class="st">"ap"</span>)</span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> gj.InteractiveMap(width<span class="op">=</span><span class="dv">500</span>, map_backend<span class="op">=</span><span class="st">"folium"</span>, use_region<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.add_raster(<span class="st">"flow_accum_new"</span>, opacity<span class="op">=</span><span class="fl">0.5</span>)</span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.add_raster(<span class="st">"relief"</span>, opacity<span class="op">=</span><span class="fl">0.75</span>)</span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.add_vector(<span class="st">"stl_boundary"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, line_color<span class="op">=</span><span class="st">"red"</span>)</span>
-<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.add_vector(<span class="st">"stl_park"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, line_color<span class="op">=</span><span class="st">"green"</span>)</span>
-<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.mask"</span>, vector<span class="op">=</span><span class="st">"stl_boundary"</span>)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"g.region"</span>, raster<span class="op">=</span><span class="st">"flow_accum_new"</span>, res<span class="op">=</span><span class="dv">30</span>, flags<span class="op">=</span><span class="st">"ap"</span>)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> gj.InteractiveMap(width<span class="op">=</span><span class="dv">500</span>, map_backend<span class="op">=</span><span class="st">"folium"</span>, use_region<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.add_raster(<span class="st">"flow_accum_new"</span>, opacity<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.add_raster(<span class="st">"relief"</span>, opacity<span class="op">=</span><span class="fl">0.75</span>)</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.add_vector(<span class="st">"stl_boundary"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, line_color<span class="op">=</span><span class="st">"red"</span>)</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.add_vector(<span class="st">"stl_park"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, line_color<span class="op">=</span><span class="st">"green"</span>)</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>projection: 99 (NAD83(HARN) / Missouri West)
 zone:       0
