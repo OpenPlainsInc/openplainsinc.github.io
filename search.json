@@ -256,7 +256,7 @@
     "href": "content/presentations/foss4gna_2024_case_studies.html#what-is-grass",
     "title": "",
     "section": "What is GRASS?",
-    "text": "What is GRASS?\n\n\n\n\n\nGRASS is geospatial computational engine\nGRASS is a modeling platform\nGRASS is a development framework\n\n\n\n\npsst GRASS is not your Papi’s Desktop GIS"
+    "text": "What is GRASS?\n\n\n\n\n\n\nGRASS is geospatial computational engine\nGRASS is a modeling platform\nGRASS is a development framework\n\n\n\n\n\npsst GRASS is not your Papi’s Desktop GIS"
   },
   {
     "objectID": "content/presentations/foss4gna_2024_case_studies.html#what-is-grass-used-for",
@@ -312,14 +312,14 @@
     "href": "content/presentations/foss4gna_2024_case_studies.html#desktop-case-study-1",
     "title": "",
     "section": "Desktop Case Study",
-    "text": "Desktop Case Study\nBohannan Huston: Tech Specs\n\n\nSetup\n\nMacOS\n\n\nTechnique\n\nbash scripts\nGrided\nParrell"
+    "text": "Desktop Case Study\nBohannan Huston: Tech Specs\n\n\n\nProcess\nHardware\nTime (sec)\nTime (min)\n\n\n\n\nSVF Generation\nMac M2 Max\n790.8\n13.2\n\n\n\nMac M1 Max\n889.2\n14.8\n\n\nImage Tiling\nMac M2 Max\n407.8\n6.8\n\n\n\nMac M1 Max\n519.1\n8.7\n\n\nBuilding Prediction\nMac M2 Max\n7537.5\n125.6\n\n\n\nMac M1 Max\n9641.4\n160.7"
   },
   {
     "objectID": "content/presentations/foss4gna_2024_case_studies.html#cloud-based-geoprocessing",
     "href": "content/presentations/foss4gna_2024_case_studies.html#cloud-based-geoprocessing",
     "title": "",
     "section": "Cloud-based Geoprocessing",
-    "text": "Cloud-based Geoprocessing\nTools\n\nActinia REST API\nApache AirFlow\nOpenPlains"
+    "text": "Cloud-based Geoprocessing\nTools\n\nActinia REST API - GRASS Web API\nApache AirFlow - ETL\nOpenPlains - Interative Web Modeling"
   },
   {
     "objectID": "content/presentations/foss4gna_2024_case_studies.html#cloud-case-study",
