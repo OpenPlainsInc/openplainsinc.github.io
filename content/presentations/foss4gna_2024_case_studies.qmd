@@ -183,7 +183,7 @@ format:
 :::{.column width=60%}
 ### So fast you usally don't need scale
 
-- Handles large raster base calcuations with ease
+- Handles large raster base calculations with ease
 
 :::
 :::{.column width=40%}
