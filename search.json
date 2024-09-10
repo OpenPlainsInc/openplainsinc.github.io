@@ -130,7 +130,7 @@
     "href": "content/presentations/foss4gna_2024_openplains.html#part-1.-from-academia-to-startup",
     "title": "OpenPlains Inc. A First-Year Retrospective",
     "section": "Part 1. From Academia to Startup",
-    "text": "Part 1. From Academia to Startup"
+    "text": "Part 1. From Academia to Startup\n\nPh.D. in Geospatial Analytics (2023)"
   },
   {
     "objectID": "content/presentations/foss4gna_2024_openplains.html#democratizing-geospatial-modeling",
@@ -151,7 +151,7 @@
     "href": "content/presentations/foss4gna_2024_openplains.html#value-prop",
     "title": "OpenPlains Inc. A First-Year Retrospective",
     "section": "Value Prop",
-    "text": "Value Prop\nDemocratizes interactive geospatial modeling in flood resilience and urban growth planning through scenario-based civic engagement."
+    "text": "Value Prop\nDemocratize interactive geospatial modeling in flood resilience and urban growth planning through scenario-based civic engagement."
   },
   {
     "objectID": "content/presentations/foss4gna_2024_openplains.html#ip-license-coi",
@@ -210,18 +210,18 @@
     "text": "Mentorship\nThank you to my Mentors\n\nFind mentors\nDon’t pay for mentorship"
   },
   {
-    "objectID": "content/presentations/foss4gna_2024_openplains.html#part-2.-open-source-community-relations",
-    "href": "content/presentations/foss4gna_2024_openplains.html#part-2.-open-source-community-relations",
+    "objectID": "content/presentations/foss4gna_2024_openplains.html#part-2.-open-source-as-an-economic-driver",
+    "href": "content/presentations/foss4gna_2024_openplains.html#part-2.-open-source-as-an-economic-driver",
     "title": "OpenPlains Inc. A First-Year Retrospective",
-    "section": "Part 2. Open Source Community Relations",
-    "text": "Part 2. Open Source Community Relations\n\nWhat should a company’s relationship be with the open source communities it depends on?"
+    "section": "Part 2. Open Source as an Economic Driver",
+    "text": "Part 2. Open Source as an Economic Driver\n\n\n\nOpen source facilitates economic development\nDrives innovation\nNeeds to be supported to be sustainable\n\n\n\n\n\nLink to Full Image"
   },
   {
-    "objectID": "content/presentations/foss4gna_2024_openplains.html#economic-driver",
-    "href": "content/presentations/foss4gna_2024_openplains.html#economic-driver",
+    "objectID": "content/presentations/foss4gna_2024_openplains.html#community-relations",
+    "href": "content/presentations/foss4gna_2024_openplains.html#community-relations",
     "title": "OpenPlains Inc. A First-Year Retrospective",
-    "section": "Economic Driver",
-    "text": "Economic Driver\n\n\n\nOpen source facilitates economic development\nDrives innovation\nNeeds to be supported to be sustainable\n\n\n\n\n\nLink to Full Image"
+    "section": "Community Relations",
+    "text": "Community Relations\n\nWhat should a company’s relationship be with the open source communities it depends on?"
   },
   {
     "objectID": "content/presentations/foss4gna_2024_openplains.html#open-source-sustainability",
@@ -242,14 +242,14 @@
     "href": "content/presentations/foss4gna_2024_openplains.html#discussion-questions",
     "title": "OpenPlains Inc. A First-Year Retrospective",
     "section": "Discussion & Questions",
-    "text": "Discussion & Questions\n\nHow can companies support thier open source community?"
+    "text": "Discussion & Questions\n\nHow can companies support thier open source community?\nHow can you growing your own open source community?"
   },
   {
     "objectID": "index.html",
     "href": "index.html",
     "title": "OpenPlains - Learning",
     "section": "",
-    "text": "GRASS GIS as Geocomputational Engine\n\n\nFOSS4G NA 2024, St. Louis Missouri\n\n\n\n\n\n\n\n\nSep 10, 2024\n\n\nCorey White, Vaclav Petras, Markus Neteler\n\n\n\n\n\n\n\n\n\n\n\n\nOpenPlains Inc. A First-Year Retrospective\n\n\nFOSS4G NA 2024, St. Louis Missouri\n\n\n\nfoss4gna\n\n\npresentation\n\n\nOpenPlains\n\n\n\n\n\n\n\n\n\nSep 10, 2024\n\n\nCorey T. White\n\n\n\n\n\n\n\n\n\n\n\n\nPart 3. Actinia Process Chians\n\n\n\n\n\n\ngeospatial\n\n\nGRASS v8.5\n\n\njupyter\n\n\nlidar\n\n\nSTAC\n\n\n\nLearn how to create custom actinia process chain templates for GRASS GIS application.\n\n\n\n\n\nSep 10, 2024\n\n\nCorey T. White, Vaclav Petras\n\n\n\n\n\n\n\n\n\n\n\n\nPart 1. GRASS GIS 101\n\n\n\n\n\n\ngeospatial\n\n\nGRASS v8.5\n\n\njupyter\n\n\nlidar\n\n\nSTAC\n\n\n\nLearn the basics of GRASS GIS, a powerful open-source geospatial procesing engine.\n\n\n\n\n\nSep 10, 2024\n\n\nCorey T. White, Vaclav Petras\n\n\n\n\n\n\n\n\n\n\n\n\nPart 2. Introduction to Actinia\n\n\n\n\n\n\ngeospatial\n\n\nGRASS v8.5\n\n\njupyter\n\n\nlidar\n\n\nSTAC\n\n\n\nLearn how to use actinia to create a cloud-based processing environment for GRASS GIS.\n\n\n\n\n\nSep 10, 2024\n\n\nCorey T. White, Vaclav Petras\n\n\n\n\n\n\n\n\n\n\n\n\nDeveloping web-application with GRASS GIS\n\n\nFOSS4G NA 2024, St. Louis Missouri\n\n\n\nworkshop\n\n\nfoss4gna\n\n\nwebdev\n\n\ngrass\n\n\n\n\n\n\n\n\n\nSep 9, 2024\n\n\nCorey T. White, Vaclav Petras\n\n\n\n\n\n\n\n\n\n\n\n\nSTAC Tutorial\n\n\n\n\n\n\nstac\n\n\ngrass-addon\n\n\ntutorial\n\n\n\n\n\n\n\n\n\nAug 26, 2024\n\n\nCorey T. White\n\n\n\n\n\n\n\n\n\n\n\n\nGeoprocessing with GRASS GIS and Jupyter Notebooks\n\n\n\n\n\n\ngeospatial\n\n\nGRASS v8.5\n\n\njupyter\n\n\nlidar\n\n\nSTAC\n\n\n\nThis tutorial demonstrates how to use GRASS GIS in Jupyter Notebooks.\n\n\n\n\n\nAug 22, 2024\n\n\nCorey T. White\n\n\n\n\n\n\nNo matching items"
+    "text": "GRASS GIS as Geocomputational Engine\n\n\nFOSS4G NA 2024, St. Louis Missouri\n\n\n\n\n\n\n\n\nSep 10, 2024\n\n\nCorey White, Vaclav Petras, Markus Neteler\n\n\n\n\n\n\n\n\n\n\n\n\nOpenPlains Inc. A First-Year Retrospective\n\n\nFOSS4G NA 2024, St. Louis Missouri\n\n\n\nfoss4gna\n\n\npresentation\n\n\nOpenPlains\n\n\n\n\n\n\n\n\n\nSep 10, 2024\n\n\nCorey T. White\n\n\n\n\n\n\n\n\n\n\n\n\nPart 3. Actinia Process Chians\n\n\n\n\n\n\ngeospatial\n\n\nGRASS v8.5\n\n\njupyter\n\n\nlidar\n\n\nSTAC\n\n\n\nLearn how to create custom actinia process chain templates for GRASS GIS application.\n\n\n\n\n\nSep 10, 2024\n\n\nCorey T. White, Vaclav Petras\n\n\n\n\n\n\n\n\n\n\n\n\nPart 1. GRASS GIS 101\n\n\n\n\n\n\ngeospatial\n\n\nGRASS v8.5\n\n\njupyter\n\n\nlidar\n\n\nSTAC\n\n\n\nLearn the basics of GRASS GIS, a powerful open-source geospatial procesing engine.\n\n\n\n\n\nSep 10, 2024\n\n\nCorey T. White, Vaclav Petras\n\n\n\n\n\n\n\n\n\n\n\n\nPart 2. Introduction to Actinia\n\n\n\n\n\n\ngeospatial\n\n\nGRASS v8.5\n\n\njupyter\n\n\nlidar\n\n\nSTAC\n\n\n\nLearn how to use actinia to create a cloud-based processing environment for GRASS GIS.\n\n\n\n\n\nSep 10, 2024\n\n\nCorey T. White, Vaclav Petras\n\n\n\n\n\n\n\n\n\n\n\n\nDeveloping web-application with GRASS GIS\n\n\nFOSS4G NA 2024, St. Louis Missouri\n\n\n\nworkshop\n\n\nfoss4gna\n\n\nwebdev\n\n\ngrass\n\n\n\n\n\n\n\n\n\nSep 9, 2024\n\n\nCorey T. White, Vaclav Petras\n\n\n\n\n\n\n\n\n\n\n\n\nGeoprocessing with GRASS GIS and Jupyter Notebooks\n\n\n\n\n\n\ngeospatial\n\n\nGRASS v8.5\n\n\njupyter\n\n\nlidar\n\n\nSTAC\n\n\n\nThis tutorial demonstrates how to use GRASS GIS in Jupyter Notebooks.\n\n\n\n\n\nAug 22, 2024\n\n\nCorey T. White\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "content/presentations/foss4gna_2024_case_studies.html#corey-white",
