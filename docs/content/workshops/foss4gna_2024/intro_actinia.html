@@ -206,7 +206,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#a-rest-api-for-grass-gis" id="toc-a-rest-api-for-grass-gis" class="nav-link active" data-scroll-target="#a-rest-api-for-grass-gis">A REST API for GRASS GIS</a></li>
   <li><a href="#import-python-libraries" id="toc-import-python-libraries" class="nav-link" data-scroll-target="#import-python-libraries">Import Python Libraries</a></li>
-  <li><a href="#setup-environment" id="toc-setup-environment" class="nav-link" data-scroll-target="#setup-environment">Setup Environment</a></li>
+  <li><a href="#setup-environment" id="toc-setup-environment" class="nav-link" data-scroll-target="#setup-environment">Setup Environment</a>
+  <ul>
+  <li><a href="#setup-variables" id="toc-setup-variables" class="nav-link" data-scroll-target="#setup-variables">Setup Variables</a></li>
+  </ul></li>
   <li><a href="#actinia-rest-api" id="toc-actinia-rest-api" class="nav-link" data-scroll-target="#actinia-rest-api">actinia REST API</a>
   <ul>
   <li><a href="#tools" id="toc-tools" class="nav-link" data-scroll-target="#tools">Tools</a></li>
@@ -226,6 +229,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#syncronous-processing" id="toc-syncronous-processing" class="nav-link" data-scroll-target="#syncronous-processing">Syncronous Processing</a></li>
   <li><a href="#asyncronous-processing" id="toc-asyncronous-processing" class="nav-link" data-scroll-target="#asyncronous-processing">Asyncronous Processing</a></li>
   </ul></li>
+  </ul></li>
+  <li><a href="#lets-look-at-the-complete-api-within-postman-or-insomnia." id="toc-lets-look-at-the-complete-api-within-postman-or-insomnia." class="nav-link" data-scroll-target="#lets-look-at-the-complete-api-within-postman-or-insomnia.">Let’s look at the complete API within <code>PostMan</code> or <code>Insomnia</code>.</a>
+  <ul>
   <li><a href="#process-chains" id="toc-process-chains" class="nav-link" data-scroll-target="#process-chains">Process Chains</a></li>
   </ul></li>
   </ul>
@@ -276,7 +282,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="import-python-libraries" class="level2">
 <h2 class="anchored" data-anchor-id="import-python-libraries">Import Python Libraries</h2>
-<div id="cell-5" class="cell" data-execution_count="2">
+<div id="cell-5" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> subprocess</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pprint <span class="im">import</span> pprint</span>
@@ -290,20 +296,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="setup-environment" class="level2">
 <h2 class="anchored" data-anchor-id="setup-environment">Setup Environment</h2>
-<div id="cell-7" class="cell" data-execution_count="32">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>gisbase <span class="op">=</span> subprocess.check_output([<span class="st">"grass"</span>, <span class="st">"--config"</span>, <span class="st">"path"</span>], text<span class="op">=</span><span class="va">True</span>).strip()</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>GISBASE <span class="op">=</span> gisbase</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>ACTINIA_USER <span class="op">=</span> <span class="st">'actinia-gdi'</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>ACTINIA_PASSWORD <span class="op">=</span> <span class="st">'actinia-gdi'</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>AUTH <span class="op">=</span> <span class="st">'actinia-gdi:actinia-gdi'</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>ACTINIA_URL <span class="op">=</span> <span class="st">'http://localhost:8088'</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ACTINIA_URL = 'https://openplains.app/actinia'</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>ACTINIA_VERSION <span class="op">=</span> <span class="st">'v3'</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>ACTINIA_BASEURL <span class="op">=</span> <span class="st">'http://localhost:8088'</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># ACTINIA_BASEURL = 'https://openplains.app/actinia'</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>ACTINIA_URL <span class="op">=</span> ACTINIA_BASEURL <span class="op">+</span> <span class="st">"/api/"</span> <span class="op">+</span> ACTINIA_VERSION</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>ACTINIA_AUTH <span class="op">=</span> HTTPBasicAuth(ACTINIA_USER, ACTINIA_PASSWORD)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Deploy Docker container with Actinia</p>
+<p>Follow Instructions at : <a href="https://github.com/OpenPlainsInc/foss4gna-2024-workshop">https://github.com/OpenPlainsInc/foss4gna-2024-workshop</a></p>
+<section id="setup-variables" class="level3">
+<h3 class="anchored" data-anchor-id="setup-variables">Setup Variables</h3>
+<div id="cell-8" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ACTINIA_USER <span class="op">=</span> <span class="st">'actinia-gdi'</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>ACTINIA_PASSWORD <span class="op">=</span> <span class="st">'actinia-gdi'</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>AUTH <span class="op">=</span> <span class="st">'actinia-gdi:actinia-gdi'</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>ACTINIA_URL <span class="op">=</span> <span class="st">'http://localhost:8088'</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ACTINIA_URL = 'https://openplains.app/actinia'</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>ACTINIA_VERSION <span class="op">=</span> <span class="st">'v3'</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>ACTINIA_BASEURL <span class="op">=</span> <span class="st">'http://localhost:8088'</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># ACTINIA_BASEURL = 'https://openplains.app/actinia'</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>ACTINIA_URL <span class="op">=</span> ACTINIA_BASEURL <span class="op">+</span> <span class="st">"/api/"</span> <span class="op">+</span> ACTINIA_VERSION</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>ACTINIA_AUTH <span class="op">=</span> HTTPBasicAuth(ACTINIA_USER, ACTINIA_PASSWORD)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<div id="cell-9" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> print_as_json(data):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(json.dumps(data, indent<span class="op">=</span><span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
 </section>
 <section id="actinia-rest-api" class="level2">
 <h2 class="anchored" data-anchor-id="actinia-rest-api">actinia REST API</h2>
@@ -314,21 +327,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><a href="https://github.com/actinia-org/actinia-python-client">actinia-python-client</a></li>
 <li><a href="https://github.com/OpenPlainsInc/actinia_openapi_python_client">actinia_openapi_python_client</a></li>
 </ul>
-<div id="cell-9" class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip3 install actinia<span class="op">-</span>python<span class="op">-</span>client</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip3 install git<span class="op">+</span>https:<span class="op">//</span>github.com<span class="op">/</span>openplainsinc<span class="op">/</span>actinia_openapi_python_client.git<span class="op">@</span>v0<span class="fl">.0.4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 </section>
 </section>
 <section id="acinia-basics" class="level2">
 <h2 class="anchored" data-anchor-id="acinia-basics">Acinia Basics</h2>
-<div id="cell-11" class="cell" data-execution_count="59">
+<div id="cell-12" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/version"</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pprint(response.json())</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'version'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>print_as_json(response.json().get(<span class="st">'version'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>'4.14.1'</code></pre>
+<pre><code>"4.14.1"</code></pre>
 </div>
 </div>
 </section>
@@ -380,14 +389,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-14" class="cell" data-execution_count="62">
+<div id="cell-15" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/locations"</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url, auth<span class="op">=</span>ACTINIA_AUTH)</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'locations'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>['nc_spm_08']</code></pre>
+<pre><code>['foss4g2024', 'nc_spm_08_grass7', 'nc_spm_08']</code></pre>
 </div>
 </div>
 <p>Now we will get extra information about a specific project.</p>
@@ -406,22 +415,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-16" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08'</span></span>
+<div id="cell-17" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08_grass7'</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/locations/</span><span class="sc">{</span>location_id<span class="sc">}</span><span class="ss">/info"</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> {}</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {}</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url, auth<span class="op">=</span>ACTINIA_AUTH, headers<span class="op">=</span>headers)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'process_results'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url, auth<span class="op">=</span>ACTINIA_AUTH)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'process_results'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>{'projection': 'PROJCRS["NAD83(HARN) / North '
                'Carolina",BASEGEOGCRS["NAD83(HARN)",DATUM["NAD83 (High '
                'Accuracy Reference Network)",ELLIPSOID["GRS '
                '1980",6378137,298.257222101,LENGTHUNIT["metre",1]]],PRIMEM["Greenwich",0,ANGLEUNIT["degree",0.0174532925199433]],ID["EPSG",4152]],CONVERSION["SPCS83 '
-               'North Carolina zone (meters)",METHOD["Lambert Conic Conformal '
+               'North Carolina zone (meter)",METHOD["Lambert Conic Conformal '
                '(2SP)",ID["EPSG",9802]],PARAMETER["Latitude of false '
                'origin",33.75,ANGLEUNIT["degree",0.0174532925199433],ID["EPSG",8821]],PARAMETER["Longitude '
                'of false '
@@ -455,24 +461,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
                'Wilson; Yadkin; '
                'Yancey."],BBOX[33.83,-84.33,36.59,-75.38]],ID["EPSG",3358]]\n',
  'region': {'b': 0.0,
-            'cells': 1,
-            'cells3': 1,
-            'cols': 1,
-            'cols3': 1,
+            'cells': 29535,
+            'cells3': 29535,
+            'cols': 179,
+            'cols3': 179,
             'depths': 1,
-            'e': 1.0,
-            'ewres': 1.0,
-            'ewres3': 1.0,
-            'n': 1.0,
-            'nsres': 1.0,
-            'nsres3': 1.0,
+            'e': 639530.0,
+            'ewres': 10.0,
+            'ewres3': 10.0,
+            'n': 221230.0,
+            'nsres': 10.0,
+            'nsres3': 10.0,
             'projection': 99,
-            'rows': 1,
-            'rows3': 1,
-            's': 0.0,
+            'rows': 165,
+            'rows3': 165,
+            's': 219580.0,
             't': 1.0,
             'tbres': 1.0,
-            'w': 0.0,
+            'w': 637740.0,
             'zone': 0}}</code></pre>
 </div>
 </div>
@@ -495,17 +501,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-18" class="cell" data-execution_count="22">
+<div id="cell-19" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># mapset = 'nc_spm_08'</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08'</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08_grass7'</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/locations/</span><span class="sc">{</span>location_id<span class="sc">}</span><span class="ss">/mapsets"</span></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> {}</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {}</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url, auth<span class="op">=</span>ACTINIA_AUTH, headers<span class="op">=</span>headers)</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'process_results'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url, auth<span class="op">=</span>ACTINIA_AUTH)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'process_results'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['PERMANENT']</code></pre>
 </div>
@@ -528,12 +531,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-20" class="cell" data-execution_count="63">
+<div id="cell-21" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mapset_id <span class="op">=</span> <span class="st">'PERMANENT'</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08'</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08_grass7'</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/locations/</span><span class="sc">{</span>location_id<span class="sc">}</span><span class="ss">/mapsets/</span><span class="sc">{</span>mapset_id<span class="sc">}</span><span class="ss">/info"</span></span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url, auth<span class="op">=</span>ACTINIA_AUTH, headers<span class="op">=</span>headers)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url, auth<span class="op">=</span>ACTINIA_AUTH)</span>
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'process_results'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -575,24 +578,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
                'Wilson; Yadkin; '
                'Yancey."],BBOX[33.83,-84.33,36.59,-75.38]],ID["EPSG",3358]]\n',
  'region': {'b': 0.0,
-            'cells': 1,
-            'cells3': 1,
-            'cols': 1,
-            'cols3': 1,
+            'cells': 29535,
+            'cells3': 29535,
+            'cols': 179,
+            'cols3': 179,
             'depths': 1,
-            'e': 1.0,
-            'ewres': 1.0,
-            'ewres3': 1.0,
-            'n': 1.0,
-            'nsres': 1.0,
-            'nsres3': 1.0,
+            'e': 639530.0,
+            'ewres': 10.0,
+            'ewres3': 10.0,
+            'n': 221230.0,
+            'nsres': 10.0,
+            'nsres3': 10.0,
             'projection': 99,
-            'rows': 1,
-            'rows3': 1,
-            's': 0.0,
+            'rows': 165,
+            'rows3': 165,
+            's': 219580.0,
             't': 1.0,
             'tbres': 1.0,
-            'w': 0.0,
+            'w': 637740.0,
             'zone': 0}}</code></pre>
 </div>
 </div>
@@ -619,19 +622,56 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-22" class="cell" data-execution_count="21">
+<div id="cell-23" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>mapset_id <span class="op">=</span> <span class="st">'PERMANENT'</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08'</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08_grass7'</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/locations/</span><span class="sc">{</span>location_id<span class="sc">}</span><span class="ss">/mapsets/</span><span class="sc">{</span>mapset_id<span class="sc">}</span><span class="ss">/raster_layers"</span></span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> {}</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {}</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url, auth<span class="op">=</span>ACTINIA_AUTH, headers<span class="op">=</span>headers)</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'process_results'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get( url, auth<span class="op">=</span>ACTINIA_AUTH)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'process_results'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[]</code></pre>
+<pre><code>['aspect',
+ 'basin_50K',
+ 'boundary_county_500m',
+ 'cfactorbare_1m',
+ 'cfactorgrow_1m',
+ 'el_D782_6m',
+ 'el_D783_6m',
+ 'el_D792_6m',
+ 'el_D793_6m',
+ 'elev_lid792_1m',
+ 'elev_ned_30m',
+ 'elev_srtm_30m',
+ 'elev_state_500m',
+ 'elevation',
+ 'elevation_shade',
+ 'facility',
+ 'geology_30m',
+ 'lakes',
+ 'landclass96',
+ 'landcover_1m',
+ 'landuse96_28m',
+ 'lsat7_2002_10',
+ 'lsat7_2002_20',
+ 'lsat7_2002_30',
+ 'lsat7_2002_40',
+ 'lsat7_2002_50',
+ 'lsat7_2002_61',
+ 'lsat7_2002_62',
+ 'lsat7_2002_70',
+ 'lsat7_2002_80',
+ 'ncmask_500m',
+ 'ortho_2001_t792_1m',
+ 'roadsmajor',
+ 'slope',
+ 'soilsID',
+ 'soils_Kfactor',
+ 'streams_derived',
+ 'towns',
+ 'urban',
+ 'zipcodes',
+ 'zipcodes_dbl']</code></pre>
 </div>
 </div>
 </section>
@@ -654,9 +694,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-24" class="cell" data-execution_count="20">
+<div id="cell-25" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>mapset_id <span class="op">=</span> <span class="st">'PERMANENT'</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08'</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08_grass7'</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/locations/</span><span class="sc">{</span>location_id<span class="sc">}</span><span class="ss">/mapsets/</span><span class="sc">{</span>mapset_id<span class="sc">}</span><span class="ss">/vector_layers"</span></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> {}</span>
@@ -666,7 +706,52 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'process_results'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[]</code></pre>
+<pre><code>['P079214',
+ 'P079215',
+ 'P079218',
+ 'P079219',
+ 'boundary_county',
+ 'boundary_municp',
+ 'bridges',
+ 'busroute1',
+ 'busroute11',
+ 'busroute6',
+ 'busroute_a',
+ 'busroutesall',
+ 'busstopsall',
+ 'census_wake2000',
+ 'censusblk_swwake',
+ 'comm_colleges',
+ 'elev_lid792_bepts',
+ 'elev_lid792_cont1m',
+ 'elev_lid792_randpts',
+ 'elev_lidrural_mrpts',
+ 'elev_lidrural_mrptsft',
+ 'elev_ned10m_cont10m',
+ 'firestations',
+ 'geodetic_pts',
+ 'geodetic_swwake_pts',
+ 'geology',
+ 'geonames_NC',
+ 'geonames_wake',
+ 'hospitals',
+ 'lakes',
+ 'nc_state',
+ 'overpasses',
+ 'poi_names_wake',
+ 'precip_30ynormals',
+ 'precip_30ynormals_3d',
+ 'railroads',
+ 'roadsmajor',
+ 'schools_wake',
+ 'soils_general',
+ 'soils_wake',
+ 'streams',
+ 'streets_wake',
+ 'swwake_10m',
+ 'urbanarea',
+ 'usgsgages',
+ 'zipcodes_wake']</code></pre>
 </div>
 </div>
 </section>
@@ -693,18 +778,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-26" class="cell" data-execution_count="37">
+<div id="cell-27" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mapset_id <span class="op">=</span> <span class="st">'PERMANENT'</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08'</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08_grass7'</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/locations/</span><span class="sc">{</span>location_id<span class="sc">}</span><span class="ss">/mapsets/</span><span class="sc">{</span>mapset_id<span class="sc">}</span><span class="ss">/processing"</span></span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> {}</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {}</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> {}</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> {}</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.post( url, auth<span class="op">=</span>ACTINIA_AUTH, json<span class="op">=</span>data)</span>
 <span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.post( url, auth<span class="op">=</span>ACTINIA_AUTH, json<span class="op">=</span>data)</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'process_results'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'process_results'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>None</code></pre>
 </div>
@@ -729,112 +812,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-28" class="cell">
+<div id="cell-29" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>mapset_id <span class="op">=</span> <span class="st">'PERMANENT'</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08'</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>location_id <span class="op">=</span> <span class="st">'nc_spm_08_grass7'</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ACTINIA_URL<span class="sc">}</span><span class="ss">/locations/</span><span class="sc">{</span>location_id<span class="sc">}</span><span class="ss">/mapsets/</span><span class="sc">{</span>mapset_id<span class="sc">}</span><span class="ss">/processing_async"</span></span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> {}</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {}</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> {}</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> {}</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.post( url, auth<span class="op">=</span>ACTINIA_AUTH, json<span class="op">=</span>data)</span>
 <span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.post( url, auth<span class="op">=</span>ACTINIA_AUTH, headers<span class="op">=</span>headers, json<span class="op">=</span>data)</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'process_results'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>pprint(response.json().get(<span class="st">'process_results'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{}</code></pre>
+</div>
 </div>
 </section>
 </section>
+</section>
+<section id="lets-look-at-the-complete-api-within-postman-or-insomnia." class="level2">
+<h2 class="anchored" data-anchor-id="lets-look-at-the-complete-api-within-postman-or-insomnia.">Let’s look at the complete API within <code>PostMan</code> or <code>Insomnia</code>.</h2>
+<ul>
+<li><a href="https://www.postman.com/">Postman</a></li>
+<li><a href="https://insomnia.rest/download">Insomnia</a></li>
+</ul>
+<pre><code>https://localhost:8080/api/v3/swagger-ui/index.html</code></pre>
 <section id="process-chains" class="level3">
 <h3 class="anchored" data-anchor-id="process-chains">Process Chains</h3>
-<p>Let’s build our own process chain.</p>
-<div id="cell-30" class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pc <span class="op">=</span> {</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"list"</span>: [</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>        {</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>             <span class="st">"id"</span>: <span class="st">"computational_region"</span>,</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>             <span class="st">"module"</span>: <span class="st">"g.region"</span>,</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>             <span class="st">"inputs"</span>: [</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>                 {<span class="st">"param"</span>: <span class="st">"raster"</span>,</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"value"</span>: <span class="st">"elevation@PERMANENT"</span>},</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>                 {<span class="st">"param"</span>: <span class="st">"res"</span>,</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"value"</span>: <span class="st">"10"</span>}</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>             ],</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>             <span class="st">"stdout"</span>: {<span class="st">"id"</span>: <span class="st">"region"</span>, <span class="st">"format"</span>: <span class="st">"kv"</span>, <span class="st">"delimiter"</span>: <span class="st">"="</span>},</span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>             <span class="st">"flags"</span>: <span class="st">"g"</span></span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>         },</span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>        {</span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>          <span class="st">"id"</span>: <span class="st">"create_hillshading"</span>,</span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>          <span class="st">"module"</span>: <span class="st">"r.relief"</span>,</span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>          <span class="st">"inputs"</span>: [</span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>              {</span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"param"</span>: <span class="st">"input"</span>,</span>
-<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"value"</span>: <span class="st">"elevation"</span></span>
-<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>              }</span>
-<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>          ],</span>
-<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>          <span class="st">"outputs"</span>: [</span>
-<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>              {</span>
-<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"param"</span>: <span class="st">"output"</span>,</span>
-<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"value"</span>: <span class="st">"hillshade"</span></span>
-<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>              }</span>
-<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>          ]</span>
-<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>      },</span>
-<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>      {</span>
-<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>          <span class="st">"id"</span>: <span class="st">"exporter_1"</span>,</span>
-<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>          <span class="st">"module"</span>: <span class="st">"exporter"</span>,</span>
-<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>          <span class="st">"outputs"</span>: [</span>
-<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>              {</span>
-<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"export"</span>: {<span class="st">"type"</span>: <span class="st">"raster"</span>, <span class="st">"format"</span>: <span class="st">"COG"</span>},</span>
-<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"param"</span>: <span class="st">"map"</span>,</span>
-<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"value"</span>: <span class="st">"hillshade"</span></span>
-<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a>              }</span>
-<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>          ]</span>
-<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a>    ],</span>
-<span id="cb23-43"><a href="#cb23-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">"version"</span>: <span class="st">"1"</span></span>
-<span id="cb23-44"><a href="#cb23-44" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-32" class="cell" data-execution_count="45">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>sys.path.append(</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    subprocess.check_output([<span class="st">"grass"</span>, <span class="st">"--config"</span>, <span class="st">"python_path"</span>], text<span class="op">=</span><span class="va">True</span>).strip()</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># create a temporary folder where to place our GRASS project</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tempfile</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>tempdir <span class="op">=</span> tempfile.TemporaryDirectory()</span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> grass.script <span class="im">as</span> gs</span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> grass.jupyter <span class="im">as</span> gj</span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>gs.create_project(path<span class="op">=</span>tempdir.name, name<span class="op">=</span><span class="st">"foss4g2024_p2"</span>, epsg<span class="op">=</span><span class="st">"2817"</span>, overwrite<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>session <span class="op">=</span> gj.init(Path(tempdir.name,<span class="st">"foss4g2024_p2"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-33" class="cell" data-execution_count="57">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>step_1_raw <span class="op">=</span> <span class="op">!</span>g.region raster<span class="op">=</span>elevation res<span class="op">=</span><span class="dv">10</span> <span class="op">--</span>json</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>step_1 <span class="op">=</span> <span class="st">''</span>.join(step_1_raw)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>step_1_json <span class="op">=</span> json.loads(step_1)</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>pprint(step_1_json)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>{'id': 'g.region_1804289383',
- 'inputs': [{'param': 'raster', 'value': 'elevation'},
-            {'param': 'res', 'value': '10'},
-            {'param': 'format', 'value': 'plain'}],
- 'module': 'g.region'}</code></pre>
-</div>
-</div>
-<div id="cell-34" class="cell" data-execution_count="47">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>r.info elevation <span class="op">-</span>g <span class="op">--</span>json</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>{
-  "module": "r.info",
-  "id": "r.info_1804289383",
-  "flags":"g",
-  "inputs":[
-     {"param": "map", "value": "elevation"},
-     {"param": "format", "value": "plain"}
-   ]}</code></pre>
-</div>
-</div>
+<p>Let move on to creating process chains in <a href="../../../content/workshops/foss4gna_2024/process_chains.html">Part 3</a>.</p>
 
 
 </section>
