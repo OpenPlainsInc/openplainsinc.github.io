@@ -112,15 +112,30 @@ Trust in unfamiliar models
 - Servers
 - Time and energy
 
+## Mentorship
+
+### Thank you to my Mentors
+
+- Find mentors
+- Don't pay for mentorship
+
+
 ## Part 2. Open Source Community Relations
 
 - What should a company's relationship be with the open source communities it depends on?
 
 ## Economic Driver
 
+::: {.columns}
+:::{.column width=50%}
 1. Open source facilitates economic development
 2. Drives innovation
 3. Needs to be supported to be sustainable
+:::
+:::{.column width=50%}
+[![Link to Full Image](images/Map%20of%20Geospatial%20Platforms%202.png)](images/Map%20of%20Geospatial%20Platforms%202.png)
+:::
+:::
 
 ## Open Source Sustainability {.text-center}
 
