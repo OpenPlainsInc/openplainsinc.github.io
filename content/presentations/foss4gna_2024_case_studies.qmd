@@ -5,7 +5,7 @@ title-slide-attributes:
     data-color: grass-color-primary
 page-layout: full
 title-block-banner: true    
-image: images/flooding_background.png
+image: ../images/logos/grassgis_logo_colorlogo_text_whitebg.png
 subtitle: "FOSS4G NA 2024, St. Louis Missouri"
 author:
   - name: "Corey White"
@@ -27,7 +27,7 @@ author:
     degrees: PhD
     url: "https://github.com/neteler"
     orcid: "0000-0003-1916-1966"
-    email: " neteler@mundialis.de"
+    email: "neteler@mundialis.de"
     affiliations:
       - ref: md
 date: "September 10, 2024"
@@ -80,9 +80,11 @@ format:
 ![](images/mcdonnells-curry.gif)
 :::
 :::{.column width=50%}
+::: {.incremental}
 - <span class="highlight">GRASS</span> is geospatial computational engine
 - <span class="highlight">GRASS</span> is a modeling platform
 - <span class="highlight">GRASS</span> is a development framework
+:::
 :::
 :::
 
@@ -208,34 +210,27 @@ Civil Engineeering firm based out of New Mexico
 :::
 :::
 
-## Desktop Case Study
+## Desktop Case Study {.smaller}
 
 ##### [Bohannan Huston](bhinc.com): Tech Specs
 
-:::{.columns}
-:::{.column width=50%}
 
-#### Setup
-
-- MacOS
-
-:::
-:::{.column width=50%}
-#### Technique
-
-- bash scripts
-- Grided
-- Parrell
-:::
-:::
+| Process             | Hardware   | Time (sec) | Time (min) |
+|---------------------|------------|------------|------------|
+| SVF Generation      | Mac M2 Max | 790.8      | 13.2       |
+|                     | Mac M1 Max | 889.2      | 14.8       |
+| Image Tiling        | Mac M2 Max | 407.8      | 6.8        |
+|                     | Mac M1 Max | 519.1      | 8.7        |
+| Building Prediction | Mac M2 Max | 7537.5     | 125.6      |
+|                     | Mac M1 Max | 9641.4     | 160.7      |
 
 ## Cloud-based Geoprocessing
 
 ### Tools
 
-- Actinia REST API
-- Apache AirFlow
-- OpenPlains
+- Actinia REST API - GRASS Web API
+- Apache AirFlow - ETL
+- OpenPlains - Interative Web Modeling
 
 ## Cloud Case Study
 

@@ -403,11 +403,13 @@
 <div class="column" style="width:50%;">
 <p><img data-src="images/mcdonnells-curry.gif"></p>
 </div><div class="column" style="width:50%;">
+<div>
 <ul>
-<li><span class="highlight">GRASS</span> is geospatial computational engine</li>
-<li><span class="highlight">GRASS</span> is a modeling platform</li>
-<li><span class="highlight">GRASS</span> is a development framework</li>
+<li class="fragment"><span class="highlight">GRASS</span> is geospatial computational engine</li>
+<li class="fragment"><span class="highlight">GRASS</span> is a modeling platform</li>
+<li class="fragment"><span class="highlight">GRASS</span> is a development framework</li>
 </ul>
+</div>
 </div>
 </div>
 
@@ -532,32 +534,65 @@
 </div>
 </div>
 </section>
-<section id="desktop-case-study-1" class="slide level2">
+<section id="desktop-case-study-1" class="slide level2 smaller">
 <h2>Desktop Case Study</h2>
 <h5 id="bohannan-huston-tech-specs"><a href="bhinc.com">Bohannan Huston</a>: Tech Specs</h5>
-<div class="columns">
-<div class="column" style="width:50%;">
-<h4 id="setup">Setup</h4>
-<ul>
-<li>MacOS</li>
-</ul>
-</div><div class="column" style="width:50%;">
-<h4 id="technique">Technique</h4>
-<ul>
-<li>bash scripts</li>
-<li>Grided</li>
-<li>Parrell</li>
-</ul>
-</div>
-</div>
+<table>
+<thead>
+<tr class="header">
+<th>Process</th>
+<th>Hardware</th>
+<th>Time (sec)</th>
+<th>Time (min)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>SVF Generation</td>
+<td>Mac M2 Max</td>
+<td>790.8</td>
+<td>13.2</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Mac M1 Max</td>
+<td>889.2</td>
+<td>14.8</td>
+</tr>
+<tr class="odd">
+<td>Image Tiling</td>
+<td>Mac M2 Max</td>
+<td>407.8</td>
+<td>6.8</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Mac M1 Max</td>
+<td>519.1</td>
+<td>8.7</td>
+</tr>
+<tr class="odd">
+<td>Building Prediction</td>
+<td>Mac M2 Max</td>
+<td>7537.5</td>
+<td>125.6</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Mac M1 Max</td>
+<td>9641.4</td>
+<td>160.7</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="cloud-based-geoprocessing" class="slide level2">
 <h2>Cloud-based Geoprocessing</h2>
 <h3 id="tools">Tools</h3>
 <ul>
-<li>Actinia REST API</li>
-<li>Apache AirFlow</li>
-<li>OpenPlains</li>
+<li>Actinia REST API - GRASS Web API</li>
+<li>Apache AirFlow - ETL</li>
+<li>OpenPlains - Interative Web Modeling</li>
 </ul>
 </section>
 <section id="cloud-case-study" class="slide level2">

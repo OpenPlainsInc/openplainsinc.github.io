@@ -7,6 +7,7 @@ title: "OpenPlains Inc. A First-Year Retrospective"
 subtitle: FOSS4G NA 2024, St. Louis Missouri
 date: September 10, 2024
 categories: [foss4gna, presentation, OpenPlains]
+image: ../images/logos/op_logo.png
 draft: false
 ---
 
