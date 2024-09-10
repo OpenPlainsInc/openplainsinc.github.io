@@ -70,9 +70,6 @@ format:
 
 :::
 
-
-
-
 ## What is GRASS?
 
 :::{.columns}
@@ -84,44 +81,8 @@ format:
 - <span class="highlight">GRASS</span> is geospatial computational engine
 - <span class="highlight">GRASS</span> is a modeling platform
 - <span class="highlight">GRASS</span> is a development framework
+- <span class="highlight">GRASS</span> is not your Papi's Desktop GIS
 :::
-:::
-:::
-
-::: aside
-psst <span class="highlight">GRASS</span> is not your Papi's Desktop GIS
-:::
-
-
-## What is GRASS used For?
-
-- Advanced geospatial modeling and analysis
-- Data Science
-- Data Engineering
-
-## Who is using GRASS
-
-### Civil and Environmental
-
-- Researchers
-- Modelers
-- Data Engineers
-- Climate Scientists
-- Startups
-
-## Features
-
-:::{.columns}
-:::{.column width=50%}
-- Hydrologly
-- Map Calculations
-- Geomorphology
-- Remote Sensing
-- Machine Learning
-- Lidar
-:::
-:::{.column width=40%}
-![](images/depth.webp)
 :::
 :::
 
@@ -143,13 +104,55 @@ psst <span class="highlight">GRASS</span> is not your Papi's Desktop GIS
 :::
 :::
 
+## What is GRASS used For?
+
+- Advanced geospatial modeling and analysis
+- Data Science
+- Data Engineering
+
+## Who is using GRASS
+
+:::{.columns}
+:::{.column width=50%}
+### Civil and Environmental
+
+- Researchers
+- Modelers
+- Data Engineers
+- Climate Scientists
+- Startups
+:::
+:::{.column width=50%}
+![](images/arnold-schwarzenegger-whos-your-daddy.gif)
+:::
+:::
+
+## Features
+
+:::{.columns}
+:::{.column width=50%}
+- Hydrologly
+- Map Calculations
+- Geomorphology
+- Remote Sensing
+- Machine Learning
+- Lidar
+:::
+:::{.column width=40%}
+![](images/depth.webp)
+:::
+:::
+
+
 ## GRASS in the Wild {.smaller}
+
+#### Case Studies
 
 :::{.columns}
 :::{.column width=33%}
 ### Desktop {background-color="white"}
 
-* Civil Engineering Firms
+* Civil Engineering Firm
 * Lidar/Raster Processing
 * Power desktops to simplify processing
 
@@ -157,22 +160,22 @@ psst <span class="highlight">GRASS</span> is not your Papi's Desktop GIS
 :::{.column width=33%}
 ### Cloud 
 
-* Environmental Engineering Companies
-* Government
+* Environmental Engineering Firm
+* Remote Sensing
+* Machine Learning
 
 :::
 :::{.column width=33%}
 ### HPC
 
-* Environmental Researchers
-    * Academia
-    * Governmental
-
+* Academia
 * National Scale Data Processing
+* Urban Growth Forcasting
 
 :::
 :::
 
+---
 
 ## Desktop-based Geoprocessing
 
@@ -198,7 +201,6 @@ psst <span class="highlight">GRASS</span> is not your Papi's Desktop GIS
 
 Civil Engineeering firm based out of New Mexico
 
-
 ##### Modeling & Anaylsis
 - 1m QL1 Lidar Data
 - Vegitation Analysis
@@ -214,6 +216,7 @@ Civil Engineeering firm based out of New Mexico
 
 ##### [Bohannan Huston](bhinc.com): Tech Specs
 
+Data: North Carolina Phase 4 Geiger - images:			22,519
 
 | Process             | Hardware   | Time (sec) | Time (min) |
 |---------------------|------------|------------|------------|
@@ -228,9 +231,9 @@ Civil Engineeering firm based out of New Mexico
 
 ### Tools
 
-- Actinia REST API - GRASS Web API
+- actinia - GRASS REST API
 - Apache AirFlow - ETL
-- OpenPlains - Interative Web Modeling
+- OpenPlains - Interative Geospatial Modeling
 
 ## Cloud Case Study
 
@@ -238,7 +241,7 @@ Civil Engineeering firm based out of New Mexico
 
 - GRASS GIS
 - GRASS GIS Addons
-- Actinia
+- actinia
 
 ## Cloud Case Study {.smaller}
 #####  Mudialis: Detecting buildings, green roofs and trees
@@ -320,8 +323,7 @@ HPC - High Performance Computing
 - <span class="highlight">GRASS</span> is geospatial computational engine
 - <span class="highlight">GRASS</span> is a modeling platform
 - <span class="highlight">GRASS</span> is a development framework
-
-### <span class="highlight">GRASS</span> is not your Papi's Desktop GIS {.text-muted}
+- <span class="highlight">GRASS</span> is not your Papi's Desktop GIS {.text-muted}
 :::
 :::
 
