@@ -15,6 +15,8 @@ draft: false
 
 ![](images/grad_announcment.PNG)
 
+Ph.D. in Geospatial Analytics (2023)
+
 ---
 
 ## Democratizing Geospatial Modeling
@@ -37,7 +39,7 @@ draft: false
 
 ## Value Prop
 
-**Democratizes interactive geospatial modeling** in flood resilience and urban growth planning through **scenario-based civic engagement**.
+**Democratize interactive geospatial modeling** in flood resilience and urban growth planning through **scenario-based civic engagement**.
 
 ## IP | License | COI
 
@@ -120,11 +122,7 @@ Trust in unfamiliar models
 - Don't pay for mentorship
 
 
-## Part 2. Open Source Community Relations
-
-- What should a company's relationship be with the open source communities it depends on?
-
-## Economic Driver
+## Part 2. Open Source as an Economic Driver
 
 ::: {.columns}
 :::{.column width=50%}
@@ -136,6 +134,10 @@ Trust in unfamiliar models
 [![Link to Full Image](images/Map%20of%20Geospatial%20Platforms%202.png)](images/Map%20of%20Geospatial%20Platforms%202.png)
 :::
 :::
+
+## Community Relations
+
+- What should a company's relationship be with the open source communities it depends on?
 
 ## Open Source Sustainability {.text-center}
 

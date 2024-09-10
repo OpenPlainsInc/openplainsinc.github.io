@@ -1,10 +1,10 @@
 {
-  "hash": "94ca74e1c5e7bac16cb35e9bda7f8122",
+  "hash": "8d5e4f1c2d45f142212bb8ec5a2adef0",
   "result": {
     "engine": "jupyter",
-    "markdown": "---\ntitle: STAC Tutorial\nformat: html\nauthor: Corey T. White\ndate: '2024-08-26'\ncategories:\n  - stac\n  - grass-addon\n  - tutorial\npage-layout: full\ntitle-block-banner: true\n---\n\n",
+    "markdown": "---\ntitle: STAC Tutorial\nformat: html\nauthor: Corey T. White\ndate: '2024-08-26'\ncategories:\n  - stac\n  - grass-addon\n  - tutorial\npage-layout: full\ntitle-block-banner: true\ndraft: true\n---\n\n",
     "supporting": [
-      "t_stac_tutorial_files"
+      "t_stac_tutorial_files/figure-html"
     ],
     "filters": [],
     "includes": {}
