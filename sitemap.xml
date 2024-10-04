@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/content/workshops/foss4gna_2024/intro_actinia.html</loc>
-    <lastmod>2024-09-10T19:45:47.061Z</lastmod>
+    <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/content/presentations/foss4gna_2024_openplains.html</loc>
+    <lastmod>2024-10-04T16:07:12.023Z</lastmod>
   </url>
   <url>
     <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/content/workshops/foss4gna_2024/workshop.html</loc>
-    <lastmod>2024-09-10T19:45:47.077Z</lastmod>
+    <lastmod>2024-10-04T16:07:12.304Z</lastmod>
   </url>
   <url>
-    <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/content/notebooks/us_doi/grass_jupyter.html</loc>
-    <lastmod>2024-09-10T19:45:46.657Z</lastmod>
-  </url>
-  <url>
-    <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/content/presentations/foss4gna_2024_openplains.html</loc>
-    <lastmod>2024-09-10T19:45:46.769Z</lastmod>
+    <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/content/workshops/foss4gna_2024/intro_actinia.html</loc>
+    <lastmod>2024-10-04T16:07:12.289Z</lastmod>
   </url>
   <url>
     <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/index.html</loc>
-    <lastmod>2024-09-10T19:45:47.645Z</lastmod>
-  </url>
-  <url>
-    <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/content/presentations/foss4gna_2024_case_studies.html</loc>
-    <lastmod>2024-09-10T19:45:46.769Z</lastmod>
-  </url>
-  <url>
-    <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/content/workshops/foss4gna_2024/process_chains.html</loc>
-    <lastmod>2024-09-10T19:45:47.077Z</lastmod>
+    <lastmod>2024-10-04T16:07:12.810Z</lastmod>
   </url>
   <url>
     <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/content/workshops/foss4gna_2024/intro_grass.html</loc>
-    <lastmod>2024-09-10T19:45:47.077Z</lastmod>
+    <lastmod>2024-10-04T16:07:12.304Z</lastmod>
+  </url>
+  <url>
+    <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/content/workshops/foss4gna_2024/process_chains.html</loc>
+    <lastmod>2024-10-04T16:07:12.304Z</lastmod>
+  </url>
+  <url>
+    <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/content/presentations/foss4gna_2024_case_studies.html</loc>
+    <lastmod>2024-10-04T16:07:12.023Z</lastmod>
+  </url>
+  <url>
+    <loc>https://OpenPlainsInc.github.io/openplainsinc.github.io/content/notebooks/us_doi/grass_jupyter.html</loc>
+    <lastmod>2024-10-04T16:07:11.927Z</lastmod>
   </url>
 </urlset>
