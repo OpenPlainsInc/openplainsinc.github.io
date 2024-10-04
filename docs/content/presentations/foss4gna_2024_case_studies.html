@@ -8,7 +8,7 @@
 <link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="../../site_libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.4.550">
+  <meta name="generator" content="quarto-1.5.57">
 
   <meta name="author" content="Corey White">
   <meta name="author" content="Vaclav Petras">
@@ -394,8 +394,7 @@
 <div class="circle-image-container">
 <p><img data-src="../images/corey_headshot.jpeg" class="circle-image"></p>
 </div>
-</div>
-</div>
+</div></div>
 </section>
 <section id="what-is-grass" class="slide level2">
 <h2>What is GRASS?</h2>
@@ -411,8 +410,7 @@
 <li class="fragment"><span class="highlight">GRASS</span> is not your Papi’s Desktop GIS</li>
 </ul>
 </div>
-</div>
-</div>
+</div></div>
 </section>
 <section id="grass-as-a-geoprocessing-engine" class="slide level2 smaller">
 <h2>GRASS as a Geoprocessing Engine</h2>
@@ -434,8 +432,7 @@
 </ul>
 </div><div class="column" style="width:50%;">
 <p><img data-src="images/GRASS_Jupyter_Notebooks.png"></p>
-</div>
-</div>
+</div></div>
 </section>
 <section id="what-is-grass-used-for" class="slide level2">
 <h2>What is GRASS used For?</h2>
@@ -459,8 +456,7 @@
 </ul>
 </div><div class="column" style="width:50%;">
 <p><img data-src="images/arnold-schwarzenegger-whos-your-daddy.gif"></p>
-</div>
-</div>
+</div></div>
 </section>
 <section id="features" class="slide level2">
 <h2>Features</h2>
@@ -476,8 +472,7 @@
 </ul>
 </div><div class="column" style="width:40%;">
 <p><img data-src="images/depth.webp"></p>
-</div>
-</div>
+</div></div>
 </section>
 <section id="grass-in-the-wild" class="slide level2 smaller">
 <h2>GRASS in the Wild</h2>
@@ -504,8 +499,7 @@
 <li>National Scale Data Processing</li>
 <li>Urban Growth Forcasting</li>
 </ul>
-</div>
-</div>
+</div></div>
 </section>
 <section id="desktop-based-geoprocessing" class="slide level2">
 <h2>Desktop-based Geoprocessing</h2>
@@ -517,8 +511,7 @@
 </ul>
 </div><div class="column" style="width:40%;">
 <p><img data-src="images/lawnmower-garden.gif"></p>
-</div>
-</div>
+</div></div>
 </section>
 <section id="desktop-case-study" class="slide level2">
 <h2>Desktop Case Study</h2>
@@ -534,14 +527,13 @@
 </ul>
 </div><div class="column" style="width:50%;">
 <p><img data-src="images/bohan.png"></p>
-</div>
-</div>
+</div></div>
 </section>
 <section id="desktop-case-study-1" class="slide level2 smaller">
 <h2>Desktop Case Study</h2>
 <h5 id="bohannan-huston-tech-specs"><a href="bhinc.com">Bohannan Huston</a>: Tech Specs</h5>
 <p>Data: North Carolina Phase 4 Geiger - images: 22,519</p>
-<table>
+<table class="caption-top">
 <thead>
 <tr class="header">
 <th>Process</th>
@@ -625,8 +617,7 @@
 </ul>
 </div><div class="column" style="width:50%;">
 <p><img data-src="images/rvr_herne_building_identification.png"></p>
-</div>
-</div>
+</div></div>
 
 <aside><div>
 <p>Source code: <a href="https://github.com/mundialis/rvr_interface/">https://github.com/mundialis/rvr_interface/</a></p>
@@ -641,8 +632,7 @@
 <p><img data-src="images/actinia_random_forest.png"></p>
 </div><div class="column" style="width:33%;">
 <p><img data-src="images/actinia_leafmap_incora.jpg"></p>
-</div>
-</div>
+</div></div>
 
 <aside><div>
 <p>Machine learning based image classification using an aerial image and surface model. Visualization with <a href="https://leafmap.org/">leafmap</a></p>
@@ -687,8 +677,7 @@
 <li><span class="highlight">GRASS</span> is a development framework</li>
 <li><span class="highlight">GRASS</span> is not your Papi’s Desktop GIS {.text-muted}</li>
 </ul>
-</div>
-</div>
+</div></div>
 </section>
 <section id="questions" class="slide level2 text-center" data-background-video="images/grass_prauge.mp4" data-background-video-muted="true">
 <h2><span class="text-white">Questions</span></h2>
@@ -941,18 +930,7 @@
         }
         return false;
       }
-      const clipboard = new window.ClipboardJS('.code-copy-button', {
-        text: function(trigger) {
-          const codeEl = trigger.previousElementSibling.cloneNode(true);
-          for (const childEl of codeEl.children) {
-            if (isCodeAnnotation(childEl)) {
-              childEl.remove();
-            }
-          }
-          return codeEl.innerText;
-        }
-      });
-      clipboard.on('success', function(e) {
+      const onCopySuccess = function(e) {
         // button target
         const button = e.trigger;
         // don't keep focus
@@ -984,7 +962,47 @@
         }, 1000);
         // clear code selection
         e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
       });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        // For code content inside modals, clipBoardJS needs to be initialized with a container option
+        // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
       function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
         const config = {
           allowHTML: true,
@@ -1021,7 +1039,11 @@
           try { href = new URL(href).hash; } catch {}
           const id = href.replace(/^#\/?/, "");
           const note = window.document.getElementById(id);
-          return note.innerHTML;
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
         });
       }
       const findCites = (el) => {
