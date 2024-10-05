@@ -130,7 +130,7 @@
     "href": "content/workshops/foss4gna_2024/workshop.html#overview",
     "title": "Developing web-application with GRASS GIS",
     "section": "Overview",
-    "text": "Overview\n\nGRASS GIS - is a raster and vector based geospatial processing engine.\nActinia - is the GRASS GIS REST API for scalable, distributed, high performance geospatial processing.\n\nPart 1. GRASS GIS 101\n\nhttps://colab.research.google.com/github/OpenPlainsInc/openplainsinc.github.io/blob/main/content/workshops/foss4gna_2024/intro_grass.ipynb\n\nPart 2. Introduction to Actinia Part 3. Process Chains"
+    "text": "Overview\n\nGRASS GIS - is a raster and vector based geospatial processing engine.\nActinia - is the GRASS GIS REST API for scalable, distributed, high performance geospatial processing.\n\nPart 1. GRASS GIS 101 Learn the basics of using GRASS GIS within a Jupyter Notebook environment.\n\nhttps://colab.research.google.com/github/OpenPlainsInc/openplainsinc.github.io/blob/main/content/workshops/foss4gna_2024/intro_grass.ipynb\n\nPart 2. Introduction to Actinia Learn how to use actinia REST API.\nPart 3. Process Chains Learn how to turn your GRASS GIS process into an actinia process chain."
   },
   {
     "objectID": "content/workshops/foss4gna_2024/intro_actinia.html",
