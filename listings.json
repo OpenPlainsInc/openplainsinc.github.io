@@ -2,10 +2,11 @@
   {
     "listing": "/index.html",
     "items": [
+      "/content/notebooks/hurricane_helene_2024/photogrametry.html",
       "/content/presentations/foss4gna_2024_case_studies.html",
       "/content/presentations/foss4gna_2024_openplains.html",
-      "/content/workshops/foss4gna_2024/intro_grass.html",
       "/content/workshops/foss4gna_2024/intro_actinia.html",
+      "/content/workshops/foss4gna_2024/intro_grass.html",
       "/content/workshops/foss4gna_2024/process_chains.html",
       "/content/workshops/foss4gna_2024/workshop.html",
       "/content/notebooks/us_doi/grass_jupyter.html"
