@@ -10,7 +10,7 @@
 <meta name="dcterms.date" content="2024-10-09">
 <meta name="description" content="This tutorial demonstrates how to use GRASS GIS in Jupyter Notebooks.">
 
-<title>Geoprocessing with GRASS GIS and Jupyter Notebooks</title>
+<title>Helene Photogrametery Data Download</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -157,7 +157,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">Geoprocessing with GRASS GIS and Jupyter Notebooks</h1>
+      <h1 class="title">Helene Photogrametery Data Download</h1>
                   <div>
         <div class="description">
           This tutorial demonstrates how to use GRASS GIS in Jupyter Notebooks.
@@ -219,8 +219,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#run-the-download-command" id="toc-run-the-download-command" class="nav-link" data-scroll-target="#run-the-download-command">Run the download command</a></li>
   <li><a href="#example-output" id="toc-example-output" class="nav-link" data-scroll-target="#example-output">Example output</a></li>
+  <li><a href="#run-data-in-your-favorite-photogrametry-software" id="toc-run-data-in-your-favorite-photogrametry-software" class="nav-link" data-scroll-target="#run-data-in-your-favorite-photogrametry-software">Run data in your favorite photogrametry software</a></li>
   </ul></li>
-  <li><a href="#wip" id="toc-wip" class="nav-link" data-scroll-target="#wip">WIP</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -236,7 +236,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Download Flight Data</h1>
 <section id="set-up-environment" class="level2">
 <h2 class="anchored" data-anchor-id="set-up-environment">Set up environment</h2>
-<div id="ec897aa8" class="cell" data-execution_count="1">
+<div id="f02aeab1" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> subprocess</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
@@ -267,20 +267,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="grass">GRASS</h2>
 <section id="create-project" class="level3">
 <h3 class="anchored" data-anchor-id="create-project">Create project</h3>
-<div id="62e4606f" class="cell" data-execution_count="2">
+<div id="8bdc9d2d" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>gs.create_project(path<span class="op">=</span>grassdata, name<span class="op">=</span>project_name, epsg<span class="op">=</span><span class="st">"3358"</span>, overwrite<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="start-grass-session" class="level3">
 <h3 class="anchored" data-anchor-id="start-grass-session">Start GRASS session</h3>
-<div id="f95ce25c" class="cell" data-execution_count="3">
+<div id="84fd3d1b" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Start GRASS in the recently created project</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>session <span class="op">=</span> gj.init(Path(grassdata, project_name))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="define-query-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="define-query-parameters">Define Query Parameters</h3>
-<div id="952f32c6" class="cell" data-execution_count="4">
+<div id="ed315592" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>project <span class="op">=</span> <span class="st">'`CAP - H-TS Helene 2024`'</span> <span class="co"># Queried at API level</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>mission <span class="op">=</span> <span class="st">"'24-1-5849'"</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>flight <span class="op">=</span> <span class="st">"'A0046B'"</span> <span class="co"># Swannanowa</span></span>
@@ -290,13 +290,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="import-data" class="level3">
 <h3 class="anchored" data-anchor-id="import-data">Import Data</h3>
-<div id="c83209de" class="cell" data-execution_count="5">
+<div id="99ce42e0" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"v.import"</span>, <span class="bu">input</span><span class="op">=</span>url, output<span class="op">=</span><span class="st">"image_points"</span>, overwrite<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="get-data-info" class="level3">
 <h3 class="anchored" data-anchor-id="get-data-info">Get data info</h3>
-<div id="98b62e2c" class="cell" data-execution_count="6">
+<div id="df9c389d" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"v.info"</span>, <span class="bu">map</span><span class="op">=</span><span class="st">"image_points"</span>, flags<span class="op">=</span><span class="st">"c"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>INTEGER|cat
@@ -328,13 +328,13 @@ TEXT|Editor</code></pre>
 </section>
 <section id="set-region" class="level3">
 <h3 class="anchored" data-anchor-id="set-region">Set region</h3>
-<div id="0a1db69a" class="cell" data-execution_count="7">
+<div id="d0356de0" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"g.region"</span>, vector<span class="op">=</span><span class="st">"image_points"</span>, res<span class="op">=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="view-data" class="level3">
 <h3 class="anchored" data-anchor-id="view-data">View Data</h3>
-<div id="ed82b707" class="cell" data-execution_count="8">
+<div id="7e13db6e" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># m = gj.Map()</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># m.d_vect(map="image_points")</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># display(m.show())</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -342,7 +342,7 @@ TEXT|Editor</code></pre>
 </section>
 <section id="read-data-into-pandas-dataframe" class="level3">
 <h3 class="anchored" data-anchor-id="read-data-into-pandas-dataframe">Read data into pandas DataFrame</h3>
-<div id="0658c969" class="cell" data-execution_count="9">
+<div id="a9d061a2" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>points_json <span class="op">=</span> gs.parse_command(<span class="st">"v.db.select"</span>,</span>
@@ -353,7 +353,7 @@ TEXT|Editor</code></pre>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>points_df <span class="op">=</span> pd.DataFrame(points_json[<span class="st">"records"</span>])</span>
 <span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>points_df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="63">
+<div class="cell-output cell-output-display" data-execution_count="7">
 <div>
 
 
@@ -516,7 +516,7 @@ TEXT|Editor</code></pre>
 </section>
 <section id="download-images-for-processing" class="level2">
 <h2 class="anchored" data-anchor-id="download-images-for-processing">Download images for processing</h2>
-<div id="75f77243" class="cell" data-execution_count="10">
+<div id="7ea1a2d1" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> concurrent.futures <span class="im">import</span> ThreadPoolExecutor, as_completed</span>
@@ -551,7 +551,7 @@ TEXT|Editor</code></pre>
 <section id="run-the-download-command" class="level3">
 <h3 class="anchored" data-anchor-id="run-the-download-command">Run the download command</h3>
 <p>Make sure to set appropriate threads for your system.</p>
-<div id="6d495887" class="cell" data-execution_count="11">
+<div id="1bc513f8" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>url_list <span class="op">=</span> <span class="bu">list</span>(points_df.url.values)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>run(urls<span class="op">=</span>url_list, save_dir<span class="op">=</span><span class="st">"imagery_data/nadir/</span><span class="sc">{flight}</span><span class="st">"</span>, num_threads<span class="op">=</span><span class="dv">32</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -583,12 +583,17 @@ TEXT|Editor</code></pre>
 </tr>
 </tbody>
 </table>
+<!-- ## WIP -->
 </section>
-</section>
-<section id="wip" class="level2">
-<h2 class="anchored" data-anchor-id="wip">WIP</h2>
+<section id="run-data-in-your-favorite-photogrametry-software" class="level3">
+<h3 class="anchored" data-anchor-id="run-data-in-your-favorite-photogrametry-software">Run data in your favorite photogrametry software</h3>
+<ul>
+<li>WebODM</li>
+<li>Agisoft Metashape</li>
+</ul>
 
 
+</section>
 </section>
 </section>
 
