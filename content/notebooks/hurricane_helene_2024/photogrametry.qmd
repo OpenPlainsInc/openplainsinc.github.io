@@ -1,6 +1,6 @@
 ---
-title: Helene Photogrametery Data Download
-description: This tutorial demonstrates how to use GRASS GIS in Jupyter Notebooks.
+title: Helene Photogrametery
+description: This tutorial demonstrates how download images from ArcGIS Server into GRASS GIS.
 format: html
 author: Corey T. White
 date: '2024-10-9'
