@@ -7,6 +7,10 @@ date: '2024-10-9'
 keep-ipynb: false
 toc: true
 toc-depth: 4
+engine: jupyter
+execute:
+  eval: false
+jupyter: python3
 image: imagery_data/nadir/A0046B/0_000_00_000.jpg
 categories: [geospatial, GRASS v8.5, jupyter, helene]
 page-layout: full
