@@ -11,7 +11,7 @@ image: imagery_data/nadir/A0046B/0_000_00_000.jpg
 categories: [geospatial, GRASS v8.5, jupyter, helene]
 page-layout: full
 title-block-banner: true
-draft: false
+draft: true
 ---
 
 # Download Flight Data
@@ -116,6 +116,26 @@ points_df.head()
 import os
 import requests
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import requests
+
+def query_feature_service(flight_id):
+    try:
+        rest_url = 'https://services.arcgis.com/XG15cJAlne2vxtgt/ArcGIS/rest/services/Image_Points_view/FeatureServer/3/query'
+
+        query = f"project='CAP - H-TS Helene 2024' AND mission='24-1-5849' AND flight='{flight_id}'"
+
+        params = {
+            'where': query,
+            'outFields': '*',
+            'f': 'json',
+            'returnGeometry': 'false'
+        }
+        response = requests.get(rest_url, params=params)
+        json_data = response.json()
+        url_list = list(map(lambda feat: feat.get('url'), json_data['features']))
+        return url_list
+    except requests.RequestException as e:
+        print(f"Error fetching data from FeatureService: {e}")
 
 # Function to download an image from a URL
 def download_image(url, save_path, session):
@@ -175,6 +195,18 @@ run(urls=url_list, save_dir="imagery_data/nadir/{flight}", num_threads=32)
 ```{python}
 #| echo: false
 #| eval: false
-#| 
-docker run -ti --rm -v /my/project:/datasets/code opendronemap/odm --project-path /datasets
+
+image_urls = query_feature_service(flight_id="A0046B")
+len(image_urls)
+# docker run -ti --rm -v /my/project:/datasets/code opendronemap/odm --project-path /datasets
+```
+
+```{python}
+url_list = None
+with open("data(2).txt", "r") as data:
+    url_list = [line.strip() for line in data.readlines()]
+
+run(urls=url_list, save_dir="outputs/3dep_lidar2", num_threads=32)
+
+
 ```
