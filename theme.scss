@@ -58,6 +58,13 @@ $presentation-heading-color: $primary;
   h1 {
     color: $op-black !important;
   }
+  a {
+    color: $op-brown !important;
+  }
+}
+
+.quarto-title .quarto-categories .quarto-category {
+  color: $op-brown !important;
 }
 
 .reveal {
