@@ -242,7 +242,7 @@ window.Quarto = {
   <ul>
   <li><a href="#intro-to-geoprocessing-with-the-grass-gis-geoprocessing-engine" id="toc-intro-to-geoprocessing-with-the-grass-gis-geoprocessing-engine" class="nav-link active" data-scroll-target="#intro-to-geoprocessing-with-the-grass-gis-geoprocessing-engine">Intro to Geoprocessing with the GRASS GIS Geoprocessing Engine</a>
   <ul>
-  <li><a href="#teacher" id="toc-teacher" class="nav-link" data-scroll-target="#teacher">Teacher</a></li>
+  <li><a href="#instructor" id="toc-instructor" class="nav-link" data-scroll-target="#instructor">Instructor</a></li>
   <li><a href="#workshop-objective" id="toc-workshop-objective" class="nav-link" data-scroll-target="#workshop-objective">Workshop Objective</a></li>
   <li><a href="#install-grass-gis-and-data-in-google-colab" id="toc-install-grass-gis-and-data-in-google-colab" class="nav-link" data-scroll-target="#install-grass-gis-and-data-in-google-colab">Install GRASS GIS and Data in Google Colab</a></li>
   <li><a href="#what-is-gis" id="toc-what-is-gis" class="nav-link" data-scroll-target="#what-is-gis">What is GIS?</a>
@@ -322,8 +322,8 @@ window.Quarto = {
 <section id="intro-to-geoprocessing-with-the-grass-gis-geoprocessing-engine" class="level1">
 <h1>Intro to Geoprocessing with the GRASS GIS Geoprocessing Engine</h1>
 <p>During the workshop, we aim to introduce you to the basic concepts of geospatial processing and modeling with <a href="https://grass.osgeo.org">GRASS GIS</a>.</p>
-<section id="teacher" class="level2">
-<h2 class="anchored" data-anchor-id="teacher">Teacher</h2>
+<section id="instructor" class="level2">
+<h2 class="anchored" data-anchor-id="instructor">Instructor</h2>
 <p>Dr.&nbsp;Corey T. White is a geospatial scientist and educator with over 20 years of experience in the field of geospatial science. He is the founder of <a href="https://openplains.com">OpenPlains</a>, an interactive geospatial modeling platform for climate-resilience. Dr.&nbsp;White has a Ph.D.&nbsp;in Geospatial Analytics from North Carolina State University and teaches geospatial modeling and UAS mapping at the Center for Geospatial Analytics at NC State University.</p>
 </section>
 <section id="workshop-objective" class="level2">
@@ -1439,15 +1439,31 @@ flooding_5.0@ncssm,,301,None,2.9949480126371,3.0517578125e-05,11.3963012695312,2
 </div>
 </div>
 </div>
+<div id="cell-74" class="cell" data-execution_count="142">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>df_flood[<span class="st">'extent_km2'</span>] <span class="op">=</span> df_flood[<span class="st">'cells'</span>] <span class="op">*</span> <span class="fl">0.000001</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> df_flood.plot(x<span class="op">=</span><span class="st">"start"</span>, y<span class="op">=</span><span class="st">"extent_km2"</span>, title<span class="op">=</span><span class="st">"Inundation Extent"</span>, label<span class="op">=</span><span class="st">"Extent"</span>)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>ax.axhline(y<span class="op">=</span><span class="dv">2327148</span> <span class="op">*</span> <span class="fl">0.000001</span>, color<span class="op">=</span><span class="st">'gray'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'Study Area Extent'</span>)</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Inundation Extent (km2)"</span>)</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Time (minutes)"</span>)</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ncssm_workshop_files/figure-html/cell-39-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 <section id="interactive-estimated-flood-inundation-map" class="level4">
 <h4 class="anchored" data-anchor-id="interactive-estimated-flood-inundation-map">Interactive Estimated Flood Inundation Map</h4>
-<div id="cell-75" class="cell" data-execution_count="133">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>flood_map <span class="op">=</span> gj.InteractiveMap(height<span class="op">=</span><span class="dv">800</span>,width<span class="op">=</span><span class="dv">800</span>)</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>flood_map.add_raster(<span class="st">"naip_2022_rgb"</span>)</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>flood_map.add_raster(<span class="st">"flooding_5.0"</span>)</span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>flood_map.add_vector(<span class="st">"streams@ncssm"</span>)</span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>flood_map.add_layer_control()</span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>display(flood_map.show())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-76" class="cell" data-execution_count="133">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>flood_map <span class="op">=</span> gj.InteractiveMap(height<span class="op">=</span><span class="dv">800</span>,width<span class="op">=</span><span class="dv">800</span>)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>flood_map.add_raster(<span class="st">"naip_2022_rgb"</span>)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>flood_map.add_raster(<span class="st">"flooding_5.0"</span>)</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>flood_map.add_vector(<span class="st">"streams@ncssm"</span>)</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>flood_map.add_layer_control()</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>display(flood_map.show())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id":"b4927581f60c4e6e8394c429e6aee86c","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
@@ -1457,8 +1473,8 @@ flooding_5.0@ncssm,,301,None,2.9949480126371,3.0517578125e-05,11.3963012695312,2
 </section>
 <section id="export-map-as-html" class="level4">
 <h4 class="anchored" data-anchor-id="export-map-as-html">Export Map as HTML</h4>
-<div id="cell-77" class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>flood_map.save(filename<span class="op">=</span><span class="st">"./output/index.html"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-78" class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>flood_map.save(filename<span class="op">=</span><span class="st">"./output/index.html"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -1467,14 +1483,14 @@ flooding_5.0@ncssm,,301,None,2.9949480126371,3.0517578125e-05,11.3963012695312,2
 <h2 class="anchored" data-anchor-id="create-a-new-project-location-and-mapset">Create a new Project (Location and Mapset)</h2>
 <p>Create a new subproject (i.e.&nbsp;Mapset)</p>
 <p>This example uses a temprary directory to create a new project call <code>myfirstproject</code> with the <code>EPSG:3358</code> CRS.</p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tempfile</span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>tempdir <span class="op">=</span> tempfile.TemporaryDirectory()</span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>gs.create_project(path<span class="op">=</span>tempdir, name<span class="op">=</span><span class="st">"myfirstproject"</span>, epsg<span class="op">=</span><span class="st">"3358"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tempfile</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>tempdir <span class="op">=</span> tempfile.TemporaryDirectory()</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>gs.create_project(path<span class="op">=</span>tempdir, name<span class="op">=</span><span class="st">"myfirstproject"</span>, epsg<span class="op">=</span><span class="st">"3358"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Start a new GRASS GIS session in the new subproject</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>gj.init(Path(tempdir.name), <span class="st">"myfirstproject"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>gj.init(Path(tempdir.name), <span class="st">"myfirstproject"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="local-data-resources" class="level3">
 <h3 class="anchored" data-anchor-id="local-data-resources">Local Data Resources</h3>
 <section id="where-can-i-get-my-own-geospatial-data" class="level4">
@@ -1484,24 +1500,24 @@ flooding_5.0@ncssm,,301,None,2.9949480126371,3.0517578125e-05,11.3963012695312,2
 <li><a href="https://www.nconemap.gov/">NC OneMap</a></li>
 <li><a href="https://live-durhamnc.opendata.arcgis.com/">Durham OpenData Portal</a></li>
 </ul>
-<div id="cell-79" class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Point Data</span></span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>hospitals <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Community/MapServer/0/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>schools <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Education/MapServer/0/query?outFields=*&amp;where=1%3D1&amp;f=geojson"</span></span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Line Data</span></span>
-<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>roads <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Transportation/MapServer/6/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
-<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>greenways <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/ProjectServices/Trans_ExistingFutureBikePedFacilities/MapServer/1/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
-<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>sidewalks <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Community/MapServer/5/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
-<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Polygon Datahttps://earth.nullschool.net</span></span>
-<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>zipcodes <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Administrative/MapServer/0/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
-<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>county_boundary <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Administrative/MapServer/2/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
-<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>durham_city_boundary <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Administrative/MapServer/1/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
-<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>school_districts <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Education/MapServer/1/query?outFields=*&amp;where=1%3D1f=geojson"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-80" class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Point Data</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>hospitals <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Community/MapServer/0/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>schools <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Education/MapServer/0/query?outFields=*&amp;where=1%3D1&amp;f=geojson"</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Line Data</span></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>roads <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Transportation/MapServer/6/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>greenways <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/ProjectServices/Trans_ExistingFutureBikePedFacilities/MapServer/1/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>sidewalks <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Community/MapServer/5/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Polygon Datahttps://earth.nullschool.net</span></span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>zipcodes <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Administrative/MapServer/0/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>county_boundary <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Administrative/MapServer/2/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>durham_city_boundary <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Administrative/MapServer/1/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>school_districts <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Education/MapServer/1/query?outFields=*&amp;where=1%3D1f=geojson"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-80" class="cell" data-execution_count="98">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>v.<span class="im">import</span> <span class="op">--</span><span class="bu">help</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-81" class="cell" data-execution_count="98">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>v.<span class="im">import</span> <span class="op">--</span><span class="bu">help</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Imports vector data into a GRASS vector map using OGR library and reprojects on the fly.
 
@@ -1532,8 +1548,8 @@ Parameters:
                 options: -1-100</code></pre>
 </div>
 </div>
-<div id="cell-81" class="cell" data-execution_count="97">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>r.<span class="im">import</span> <span class="op">--</span><span class="bu">help</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-82" class="cell" data-execution_count="97">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>r.<span class="im">import</span> <span class="op">--</span><span class="bu">help</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Imports raster data into a GRASS raster map using GDAL library and reprojects on the fly.
 
@@ -1575,8 +1591,8 @@ Parameters:
 <section id="install-add-ons" class="level2">
 <h2 class="anchored" data-anchor-id="install-add-ons">Install Add-Ons</h2>
 <p><a href="https://grass.osgeo.org/grass82/manuals/addons/index.html">Add-On Index</a></p>
-<div id="cell-83" class="cell" data-execution_count="99">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>g.extension <span class="op">--</span><span class="bu">help</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-84" class="cell" data-execution_count="99">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>g.extension <span class="op">--</span><span class="bu">help</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Maintains GRASS Addons extensions in local GRASS installation.
 
