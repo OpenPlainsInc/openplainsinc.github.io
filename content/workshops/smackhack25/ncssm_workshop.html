@@ -8,7 +8,7 @@
 
 <meta name="author" content="Corey T. White">
 <meta name="dcterms.date" content="2025-02-08">
-<meta name="description" content="an introduction to geoprocessing with GRASS GIS. We aim to introduce you to the basics concepts of Geographic Information Systems (GIS) and how to use GRASS GIS to perform geoprocessing tasks.">
+<meta name="description" content="Workshop introduction to geoprocessing with GRASS GIS. We aim to introduce you to the basics concepts of Geographic Information Systems (GIS) and how to use GRASS GIS to perform geoprocessing tasks.">
 
 <title>Introduction Geoprocessing with GRASS GIS</title>
 <style>
@@ -190,7 +190,7 @@ window.Quarto = {
       <h1 class="title">Introduction Geoprocessing with GRASS GIS</h1>
                   <div>
         <div class="description">
-          an introduction to geoprocessing with <a href="https://grass.osgeo.org">GRASS GIS</a>. We aim to introduce you to the basics concepts of Geographic Information Systems (GIS) and how to use GRASS GIS to perform geoprocessing tasks.
+          Workshop introduction to geoprocessing with <a href="https://grass.osgeo.org">GRASS GIS</a>. We aim to introduce you to the basics concepts of Geographic Information Systems (GIS) and how to use GRASS GIS to perform geoprocessing tasks.
         </div>
       </div>
                           <div class="quarto-categories">
@@ -221,6 +221,14 @@ window.Quarto = {
     </div>
     
       
+      <div>
+      <div class="quarto-title-meta-heading">Doi</div>
+      <div class="quarto-title-meta-contents">
+        <p class="doi">
+          <a href="https://doi.org/10.5281/zenodo.0000000">10.5281/zenodo.0000000</a>
+        </p>
+      </div>
+    </div>
     </div>
     
   
@@ -234,6 +242,7 @@ window.Quarto = {
   <ul>
   <li><a href="#intro-to-geoprocessing-with-the-grass-gis-geoprocessing-engine" id="toc-intro-to-geoprocessing-with-the-grass-gis-geoprocessing-engine" class="nav-link active" data-scroll-target="#intro-to-geoprocessing-with-the-grass-gis-geoprocessing-engine">Intro to Geoprocessing with the GRASS GIS Geoprocessing Engine</a>
   <ul>
+  <li><a href="#teacher" id="toc-teacher" class="nav-link" data-scroll-target="#teacher">Teacher</a></li>
   <li><a href="#workshop-objective" id="toc-workshop-objective" class="nav-link" data-scroll-target="#workshop-objective">Workshop Objective</a></li>
   <li><a href="#install-grass-gis-and-data-in-google-colab" id="toc-install-grass-gis-and-data-in-google-colab" class="nav-link" data-scroll-target="#install-grass-gis-and-data-in-google-colab">Install GRASS GIS and Data in Google Colab</a></li>
   <li><a href="#what-is-gis" id="toc-what-is-gis" class="nav-link" data-scroll-target="#what-is-gis">What is GIS?</a>
@@ -277,20 +286,16 @@ window.Quarto = {
   <li><a href="#slope-aspect" id="toc-slope-aspect" class="nav-link" data-scroll-target="#slope-aspect">Slope &amp; Aspect</a></li>
   <li><a href="#ndvi-normalized-difference-vegetation-index" id="toc-ndvi-normalized-difference-vegetation-index" class="nav-link" data-scroll-target="#ndvi-normalized-difference-vegetation-index">NDVI (Normalized Difference Vegetation Index)</a>
   <ul class="collapse">
-  <li><a href="#shaded-map" id="toc-shaded-map" class="nav-link" data-scroll-target="#shaded-map">Shaded Map</a></li>
   <li><a href="#d-map" id="toc-d-map" class="nav-link" data-scroll-target="#d-map">3D Map</a></li>
   </ul></li>
   <li><a href="#watershed" id="toc-watershed" class="nav-link" data-scroll-target="#watershed">Watershed</a>
   <ul class="collapse">
   <li><a href="#basins" id="toc-basins" class="nav-link" data-scroll-target="#basins">Basins</a></li>
-  <li><a href="#flow-accumulation" id="toc-flow-accumulation" class="nav-link" data-scroll-target="#flow-accumulation">Flow Accumulation</a></li>
   <li><a href="#streams" id="toc-streams" class="nav-link" data-scroll-target="#streams">Streams</a></li>
   </ul></li>
-  <li><a href="#flood-innundation" id="toc-flood-innundation" class="nav-link" data-scroll-target="#flood-innundation">Flood Innundation</a>
+  <li><a href="#estimate-flood-innundation" id="toc-estimate-flood-innundation" class="nav-link" data-scroll-target="#estimate-flood-innundation">Estimate Flood Innundation</a>
   <ul class="collapse">
-  <li><a href="#simulate-flood" id="toc-simulate-flood" class="nav-link" data-scroll-target="#simulate-flood">Simulate Flood</a></li>
-  <li><a href="#map" id="toc-map" class="nav-link" data-scroll-target="#map">Map</a></li>
-  <li><a href="#interactive-flood-map" id="toc-interactive-flood-map" class="nav-link" data-scroll-target="#interactive-flood-map">Interactive Flood Map</a></li>
+  <li><a href="#interactive-estimated-flood-inundation-map" id="toc-interactive-estimated-flood-inundation-map" class="nav-link" data-scroll-target="#interactive-estimated-flood-inundation-map">Interactive Estimated Flood Inundation Map</a></li>
   <li><a href="#export-map-as-html" id="toc-export-map-as-html" class="nav-link" data-scroll-target="#export-map-as-html">Export Map as HTML</a></li>
   </ul></li>
   </ul></li>
@@ -313,10 +318,14 @@ window.Quarto = {
 
 
 
-<p><a href="https://colab.research.google.com/github/tomorrownow/intro-to-geoprocessing-workshop/blob/main/ncssm_workshop.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid" alt="Open In Colab"></a><a href="https://zenodo.org/doi/10.5281/zenodo.10764925"><img src="https://zenodo.org/badge/756914869.svg" class="img-fluid" alt="DOI"></a></p>
+<p><a href="https://colab.research.google.com/github/OpenPlainsInc/openplainsinc.github.io/blob/main/content/workshops/smackhack25/ncssm_workshop.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid" alt="Open In Colab"></a><a href="https://zenodo.org/doi/10.5281/zenodo.10764925"><img src="https://zenodo.org/badge/756914869.svg" class="img-fluid" alt="DOI"></a></p>
 <section id="intro-to-geoprocessing-with-the-grass-gis-geoprocessing-engine" class="level1">
 <h1>Intro to Geoprocessing with the GRASS GIS Geoprocessing Engine</h1>
 <p>During the workshop, we aim to introduce you to the basic concepts of geospatial processing and modeling with <a href="https://grass.osgeo.org">GRASS GIS</a>.</p>
+<section id="teacher" class="level2">
+<h2 class="anchored" data-anchor-id="teacher">Teacher</h2>
+<p>Dr.&nbsp;Corey T. White is a geospatial scientist and educator with over 20 years of experience in the field of geospatial science. He is the founder of <a href="https://openplains.com">OpenPlains</a>, an interactive geospatial modeling platform for climate-resilience. Dr.&nbsp;White has a Ph.D.&nbsp;in Geospatial Analytics from North Carolina State University and teaches geospatial modeling and UAS mapping at the Center for Geospatial Analytics at NC State University.</p>
+</section>
 <section id="workshop-objective" class="level2">
 <h2 class="anchored" data-anchor-id="workshop-objective">Workshop Objective</h2>
 <p>At the end of this workshop, you will be able to:</p>
@@ -358,8 +367,7 @@ window.Quarto = {
 </section>
 <section id="what-is-gis" class="level2">
 <h2 class="anchored" data-anchor-id="what-is-gis">What is GIS?</h2>
-<p>GIS is a system designed to capture, store, manipulate, analyze, manage, and present spatial or geographic data. GIS applications are tools that allow users to create interactive queries (user-created searches), analyze spatial information, edit data in maps, and present the results of all these operations.</p>
-<p>There are many GIS software solutions that each perform well at differnt tasks.</p>
+<p>GIS (Geographic Information System) is a system designed to capture, store, manipulate, analyze, manage, and present spatial or geographic data. GIS applications are tools that allow users to create interactive queries (user-created searches), analyze spatial information, edit data in maps, and present the results of all these operations.</p>
 <section id="geospatial-data" class="level3">
 <h3 class="anchored" data-anchor-id="geospatial-data">Geospatial data</h3>
 <p>Geospatial data is data that is associated with a particular location on the surface of the Earth. This data can be represented in many forms, such as <strong>vector</strong> data (points, lines, polygons), and <strong>raster</strong> data. Geospatial data can be used to answer questions such as “Where is the nearest hospital?” or “What is the likelihood of flooding at a given location?”.</p>
@@ -484,7 +492,7 @@ window.Quarto = {
 <p>Even though it is widely used for web mapping, it is not recommend for professional work because it has a high level of distortion at high latitudes and considers the Earth as a perfect sphere instead of an <code>geoid</code>.</p>
 <p>You can see for yourself the distortion of the Mercator projection by using the <a href="https://thetruesize.com">The true size</a> website.</p>
 <p><strong>Learn More</strong> Learn more about <a href="https://www.jasondavies.com/maps/transition">Map projection transitions</a> Look up CRS at <a href="https://epsg.io">epsg.io</a></p>
-<iframe width="800" height="600" src="https://www.jasondavies.com/maps/transition" title="Flood Map" frameborder="0">
+<iframe height="650" width="800" src="https://www.jasondavies.com/maps/transition" title="Flood Map" frameborder="0">
 </iframe>
 </section>
 </section>
@@ -592,7 +600,7 @@ window.Quarto = {
 <section id="grass-python-environment-setup" class="level3">
 <h3 class="anchored" data-anchor-id="grass-python-environment-setup">GRASS Python Environment Setup</h3>
 <p>To use GRASS GIS in Python, we need to set the <code>GISBASE</code> environment variable to the location of the GRASS GIS installation. We also need to add the GRASS GIS Python library to the Python path.</p>
-<div id="cell-11" class="cell" data-execution_count="4">
+<div id="cell-11" class="cell" data-execution_count="40">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> subprocess</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
@@ -603,7 +611,7 @@ window.Quarto = {
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sqlite3</span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> IFrame</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display</span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Switch to the home directory</span></span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># os.chdir(os.path.expanduser("~")) # Colab only</span></span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
@@ -626,7 +634,7 @@ window.Quarto = {
 <section id="grass-gis-session" class="level3">
 <h3 class="anchored" data-anchor-id="grass-gis-session">GRASS GIS Session</h3>
 <p>With our Python environment setup we can start a GRASS GIS session using the <code>gj.init</code> function. Here we pass the the path to our <code>project/mapset</code> (<code>nc_basic_spm_grass7/tutorial</code>). This will allow us to exectute GRASS GIS commands in Python in the <code>tutorial</code> mapset.</p>
-<div id="cell-13" class="cell" data-execution_count="5">
+<div id="cell-13" class="cell" data-execution_count="42">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Start a GRASS session</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>session <span class="op">=</span> gj.init(<span class="st">"./grassdata"</span>, <span class="st">"nc_basic_spm_grass7"</span>, <span class="st">"tutorial"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -990,14 +998,15 @@ meters=1</code></pre>
 </section>
 <section id="web-maps" class="level4">
 <h4 class="anchored" data-anchor-id="web-maps">Web Maps</h4>
-<div id="cell-40" class="cell" data-execution_count="19">
+<div id="cell-40" class="cell" data-execution_count="43">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>elevation_map <span class="op">=</span> gj.InteractiveMap(width<span class="op">=</span><span class="dv">800</span>, height<span class="op">=</span><span class="dv">600</span>)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>elevation_map.add_raster(<span class="st">"elevation"</span>)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>elevation_map.add_vector(<span class="st">"roadsmajor"</span>)</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>elevation_map.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>elevation_map.add_raster(<span class="st">"aspect"</span>, opacity<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>elevation_map.add_raster(<span class="st">"elevation"</span>, opacity<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>elevation_map.add_vector(<span class="st">"roadsmajor"</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>display(elevation_map.show())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"4a144d170b864be5ad4a8bf8fc147d79","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+{"model_id":"5ae94889ed8f49a2ba2a134c1990d363","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
 </div>
@@ -1006,13 +1015,13 @@ meters=1</code></pre>
 </section>
 <section id="ncssm-ndvi-watershed-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="ncssm-ndvi-watershed-analysis">NCSSM NDVI &amp; Watershed Analysis</h2>
-<div id="cell-42" class="cell" data-execution_count="21">
+<div id="cell-42" class="cell" data-execution_count="44">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>gj.init(<span class="st">"./grassdata/nc_basic_spm_grass7/ncssm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="21">
+<div class="cell-output cell-output-display" data-execution_count="44">
 <pre><code>&lt;grass.jupyter.setup._JupyterGlobalSession at 0x76f9ea3dfc40&gt;</code></pre>
 </div>
 </div>
-<div id="cell-43" class="cell" data-execution_count="22">
+<div id="cell-43" class="cell" data-execution_count="45">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"g.region"</span>, raster<span class="op">=</span><span class="st">"ncssm_be_1m"</span>, res<span class="op">=</span><span class="dv">1</span>, flags<span class="op">=</span><span class="st">"ap"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>projection: 99 (Lambert Conformal Conic)
@@ -1030,7 +1039,7 @@ cols:       1527
 cells:      2327148</code></pre>
 </div>
 </div>
-<div id="cell-44" class="cell" data-execution_count="23">
+<div id="cell-44" class="cell" data-execution_count="46">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> gj.Map()</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_rast(<span class="bu">map</span><span class="op">=</span><span class="st">"naip_2022_rgb"</span>)</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"ncssm"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="st">"white"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
@@ -1040,7 +1049,7 @@ cells:      2327148</code></pre>
 <span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"sidewalks"</span>, color<span class="op">=</span><span class="st">"grey"</span>)</span>
 <span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_barscale(at<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">7</span>), flags<span class="op">=</span><span class="st">"n"</span>)</span>
 <span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="23">
+<div class="cell-output cell-output-display" data-execution_count="46">
 <div>
 <figure class="figure">
 <p><img src="ncssm_workshop_files/figure-html/cell-21-output-1.png" class="img-fluid figure-img"></p>
@@ -1050,7 +1059,7 @@ cells:      2327148</code></pre>
 </div>
 <section id="slope-aspect" class="level4">
 <h4 class="anchored" data-anchor-id="slope-aspect">Slope &amp; Aspect</h4>
-<div id="cell-46" class="cell" data-execution_count="24">
+<div id="cell-46" class="cell" data-execution_count="47">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"r.slope.aspect"</span>,</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    elevation<span class="op">=</span><span class="st">"ncssm_be_1m"</span>,</span>
@@ -1061,7 +1070,7 @@ cells:      2327148</code></pre>
 <span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    overwrite<span class="op">=</span><span class="va">True</span></span>
 <span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-47" class="cell" data-execution_count="25">
+<div id="cell-47" class="cell" data-execution_count="48">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>ncssm_map <span class="op">=</span> gj.Map()</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>ncssm_map.d_shade(color<span class="op">=</span><span class="st">"ncssm_be_1m"</span>, shade<span class="op">=</span><span class="st">"aspect"</span>)</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>ncssm_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"ncssm"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="st">"white"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
@@ -1069,7 +1078,7 @@ cells:      2327148</code></pre>
 <span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>ncssm_map.d_legend(raster<span class="op">=</span><span class="st">"ncssm_be_1m"</span>, at<span class="op">=</span>(<span class="dv">5</span>,<span class="dv">50</span>,<span class="dv">5</span>,<span class="dv">9</span>), flags<span class="op">=</span><span class="st">"b"</span>)</span>
 <span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>ncssm_map.d_barscale(at<span class="op">=</span>(<span class="dv">20</span>,<span class="dv">8</span>), flags<span class="op">=</span><span class="st">"n"</span>, length<span class="op">=</span><span class="dv">250</span>)</span>
 <span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>ncssm_map.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="25">
+<div class="cell-output cell-output-display" data-execution_count="48">
 <div>
 <figure class="figure">
 <p><img src="ncssm_workshop_files/figure-html/cell-23-output-1.png" class="img-fluid figure-img"></p>
@@ -1082,7 +1091,7 @@ cells:      2327148</code></pre>
 <h3 class="anchored" data-anchor-id="ndvi-normalized-difference-vegetation-index">NDVI (Normalized Difference Vegetation Index)</h3>
 <p>NDVI is a simple calculation that measure chlorophyll absorbtion in plants. It utilizes the Red and Near-Infrared (NIR) light to produce an index between -1 and 1 where 1 represents healthy vegetation and values less than or equal to 0 represent bare earth or other forms of imperious surface.</p>
 <p><span class="math display">\[ NDVI = \frac{(NIR - Red)}{(NIR + Red)} \]</span></p>
-<div id="cell-49" class="cell" data-execution_count="26">
+<div id="cell-49" class="cell" data-execution_count="49">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"i.vi"</span>,</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    viname<span class="op">=</span><span class="st">"ndvi"</span>,</span>
@@ -1092,16 +1101,15 @@ cells:      2327148</code></pre>
 <span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s viusalize the NDVI for the area around NCSSM.</p>
-<div id="cell-51" class="cell" data-execution_count="27">
+<div id="cell-51" class="cell" data-execution_count="134">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>ndvi_map <span class="op">=</span> gj.Map()</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_shade(color<span class="op">=</span><span class="st">"naip2022_ndvi"</span>, shade<span class="op">=</span><span class="st">"aspect"</span>)</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_rast(<span class="bu">map</span><span class="op">=</span><span class="st">"naip2022_ndvi"</span>)</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"ncssm"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="st">"#FFE599"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"roads"</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_shade(color<span class="op">=</span><span class="st">"naip2022_ndvi"</span>, shade<span class="op">=</span><span class="st">"aspect"</span>, brighten<span class="op">=</span><span class="dv">30</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"ncssm"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="st">"#FFE599"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"roads"</span>)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_barscale(at<span class="op">=</span>(<span class="dv">20</span>,<span class="dv">8</span>), flags<span class="op">=</span><span class="st">"n"</span>, length<span class="op">=</span><span class="dv">250</span>)</span>
 <span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_legend(raster<span class="op">=</span><span class="st">"naip2022_ndvi"</span>, at<span class="op">=</span>(<span class="dv">5</span>,<span class="dv">50</span>,<span class="dv">5</span>,<span class="dv">9</span>), flags<span class="op">=</span><span class="st">"b"</span>)</span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_barscale(at<span class="op">=</span>(<span class="dv">20</span>,<span class="dv">8</span>), flags<span class="op">=</span><span class="st">"n"</span>, length<span class="op">=</span><span class="dv">250</span>)</span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>ndvi_map.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="27">
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>ndvi_map.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="134">
 <div>
 <figure class="figure">
 <p><img src="ncssm_workshop_files/figure-html/cell-25-output-1.png" class="img-fluid figure-img"></p>
@@ -1109,18 +1117,28 @@ cells:      2327148</code></pre>
 </div>
 </div>
 </div>
-<section id="shaded-map" class="level4">
-<h4 class="anchored" data-anchor-id="shaded-map">Shaded Map</h4>
-<div id="cell-53" class="cell" data-execution_count="28">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>ndvi_map <span class="op">=</span> gj.Map()</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_shade(color<span class="op">=</span><span class="st">"naip2022_ndvi"</span>, shade<span class="op">=</span><span class="st">"aspect"</span>, brighten<span class="op">=</span><span class="dv">30</span>)</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"ncssm"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="st">"#FFE599"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"roads"</span>)</span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_barscale(at<span class="op">=</span>(<span class="dv">20</span>,<span class="dv">8</span>), flags<span class="op">=</span><span class="st">"n"</span>, length<span class="op">=</span><span class="dv">250</span>)</span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_legend(raster<span class="op">=</span><span class="st">"naip2022_ndvi"</span>, at<span class="op">=</span>(<span class="dv">5</span>,<span class="dv">50</span>,<span class="dv">5</span>,<span class="dv">9</span>), flags<span class="op">=</span><span class="st">"b"</span>)</span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>ndvi_map.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="28">
+<section id="d-map" class="level4">
+<h4 class="anchored" data-anchor-id="d-map">3D Map</h4>
+<blockquote class="blockquote">
+<p>Does not work in Google Colab</p>
+</blockquote>
+<div id="cell-53" class="cell" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>elevation_3dmap <span class="op">=</span> gj.Map3D(use_region<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Full list of options m.nviz.image</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="co"># https://grass.osgeo.org/grass83/manuals/m.nviz.image.html</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>elevation_3dmap.render(</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    elevation_map<span class="op">=</span><span class="st">"ncssm_1m"</span>,</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>    color_map<span class="op">=</span><span class="st">"naip2022_ndvi"</span>,</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>    perspective<span class="op">=</span><span class="dv">20</span>,</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">3000</span>,</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>    resolution_fine<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    zexag<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># fringe=['ne','nw','sw','se'],</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>    fringe_elevation<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>    arrow_position<span class="op">=</span>[<span class="dv">100</span>,<span class="dv">50</span>],</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>elevation_3dmap.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="52">
 <div>
 <figure class="figure">
 <p><img src="ncssm_workshop_files/figure-html/cell-26-output-1.png" class="img-fluid figure-img"></p>
@@ -1129,82 +1147,67 @@ cells:      2327148</code></pre>
 </div>
 </div>
 </section>
-<section id="d-map" class="level4">
-<h4 class="anchored" data-anchor-id="d-map">3D Map</h4>
-<blockquote class="blockquote">
-<p>Does not work in Google Colab</p>
-</blockquote>
-<div id="cell-55" class="cell" data-execution_count="29">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>elevation_3dmap <span class="op">=</span> gj.Map3D(use_region<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Full list of options m.nviz.image</span></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="co"># https://grass.osgeo.org/grass83/manuals/m.nviz.image.html</span></span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>elevation_3dmap.render(</span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    elevation_map<span class="op">=</span><span class="st">"ncssm_1m"</span>,</span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    color_map<span class="op">=</span><span class="st">"naip2022_ndvi"</span>,</span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    perspective<span class="op">=</span><span class="dv">20</span>,</span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">3000</span>,</span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>    resolution_fine<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>    zexag<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># fringe=['ne','nw','sw','se'],</span></span>
-<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>    fringe_elevation<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>    arrow_position<span class="op">=</span>[<span class="dv">100</span>,<span class="dv">50</span>],</span>
-<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>elevation_3dmap.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="29">
-<div>
-<figure class="figure">
-<p><img src="ncssm_workshop_files/figure-html/cell-27-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
 </section>
 <section id="watershed" class="level3">
 <h3 class="anchored" data-anchor-id="watershed">Watershed</h3>
-<div id="cell-57" class="cell" data-execution_count="30">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"r.watershed"</span>, </span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    elevation<span class="op">=</span><span class="st">"ncssm_be_1m"</span>, </span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    threshold<span class="op">=</span><span class="dv">10000</span>,</span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    accumulation<span class="op">=</span><span class="st">"accum10k"</span>,</span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    drainage<span class="op">=</span><span class="st">"direction10k"</span>,</span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    basin<span class="op">=</span><span class="st">"basins10k"</span>, </span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>    stream<span class="op">=</span><span class="st">"streams10k"</span>, </span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>    memory<span class="op">=</span><span class="dv">300</span></span>
-<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-55" class="cell" data-execution_count="53">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"r.watershed"</span>, </span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    elevation<span class="op">=</span><span class="st">"ncssm_be_1m"</span>, </span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    threshold<span class="op">=</span><span class="dv">10000</span>,</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    accumulation<span class="op">=</span><span class="st">"accum10k"</span>,</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    drainage<span class="op">=</span><span class="st">"direction10k"</span>,</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    basin<span class="op">=</span><span class="st">"basins10k"</span>, </span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>    stream<span class="op">=</span><span class="st">"streams10k"</span>, </span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>    memory<span class="op">=</span><span class="dv">300</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="basins" class="level4">
 <h4 class="anchored" data-anchor-id="basins">Basins</h4>
-<div id="cell-59" class="cell" data-execution_count="31">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>basins10k_map <span class="op">=</span> gj.Map()</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>basins10k_map.d_rast(<span class="bu">map</span><span class="op">=</span><span class="st">"basins10k"</span>)</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>basins10k_map.d_shade(color<span class="op">=</span><span class="st">"basins10k"</span>, shade<span class="op">=</span><span class="st">"aspect"</span>)</span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>basins10k_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"ncssm"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="st">"white"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>basins10k_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"roads"</span>)</span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>basins10k_map.d_barscale(at<span class="op">=</span>(<span class="dv">50</span>,<span class="dv">7</span>,<span class="dv">1</span>,<span class="dv">1</span>), flags<span class="op">=</span><span class="st">"n"</span>)</span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>basins10k_map.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="31">
+<div id="cell-57" class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>basins10k_map <span class="op">=</span> gj.Map()</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>basins10k_map.d_shade(color<span class="op">=</span><span class="st">"basins10k"</span>, shade<span class="op">=</span><span class="st">"aspect"</span>)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>basins10k_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"ncssm"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="st">"white"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>basins10k_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"roads"</span>)</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>basins10k_map.d_barscale(at<span class="op">=</span>(<span class="dv">50</span>,<span class="dv">7</span>,<span class="dv">1</span>,<span class="dv">1</span>), flags<span class="op">=</span><span class="st">"n"</span>)</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>basins10k_map.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="54">
 <div>
 <figure class="figure">
-<p><img src="ncssm_workshop_files/figure-html/cell-29-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="ncssm_workshop_files/figure-html/cell-28-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-</section>
-<section id="flow-accumulation" class="level4">
-<h4 class="anchored" data-anchor-id="flow-accumulation">Flow Accumulation</h4>
-<div id="cell-61" class="cell" data-execution_count="32">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>accum10k_map <span class="op">=</span> gj.Map()</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co"># accum10k_map.d_rast(map="accum10k")</span></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>accum10k_map.d_shade(color<span class="op">=</span><span class="st">"accum10k"</span>, shade<span class="op">=</span><span class="st">"aspect"</span>, brighten<span class="op">=</span><span class="dv">30</span>)</span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>accum10k_map.d_barscale(at<span class="op">=</span>(<span class="dv">50</span>,<span class="dv">7</span>,<span class="dv">1</span>,<span class="dv">1</span>), flags<span class="op">=</span><span class="st">"n"</span>)</span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>accum10k_map.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="32">
+<div id="cell-58" class="cell" data-execution_count="102">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"r.stats.zonal"</span>,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    base<span class="op">=</span><span class="st">"basins10k"</span>,</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    cover<span class="op">=</span><span class="st">"naip2022_ndvi"</span>,</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    method<span class="op">=</span><span class="st">"average"</span>,</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    output<span class="op">=</span><span class="st">"basins10k_ndvi_avg"</span>, </span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    flags<span class="op">=</span><span class="st">"c"</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-59" class="cell" data-execution_count="104">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.to.vect"</span>, <span class="bu">input</span><span class="op">=</span><span class="st">"basins10k"</span>, output<span class="op">=</span><span class="st">"basins10k"</span>, <span class="bu">type</span><span class="op">=</span><span class="st">"area"</span>, flags<span class="op">=</span><span class="st">"v"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-60" class="cell" data-execution_count="111">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Change the map color</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.colors"</span>, <span class="bu">map</span><span class="op">=</span><span class="st">"basins10k_ndvi_avg"</span>, color<span class="op">=</span><span class="st">"ndvi"</span>, flags<span class="op">=</span><span class="st">""</span>)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>basins10k_map <span class="op">=</span> gj.Map()</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>basins10k_map.d_shade(color<span class="op">=</span><span class="st">"basins10k_ndvi_avg"</span>, shade<span class="op">=</span><span class="st">"aspect"</span>)</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>basins10k_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"ncssm"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="st">"white"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>basins10k_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"roads"</span>)</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>basins10k_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"basins10k"</span>, color<span class="op">=</span><span class="st">"black"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, width<span class="op">=</span><span class="fl">1.5</span>)</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>basins10k_map.d_barscale(at<span class="op">=</span>(<span class="dv">20</span>,<span class="dv">8</span>), flags<span class="op">=</span><span class="st">"n"</span>, length<span class="op">=</span><span class="dv">250</span>)</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>basins10k_map.d_legend(raster<span class="op">=</span><span class="st">"naip2022_ndvi"</span>, at<span class="op">=</span>(<span class="dv">5</span>,<span class="dv">50</span>,<span class="dv">5</span>,<span class="dv">9</span>), flags<span class="op">=</span><span class="st">"b"</span>)</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>basins10k_map.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="111">
 <div>
 <figure class="figure">
-<p><img src="ncssm_workshop_files/figure-html/cell-30-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="ncssm_workshop_files/figure-html/cell-31-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1212,89 +1215,250 @@ cells:      2327148</code></pre>
 </section>
 <section id="streams" class="level4">
 <h4 class="anchored" data-anchor-id="streams">Streams</h4>
-<div id="cell-63" class="cell" data-execution_count="33">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.thin"</span>, <span class="bu">input</span><span class="op">=</span><span class="st">"streams10k"</span>, output<span class="op">=</span><span class="st">"streams10k_thin"</span>)</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.to.vect"</span>, flags<span class="op">=</span><span class="st">"s"</span>, <span class="bu">input</span><span class="op">=</span><span class="st">"streams10k_thin"</span>, output<span class="op">=</span><span class="st">"streams"</span>, <span class="bu">type</span><span class="op">=</span><span class="st">"line"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-62" class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.thin"</span>, <span class="bu">input</span><span class="op">=</span><span class="st">"streams10k"</span>, output<span class="op">=</span><span class="st">"streams10k_thin"</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.to.vect"</span>, flags<span class="op">=</span><span class="st">"s"</span>, <span class="bu">input</span><span class="op">=</span><span class="st">"streams10k_thin"</span>, output<span class="op">=</span><span class="st">"streams"</span>, <span class="bu">type</span><span class="op">=</span><span class="st">"line"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-64" class="cell" data-execution_count="34">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> gj.Map()</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_rast(<span class="bu">map</span><span class="op">=</span><span class="st">"naip_2022_rgb"</span>)</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"ncssm"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="st">"white"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"open_channels"</span>, color<span class="op">=</span><span class="st">"#7fcdbb"</span>, width<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"roads"</span>)</span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"greenways"</span>, color<span class="op">=</span><span class="st">"green"</span>)</span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"sidewalks"</span>, color<span class="op">=</span><span class="st">"grey"</span>)</span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"streams"</span>, color<span class="op">=</span><span class="st">"blue"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_barscale(at<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">7</span>), flags<span class="op">=</span><span class="st">"n"</span>)</span>
-<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-63" class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> gj.Map()</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_rast(<span class="bu">map</span><span class="op">=</span><span class="st">"naip_2022_rgb"</span>)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"ncssm"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="st">"white"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"open_channels"</span>, color<span class="op">=</span><span class="st">"#7fcdbb"</span>, width<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"roads"</span>)</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"greenways"</span>, color<span class="op">=</span><span class="st">"green"</span>)</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"sidewalks"</span>, color<span class="op">=</span><span class="st">"grey"</span>)</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"streams"</span>, color<span class="op">=</span><span class="st">"blue"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_barscale(at<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">7</span>), flags<span class="op">=</span><span class="st">"n"</span>)</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="34">
 <div>
 <figure class="figure">
-<p><img src="ncssm_workshop_files/figure-html/cell-32-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="ncssm_workshop_files/figure-html/cell-33-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
 </section>
-<section id="flood-innundation" class="level3">
-<h3 class="anchored" data-anchor-id="flood-innundation">Flood Innundation</h3>
-<section id="simulate-flood" class="level4">
-<h4 class="anchored" data-anchor-id="simulate-flood">Simulate Flood</h4>
-<div id="cell-66" class="cell" data-execution_count="35">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"g.extension"</span>, extension<span class="op">=</span><span class="st">"r.stream.distance"</span>)</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.stream.distance"</span>, stream_rast<span class="op">=</span><span class="st">"streams10k"</span>, direction<span class="op">=</span><span class="st">"direction10k"</span>, elevation<span class="op">=</span><span class="st">"ncssm_be_1m"</span>, method<span class="op">=</span><span class="st">"downstream"</span>, difference<span class="op">=</span><span class="st">"above_stream"</span>)</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.lake"</span>, elevation<span class="op">=</span><span class="st">"above_stream"</span>, water_level<span class="op">=</span><span class="dv">5</span>, lake<span class="op">=</span><span class="st">"flood"</span>, seed<span class="op">=</span><span class="st">"streams10k"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="estimate-flood-innundation" class="level3">
+<h3 class="anchored" data-anchor-id="estimate-flood-innundation">Estimate Flood Innundation</h3>
+<p>Let’s estimate the flood inundation for the area around NCSSM using the Height Above Nearest Drainage methodology (<a href="https://doi.org/10.1016/j.jhydrol.2011.03.051">A.D. Nobre, 2011</a>). First need to install two GRASS addons <code>r.stream.distance</code> and <code>r.lake.series</code> to calculate the distance to the nearest stream and create a flood inundation map.</p>
+<div id="cell-65" class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"g.extension"</span>, extension<span class="op">=</span><span class="st">"r.stream.distance"</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"g.extension"</span>, extension<span class="op">=</span><span class="st">"r.lake.series"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Your branch is up to date with 'origin/grass8'.</code></pre>
 </div>
 </div>
-</section>
-<section id="map" class="level4">
-<h4 class="anchored" data-anchor-id="map">Map</h4>
-<div id="cell-68" class="cell" data-execution_count="36">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> gj.Map()</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_rast(<span class="bu">map</span><span class="op">=</span><span class="st">"naip_2022_rgb"</span>)</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_rast(<span class="bu">map</span><span class="op">=</span><span class="st">"flood"</span>)</span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"ncssm"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="st">"white"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"open_channels"</span>, color<span class="op">=</span><span class="st">"#7fcdbb"</span>, width<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"roads"</span>)</span>
-<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"greenways"</span>, color<span class="op">=</span><span class="st">"green"</span>)</span>
-<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"sidewalks"</span>, color<span class="op">=</span><span class="st">"grey"</span>)</span>
-<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"streams"</span>, color<span class="op">=</span><span class="st">"blue"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_barscale(at<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">7</span>), flags<span class="op">=</span><span class="st">"n"</span>)</span>
-<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="36">
+<p>Here we will simulate the flood inundation extent starting from <span class="math inline">\(0 m\)</span> to <span class="math inline">\(5 m\)</span> above the nearest stream.</p>
+<div id="cell-67" class="cell" data-execution_count="112">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.stream.distance"</span>, stream_rast<span class="op">=</span><span class="st">"streams10k"</span>, direction<span class="op">=</span><span class="st">"direction10k"</span>, elevation<span class="op">=</span><span class="st">"ncssm_be_1m"</span>, method<span class="op">=</span><span class="st">"downstream"</span>, difference<span class="op">=</span><span class="st">"above_stream"</span>)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.lake.series"</span>, elevation<span class="op">=</span><span class="st">"above_stream"</span>, start_water_level<span class="op">=</span><span class="dv">0</span>, end_water_level<span class="op">=</span><span class="dv">5</span>, water_level_step<span class="op">=</span><span class="fl">0.5</span>, output<span class="op">=</span><span class="st">"flooding"</span>, seed<span class="op">=</span><span class="st">"streams10k"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can visulize the flood event from using the time series of the flood stages using <code>gj.TimeSeries</code>.</p>
+<div id="cell-69" class="cell" data-execution_count="120">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>flood_map <span class="op">=</span> gj.TimeSeriesMap()</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>flood_map.d_rast(<span class="bu">map</span><span class="op">=</span><span class="st">"naip_2022_rgb"</span>)</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>flood_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"ncssm"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="st">"white"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>flood_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"roads"</span>)</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>flood_map.add_raster_series(<span class="st">"flooding"</span>)</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>flood_map.d_legend()</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>flood_map.save(<span class="st">"output/flooding.gif"</span>)</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>flood_map.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"d59920707de444df8cace50fc55e42d5","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="output/flooding.gif" class="img-fluid figure-img"></p>
+<figcaption>Est. Flood Inundation</figcaption>
+</figure>
+</div>
+<p>We can further analysze our results by looking at the <code>r.univar</code> statistics of the flood inundation layers.</p>
+<div id="cell-72" class="cell" data-execution_count="126">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> io</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>flood_output <span class="op">=</span> gs.read_command(<span class="st">"t.rast.univar"</span>, <span class="bu">input</span><span class="op">=</span><span class="st">"flooding"</span>, separator<span class="op">=</span><span class="st">"comma"</span>)</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(flood_output)</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>df_flood <span class="op">=</span> pd.read_csv(io.StringIO(flood_output), sep<span class="op">=</span><span class="st">","</span>)</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>df_flood.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>id,semantic_label,start,end,mean,min,max,mean_of_abs,stddev,variance,coeff_var,sum,null_cells,cells,non_null_cells
+flooding_0.0@ncssm,,1,None,0.293114999222854,3.0517578125e-05,6.39630126953125,0.293114999222854,0.530534688513158,0.281467055715753,180.998819548567,3598.57284545898,2314871,12277,12277
+flooding_0.5@ncssm,,31,None,0.3905529433589,3.0517578125e-05,6.89630126953125,0.3905529433589,0.403808791069356,0.163061539744895,103.3941231108,59409.3515319824,2175032,152116,152116
+flooding_1.0@ncssm,,61,None,0.655780018643008,3.0517578125e-05,7.39630126953125,0.655780018643008,0.451270096181418,0.203644699707586,68.8142491921639,160044.425109863,2083096,244052,244052
+flooding_1.5@ncssm,,91,None,0.944751617646385,3.0517578125e-05,7.89630126953125,0.944751617646385,0.552086194782351,0.304799166469256,58.4371790923986,302084.329742432,2007398,319750,319750
+flooding_2.0@ncssm,,121,None,1.24039884684191,3.0517578125e-05,8.39630126953125,1.24039884684191,0.676488838166942,0.457637148164459,54.5380092773629,480802.160614014,1939529,387619,387619
+flooding_2.5@ncssm,,151,None,1.53000738919042,3.0517578125e-05,8.89630126953125,1.53000738919042,0.813864130666759,0.662374823185959,53.1934771306826,691632.190246582,1875103,452045,452045
+flooding_3.0@ncssm,,181,None,1.82265329658102,3.0517578125e-05,9.39630126953125,1.82265329658102,0.954796133406397,0.911635656367807,52.3849563269892,933338.83215332,1815071,512077,512077
+flooding_3.5@ncssm,,211,None,2.11564680335754,3.0517578125e-05,9.89630126953125,2.11564680335754,1.09842635059298,1.20654044767702,51.9191742614966,1204911.6300354,1757624,569524,569524
+flooding_4.0@ncssm,,241,None,2.40876133883238,3.0517578125e-05,10.3963012695312,2.40876133883238,1.24426257488545,1.54818935526058,51.6557018259267,1503647.58691406,1702907,624241,624241
+flooding_4.5@ncssm,,271,None,2.69678338183056,3.0517578125e-05,10.8963012695312,2.69678338183056,1.39404248607332,1.94335445297749,51.6927868758616,1829737.85995483,1648659,678489,678489
+flooding_5.0@ncssm,,301,None,2.9949480126371,3.0517578125e-05,11.3963012695312,2.9949480126371,1.53763176419292,2.36431144225502,51.3408499147538,2182355.72290039,1598469,728679,728679
+</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="126">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">id</th>
+<th data-quarto-table-cell-role="th">semantic_label</th>
+<th data-quarto-table-cell-role="th">start</th>
+<th data-quarto-table-cell-role="th">end</th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">min</th>
+<th data-quarto-table-cell-role="th">max</th>
+<th data-quarto-table-cell-role="th">mean_of_abs</th>
+<th data-quarto-table-cell-role="th">stddev</th>
+<th data-quarto-table-cell-role="th">variance</th>
+<th data-quarto-table-cell-role="th">coeff_var</th>
+<th data-quarto-table-cell-role="th">sum</th>
+<th data-quarto-table-cell-role="th">null_cells</th>
+<th data-quarto-table-cell-role="th">cells</th>
+<th data-quarto-table-cell-role="th">non_null_cells</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>flooding_0.0@ncssm</td>
+<td>NaN</td>
+<td>1</td>
+<td>NaN</td>
+<td>0.293115</td>
+<td>0.000031</td>
+<td>6.396301</td>
+<td>0.293115</td>
+<td>0.530535</td>
+<td>0.281467</td>
+<td>180.998820</td>
+<td>3598.572845</td>
+<td>2314871</td>
+<td>12277</td>
+<td>12277</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>flooding_0.5@ncssm</td>
+<td>NaN</td>
+<td>31</td>
+<td>NaN</td>
+<td>0.390553</td>
+<td>0.000031</td>
+<td>6.896301</td>
+<td>0.390553</td>
+<td>0.403809</td>
+<td>0.163062</td>
+<td>103.394123</td>
+<td>59409.351532</td>
+<td>2175032</td>
+<td>152116</td>
+<td>152116</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>flooding_1.0@ncssm</td>
+<td>NaN</td>
+<td>61</td>
+<td>NaN</td>
+<td>0.655780</td>
+<td>0.000031</td>
+<td>7.396301</td>
+<td>0.655780</td>
+<td>0.451270</td>
+<td>0.203645</td>
+<td>68.814249</td>
+<td>160044.425110</td>
+<td>2083096</td>
+<td>244052</td>
+<td>244052</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>flooding_1.5@ncssm</td>
+<td>NaN</td>
+<td>91</td>
+<td>NaN</td>
+<td>0.944752</td>
+<td>0.000031</td>
+<td>7.896301</td>
+<td>0.944752</td>
+<td>0.552086</td>
+<td>0.304799</td>
+<td>58.437179</td>
+<td>302084.329742</td>
+<td>2007398</td>
+<td>319750</td>
+<td>319750</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>flooding_2.0@ncssm</td>
+<td>NaN</td>
+<td>121</td>
+<td>NaN</td>
+<td>1.240399</td>
+<td>0.000031</td>
+<td>8.396301</td>
+<td>1.240399</td>
+<td>0.676489</td>
+<td>0.457637</td>
+<td>54.538009</td>
+<td>480802.160614</td>
+<td>1939529</td>
+<td>387619</td>
+<td>387619</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="cell-73" class="cell" data-execution_count="129">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> df_flood.plot(x<span class="op">=</span><span class="st">"start"</span>, y<span class="op">=</span><span class="st">"mean"</span>, title<span class="op">=</span><span class="st">"Mean flooding depth over time"</span>, label<span class="op">=</span><span class="st">"Mean"</span>)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>df_flood.plot(x<span class="op">=</span><span class="st">"start"</span>, y<span class="op">=</span><span class="st">"min"</span>, ax<span class="op">=</span>ax, style<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">"Min"</span>, color<span class="op">=</span><span class="st">'gray'</span>)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>df_flood.plot(x<span class="op">=</span><span class="st">"start"</span>, y<span class="op">=</span><span class="st">"max"</span>, ax<span class="op">=</span>ax, style<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">"Max"</span>, color<span class="op">=</span><span class="st">'gray'</span>)</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>ax.fill_between(df_flood[<span class="st">"start"</span>], df_flood[<span class="st">"min"</span>], df_flood[<span class="st">"max"</span>], color<span class="op">=</span><span class="st">'gray'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Flooding depth (m)"</span>)</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Time (minutes)"</span>)</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ncssm_workshop_files/figure-html/cell-34-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="ncssm_workshop_files/figure-html/cell-38-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-</section>
-<section id="interactive-flood-map" class="level4">
-<h4 class="anchored" data-anchor-id="interactive-flood-map">Interactive Flood Map</h4>
-<div id="cell-70" class="cell" data-execution_count="37">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>flood_map <span class="op">=</span> gj.InteractiveMap(height<span class="op">=</span><span class="dv">800</span>,width<span class="op">=</span><span class="dv">800</span>)</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>flood_map.add_raster(<span class="st">"naip_2022_rgb"</span>)</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>flood_map.add_raster(<span class="st">"flood"</span>)</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>flood_map.add_vector(<span class="st">"streams@ncssm"</span>)</span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>flood_map.add_layer_control()</span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>flood_map.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="interactive-estimated-flood-inundation-map" class="level4">
+<h4 class="anchored" data-anchor-id="interactive-estimated-flood-inundation-map">Interactive Estimated Flood Inundation Map</h4>
+<div id="cell-75" class="cell" data-execution_count="133">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>flood_map <span class="op">=</span> gj.InteractiveMap(height<span class="op">=</span><span class="dv">800</span>,width<span class="op">=</span><span class="dv">800</span>)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>flood_map.add_raster(<span class="st">"naip_2022_rgb"</span>)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>flood_map.add_raster(<span class="st">"flooding_5.0"</span>)</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>flood_map.add_vector(<span class="st">"streams@ncssm"</span>)</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>flood_map.add_layer_control()</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>display(flood_map.show())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"00daf65196bf4003af0b4c7ddbcae9d7","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+{"model_id":"b4927581f60c4e6e8394c429e6aee86c","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
 </div>
 </section>
 <section id="export-map-as-html" class="level4">
 <h4 class="anchored" data-anchor-id="export-map-as-html">Export Map as HTML</h4>
-<div id="cell-72" class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>flood_map.save(filename<span class="op">=</span><span class="st">"./output/index.html"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-77" class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>flood_map.save(filename<span class="op">=</span><span class="st">"./output/index.html"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -1303,14 +1467,14 @@ cells:      2327148</code></pre>
 <h2 class="anchored" data-anchor-id="create-a-new-project-location-and-mapset">Create a new Project (Location and Mapset)</h2>
 <p>Create a new subproject (i.e.&nbsp;Mapset)</p>
 <p>This example uses a temprary directory to create a new project call <code>myfirstproject</code> with the <code>EPSG:3358</code> CRS.</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tempfile</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>tempdir <span class="op">=</span> tempfile.TemporaryDirectory()</span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>gs.create_project(path<span class="op">=</span>tempdir, name<span class="op">=</span><span class="st">"myfirstproject"</span>, epsg<span class="op">=</span><span class="st">"3358"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tempfile</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>tempdir <span class="op">=</span> tempfile.TemporaryDirectory()</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>gs.create_project(path<span class="op">=</span>tempdir, name<span class="op">=</span><span class="st">"myfirstproject"</span>, epsg<span class="op">=</span><span class="st">"3358"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Start a new GRASS GIS session in the new subproject</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>gj.init(Path(tempdir.name), <span class="st">"myfirstproject"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>gj.init(Path(tempdir.name), <span class="st">"myfirstproject"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="local-data-resources" class="level3">
 <h3 class="anchored" data-anchor-id="local-data-resources">Local Data Resources</h3>
 <section id="where-can-i-get-my-own-geospatial-data" class="level4">
@@ -1320,24 +1484,24 @@ cells:      2327148</code></pre>
 <li><a href="https://www.nconemap.gov/">NC OneMap</a></li>
 <li><a href="https://live-durhamnc.opendata.arcgis.com/">Durham OpenData Portal</a></li>
 </ul>
-<div id="cell-74" class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Point Data</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>hospitals <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Community/MapServer/0/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>schools <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Education/MapServer/0/query?outFields=*&amp;where=1%3D1&amp;f=geojson"</span></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Line Data</span></span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>roads <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Transportation/MapServer/6/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>greenways <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/ProjectServices/Trans_ExistingFutureBikePedFacilities/MapServer/1/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>sidewalks <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Community/MapServer/5/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
-<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Polygon Datahttps://earth.nullschool.net</span></span>
-<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>zipcodes <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Administrative/MapServer/0/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
-<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>county_boundary <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Administrative/MapServer/2/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
-<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>durham_city_boundary <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Administrative/MapServer/1/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
-<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>school_districts <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Education/MapServer/1/query?outFields=*&amp;where=1%3D1f=geojson"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-79" class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Point Data</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>hospitals <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Community/MapServer/0/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>schools <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Education/MapServer/0/query?outFields=*&amp;where=1%3D1&amp;f=geojson"</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Line Data</span></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>roads <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Transportation/MapServer/6/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>greenways <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/ProjectServices/Trans_ExistingFutureBikePedFacilities/MapServer/1/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>sidewalks <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Community/MapServer/5/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Polygon Datahttps://earth.nullschool.net</span></span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>zipcodes <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Administrative/MapServer/0/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>county_boundary <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Administrative/MapServer/2/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>durham_city_boundary <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Administrative/MapServer/1/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>school_districts <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Education/MapServer/1/query?outFields=*&amp;where=1%3D1f=geojson"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-75" class="cell" data-execution_count="98">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>v.<span class="im">import</span> <span class="op">--</span><span class="bu">help</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-80" class="cell" data-execution_count="98">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>v.<span class="im">import</span> <span class="op">--</span><span class="bu">help</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Imports vector data into a GRASS vector map using OGR library and reprojects on the fly.
 
@@ -1368,8 +1532,8 @@ Parameters:
                 options: -1-100</code></pre>
 </div>
 </div>
-<div id="cell-76" class="cell" data-execution_count="97">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>r.<span class="im">import</span> <span class="op">--</span><span class="bu">help</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-81" class="cell" data-execution_count="97">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>r.<span class="im">import</span> <span class="op">--</span><span class="bu">help</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Imports raster data into a GRASS raster map using GDAL library and reprojects on the fly.
 
@@ -1411,8 +1575,8 @@ Parameters:
 <section id="install-add-ons" class="level2">
 <h2 class="anchored" data-anchor-id="install-add-ons">Install Add-Ons</h2>
 <p><a href="https://grass.osgeo.org/grass82/manuals/addons/index.html">Add-On Index</a></p>
-<div id="cell-78" class="cell" data-execution_count="99">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>g.extension <span class="op">--</span><span class="bu">help</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-83" class="cell" data-execution_count="99">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>g.extension <span class="op">--</span><span class="bu">help</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Maintains GRASS Addons extensions in local GRASS installation.
 
