@@ -1,0 +1,16 @@
+abstract: <p>Re release for Zenodo DOI</p>
+authors:
+- affiliation: OpenPlains Inc
+  family-names: Corey White
+  orcid: 0000-0002-2903-9924
+- affiliation: North Carolina State University
+  family-names: Petras
+  given-names: Vaclav
+  orcid: 0000-0001-5566-9236
+cff-version: 1.2.0
+date-released: '2024-03-02'
+doi: 10.5281/zenodo.10764926
+license:
+- cc-by-4.0
+title: 'tomorrownow/intro-to-geoprocessing-workshop: Zendo Release'
+version: 0.1.1
