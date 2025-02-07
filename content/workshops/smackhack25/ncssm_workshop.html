@@ -1,0 +1,1879 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Corey T. White">
+<meta name="dcterms.date" content="2025-02-08">
+<meta name="description" content="an introduction to geoprocessing with GRASS GIS. We aim to introduce you to the basics concepts of Geographic Information Systems (GIS) and how to use GRASS GIS to perform geoprocessing tasks.">
+
+<title>Introduction Geoprocessing with GRASS GIS</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+<script src="https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">OpenPlains Learning</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+    <div class="dropdown">
+      <a href="" title="" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label=""><i class="bi bi-github"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/OpenPlainsInc/openplainsinc.github.io/">
+            Source Code
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/OpenPlainsInc/openplainsinc.github.io/issues">
+            Report an Issue
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">Introduction Geoprocessing with GRASS GIS</h1>
+                  <div>
+        <div class="description">
+          an introduction to geoprocessing with <a href="https://grass.osgeo.org">GRASS GIS</a>. We aim to introduce you to the basics concepts of Geographic Information Systems (GIS) and how to use GRASS GIS to perform geoprocessing tasks.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">geospatial</div>
+                <div class="quarto-category">GRASS v8.5</div>
+                <div class="quarto-category">jupyter</div>
+                <div class="quarto-category">lidar</div>
+                <div class="quarto-category">STAC</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-page-left">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Corey T. White </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">February 8, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#intro-to-geoprocessing-with-the-grass-gis-geoprocessing-engine" id="toc-intro-to-geoprocessing-with-the-grass-gis-geoprocessing-engine" class="nav-link active" data-scroll-target="#intro-to-geoprocessing-with-the-grass-gis-geoprocessing-engine">Intro to Geoprocessing with the GRASS GIS Geoprocessing Engine</a>
+  <ul>
+  <li><a href="#workshop-objective" id="toc-workshop-objective" class="nav-link" data-scroll-target="#workshop-objective">Workshop Objective</a></li>
+  <li><a href="#install-grass-gis-and-data-in-google-colab" id="toc-install-grass-gis-and-data-in-google-colab" class="nav-link" data-scroll-target="#install-grass-gis-and-data-in-google-colab">Install GRASS GIS and Data in Google Colab</a></li>
+  <li><a href="#what-is-gis" id="toc-what-is-gis" class="nav-link" data-scroll-target="#what-is-gis">What is GIS?</a>
+  <ul class="collapse">
+  <li><a href="#geospatial-data" id="toc-geospatial-data" class="nav-link" data-scroll-target="#geospatial-data">Geospatial data</a>
+  <ul class="collapse">
+  <li><a href="#raster-data" id="toc-raster-data" class="nav-link" data-scroll-target="#raster-data">Raster Data</a></li>
+  <li><a href="#vector-data" id="toc-vector-data" class="nav-link" data-scroll-target="#vector-data">Vector Data</a></li>
+  </ul></li>
+  <li><a href="#geospatial-data-collection" id="toc-geospatial-data-collection" class="nav-link" data-scroll-target="#geospatial-data-collection">Geospatial Data Collection</a></li>
+  <li><a href="#coordinate-reference-systems-crs" id="toc-coordinate-reference-systems-crs" class="nav-link" data-scroll-target="#coordinate-reference-systems-crs">Coordinate Reference Systems (CRS)</a></li>
+  </ul></li>
+  <li><a href="#introduction-grass-gis" id="toc-introduction-grass-gis" class="nav-link" data-scroll-target="#introduction-grass-gis">Introduction GRASS GIS</a>
+  <ul class="collapse">
+  <li><a href="#what-is-a-geospatial-processing-engine" id="toc-what-is-a-geospatial-processing-engine" class="nav-link" data-scroll-target="#what-is-a-geospatial-processing-engine">What is a Geospatial Processing Engine?</a></li>
+  <li><a href="#grass-gis-projects-and-mapsets" id="toc-grass-gis-projects-and-mapsets" class="nav-link" data-scroll-target="#grass-gis-projects-and-mapsets">GRASS GIS Projects and Mapsets</a>
+  <ul class="collapse">
+  <li><a href="#coordinate-reference-systems-in-grass-gis" id="toc-coordinate-reference-systems-in-grass-gis" class="nav-link" data-scroll-target="#coordinate-reference-systems-in-grass-gis">Coordinate Reference Systems in GRASS GIS</a></li>
+  </ul></li>
+  <li><a href="#create-a-new-grass-gis-mapset" id="toc-create-a-new-grass-gis-mapset" class="nav-link" data-scroll-target="#create-a-new-grass-gis-mapset">Create a new GRASS GIS Mapset</a></li>
+  </ul></li>
+  <li><a href="#grass-gis-with-python" id="toc-grass-gis-with-python" class="nav-link" data-scroll-target="#grass-gis-with-python">GRASS GIS with Python</a>
+  <ul class="collapse">
+  <li><a href="#grass-python-environment-setup" id="toc-grass-python-environment-setup" class="nav-link" data-scroll-target="#grass-python-environment-setup">GRASS Python Environment Setup</a></li>
+  <li><a href="#grass-gis-session" id="toc-grass-gis-session" class="nav-link" data-scroll-target="#grass-gis-session">GRASS GIS Session</a></li>
+  <li><a href="#grass-gis-layers" id="toc-grass-gis-layers" class="nav-link" data-scroll-target="#grass-gis-layers">GRASS GIS Layers</a></li>
+  <li><a href="#computational-region" id="toc-computational-region" class="nav-link" data-scroll-target="#computational-region">Computational Region</a>
+  <ul class="collapse">
+  <li><a href="#adjusting-the-computational-region" id="toc-adjusting-the-computational-region" class="nav-link" data-scroll-target="#adjusting-the-computational-region">Adjusting the Computational Region</a></li>
+  </ul></li>
+  <li><a href="#processing-data" id="toc-processing-data" class="nav-link" data-scroll-target="#processing-data">Processing Data</a></li>
+  <li><a href="#date-visualization" id="toc-date-visualization" class="nav-link" data-scroll-target="#date-visualization">Date Visualization</a>
+  <ul class="collapse">
+  <li><a href="#maps" id="toc-maps" class="nav-link" data-scroll-target="#maps">Maps</a></li>
+  <li><a href="#d-maps" id="toc-d-maps" class="nav-link" data-scroll-target="#d-maps">3D Maps</a></li>
+  <li><a href="#web-maps" id="toc-web-maps" class="nav-link" data-scroll-target="#web-maps">Web Maps</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#ncssm-ndvi-watershed-analysis" id="toc-ncssm-ndvi-watershed-analysis" class="nav-link" data-scroll-target="#ncssm-ndvi-watershed-analysis">NCSSM NDVI &amp; Watershed Analysis</a>
+  <ul class="collapse">
+  <li><a href="#slope-aspect" id="toc-slope-aspect" class="nav-link" data-scroll-target="#slope-aspect">Slope &amp; Aspect</a></li>
+  <li><a href="#ndvi-normalized-difference-vegetation-index" id="toc-ndvi-normalized-difference-vegetation-index" class="nav-link" data-scroll-target="#ndvi-normalized-difference-vegetation-index">NDVI (Normalized Difference Vegetation Index)</a>
+  <ul class="collapse">
+  <li><a href="#shaded-map" id="toc-shaded-map" class="nav-link" data-scroll-target="#shaded-map">Shaded Map</a></li>
+  <li><a href="#d-map" id="toc-d-map" class="nav-link" data-scroll-target="#d-map">3D Map</a></li>
+  </ul></li>
+  <li><a href="#watershed" id="toc-watershed" class="nav-link" data-scroll-target="#watershed">Watershed</a>
+  <ul class="collapse">
+  <li><a href="#basins" id="toc-basins" class="nav-link" data-scroll-target="#basins">Basins</a></li>
+  <li><a href="#flow-accumulation" id="toc-flow-accumulation" class="nav-link" data-scroll-target="#flow-accumulation">Flow Accumulation</a></li>
+  <li><a href="#streams" id="toc-streams" class="nav-link" data-scroll-target="#streams">Streams</a></li>
+  </ul></li>
+  <li><a href="#flood-innundation" id="toc-flood-innundation" class="nav-link" data-scroll-target="#flood-innundation">Flood Innundation</a>
+  <ul class="collapse">
+  <li><a href="#simulate-flood" id="toc-simulate-flood" class="nav-link" data-scroll-target="#simulate-flood">Simulate Flood</a></li>
+  <li><a href="#map" id="toc-map" class="nav-link" data-scroll-target="#map">Map</a></li>
+  <li><a href="#interactive-flood-map" id="toc-interactive-flood-map" class="nav-link" data-scroll-target="#interactive-flood-map">Interactive Flood Map</a></li>
+  <li><a href="#export-map-as-html" id="toc-export-map-as-html" class="nav-link" data-scroll-target="#export-map-as-html">Export Map as HTML</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#create-a-new-project-location-and-mapset" id="toc-create-a-new-project-location-and-mapset" class="nav-link" data-scroll-target="#create-a-new-project-location-and-mapset">Create a new Project (Location and Mapset)</a>
+  <ul class="collapse">
+  <li><a href="#local-data-resources" id="toc-local-data-resources" class="nav-link" data-scroll-target="#local-data-resources">Local Data Resources</a>
+  <ul class="collapse">
+  <li><a href="#where-can-i-get-my-own-geospatial-data" id="toc-where-can-i-get-my-own-geospatial-data" class="nav-link" data-scroll-target="#where-can-i-get-my-own-geospatial-data">Where can I get my own geospatial data?</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#install-add-ons" id="toc-install-add-ons" class="nav-link" data-scroll-target="#install-add-ons">Install Add-Ons</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+
+
+
+
+
+<p><a href="https://colab.research.google.com/github/tomorrownow/intro-to-geoprocessing-workshop/blob/main/ncssm_workshop.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid" alt="Open In Colab"></a><a href="https://zenodo.org/doi/10.5281/zenodo.10764925"><img src="https://zenodo.org/badge/756914869.svg" class="img-fluid" alt="DOI"></a></p>
+<section id="intro-to-geoprocessing-with-the-grass-gis-geoprocessing-engine" class="level1">
+<h1>Intro to Geoprocessing with the GRASS GIS Geoprocessing Engine</h1>
+<p>During the workshop, we aim to introduce you to the basic concepts of geospatial processing and modeling with <a href="https://grass.osgeo.org">GRASS GIS</a>.</p>
+<section id="workshop-objective" class="level2">
+<h2 class="anchored" data-anchor-id="workshop-objective">Workshop Objective</h2>
+<p>At the end of this workshop, you will be able to:</p>
+<ul>
+<li>Understand the basic concepts of GIS</li>
+<li>Understand the basic concepts of geoprocessing</li>
+<li>Understand the fundamentals of GRASS GIS</li>
+<li>Perform basic geoprocessing tasks with GRASS GIS</li>
+<li>Understand how to use GRASS GIS in a Jupyter notebook</li>
+<li>Develop a basic workflow for geoprocessing tasks</li>
+<li>Publish a basic web map with geoprocessing results</li>
+</ul>
+<iframe width="560" height="315" src="https://learning.openplains.com/intro-to-geoprocessing-workshop/" title="Flood Map" frameborder="0">
+</iframe>
+</section>
+<section id="install-grass-gis-and-data-in-google-colab" class="level2">
+<h2 class="anchored" data-anchor-id="install-grass-gis-and-data-in-google-colab">Install GRASS GIS and Data in Google Colab</h2>
+<p>Google Colab is a free cloud service that allows you to run Python code in a Jupyter notebook environment. We will use Google Colab to run GRASS GIS and perform geoprocessing tasks.</p>
+<div id="cell-4" class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>bash</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>apt<span class="op">-</span>get install grass grass<span class="op">-</span>dev grass<span class="op">-</span>doc</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># leave the directory with source code</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>cd <span class="op">~</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># download sample data</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>mkdir <span class="op">-</span>p grassdata</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>mkdir <span class="op">-</span>p output</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>curl <span class="op">-</span>SL https:<span class="op">//</span>grass.osgeo.org<span class="op">/</span>sampledata<span class="op">/</span>north_carolina<span class="op">/</span>nc_basic_spm_grass7.<span class="bu">zip</span> <span class="op">&gt;</span> nc_basic_spm_grass7.<span class="bu">zip</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>unzip <span class="op">-</span>qq nc_basic_spm_grass7.<span class="bu">zip</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>mv nc_basic_spm_grass7 grassdata</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>rm nc_basic_spm_grass7.<span class="bu">zip</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>curl <span class="op">-</span>SL https:<span class="op">//</span>storage.googleapis.com<span class="op">/</span>public_grassdata<span class="op">/</span>ncssm_workshop_data<span class="op">/</span>ncssm.<span class="bu">zip</span> <span class="op">&gt;</span> ncssm.<span class="bu">zip</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>unzip <span class="op">-</span>qq ncssm.<span class="bu">zip</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>mv ncssm grassdata<span class="op">/</span>nc_basic_spm_grass7</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>rm ncssm.<span class="bu">zip</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="what-is-gis" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-gis">What is GIS?</h2>
+<p>GIS is a system designed to capture, store, manipulate, analyze, manage, and present spatial or geographic data. GIS applications are tools that allow users to create interactive queries (user-created searches), analyze spatial information, edit data in maps, and present the results of all these operations.</p>
+<p>There are many GIS software solutions that each perform well at differnt tasks.</p>
+<section id="geospatial-data" class="level3">
+<h3 class="anchored" data-anchor-id="geospatial-data">Geospatial data</h3>
+<p>Geospatial data is data that is associated with a particular location on the surface of the Earth. This data can be represented in many forms, such as <strong>vector</strong> data (points, lines, polygons), and <strong>raster</strong> data. Geospatial data can be used to answer questions such as “Where is the nearest hospital?” or “What is the likelihood of flooding at a given location?”.</p>
+<section id="raster-data" class="level4">
+<h4 class="anchored" data-anchor-id="raster-data">Raster Data</h4>
+<p>Raster are a way of represent <code>continuous</code> or <code>discrete</code> spatial data in a grid format. Each cell in the grid has a value that represents a particular attribute. For example, a raster could represent the temperature of the Earth’s surface, with each cell representing the temperature at a particular location.</p>
+</section>
+<section id="vector-data" class="level4">
+<h4 class="anchored" data-anchor-id="vector-data">Vector Data</h4>
+<p>Vector data is represented as points, lines, and polygons on a map. Points are used to represent specific locations, such as the location of a tree or a building. Lines are used to represent linear features, such as roads or rivers. Polygons are used to represent areas, such as the boundaries of a city or a forest.</p>
+</section>
+</section>
+<section id="geospatial-data-collection" class="level3">
+<h3 class="anchored" data-anchor-id="geospatial-data-collection">Geospatial Data Collection</h3>
+<p>Geospatial data is collected in many ways, such as:</p>
+<p><strong>Earth Observation Systems (Satellites, Aircraft, UAS)</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 40%">
+<col style="width: 35%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>System</th>
+<th>Spatial Resolution</th>
+<th>Temporal Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>UAS</td>
+<td>2cm to 5cm RGB, Variable</td>
+<td>Multiple times daily</td>
+</tr>
+<tr class="even">
+<td>PlanetScope</td>
+<td>3m RGB-NIR</td>
+<td>Daily</td>
+</tr>
+<tr class="odd">
+<td>Landsat 8</td>
+<td>30m multispectral, 15m panchromatic</td>
+<td>16 days</td>
+</tr>
+<tr class="even">
+<td>Sentinel-2</td>
+<td>10m visible and NIR, 20m SWIR</td>
+<td>5 days at equator</td>
+</tr>
+<tr class="odd">
+<td>MODIS (Terra and Aqua)</td>
+<td>250m for some bands; 500m and 1km for others</td>
+<td>1 to 2 days</td>
+</tr>
+<tr class="even">
+<td>GOES</td>
+<td>0.5km visible, 2km infrared</td>
+<td>Every 30 seconds to 15 minutes</td>
+</tr>
+<tr class="odd">
+<td>Copernicus Sentinel-1</td>
+<td>5 to 25m</td>
+<td>6 to 12 days</td>
+</tr>
+<tr class="even">
+<td>ALOS-2</td>
+<td>3 to 10m</td>
+<td>14 days</td>
+</tr>
+<tr class="odd">
+<td>NOAA-20</td>
+<td>375m</td>
+<td>Daily</td>
+</tr>
+<tr class="even">
+<td>Himawari-8</td>
+<td>0.5 to 2km</td>
+<td>10 minutes for full disk, 2.5 minutes for Japan</td>
+</tr>
+<tr class="odd">
+<td>ICESat-2</td>
+<td>17m along-track footprint</td>
+<td>Revisits every 91 days</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sensor Networks</strong></p>
+<p>In-situ sensor networks are used to collect data in the environment. Common use cases incldue weather stations, flood gauges, and air quality sensors.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/usgs_stream_gauge.jpeg" class="img-fluid figure-img" style="width:30.0%"></p>
+<figcaption>USGS Stream Gauge</figcaption>
+</figure>
+</div>
+<p><strong>Mobile Devices</strong></p>
+<p>Mobile devices are used to collect data in the field. Common use cases include GPS data, photos, and field observations.</p>
+</section>
+<section id="coordinate-reference-systems-crs" class="level3">
+<h3 class="anchored" data-anchor-id="coordinate-reference-systems-crs">Coordinate Reference Systems (CRS)</h3>
+<p>Coordinate reference systems (CRS) are used to specify the location of a point on the Earth’s surface.</p>
+<p><strong>Geodetic (Geographic) coordinate systems</strong> are used to specify the location of a point on the Earth’s surface using latitude and longitude (units degree:minutes:seconds).</p>
+<p>Example:</p>
+<ul>
+<li>-78.0, 35.0 (Durham, NC)</li>
+</ul>
+<p>Use Case:</p>
+<ul>
+<li>GPS coordinates</li>
+<li>Large regions</li>
+<li>Data Exchange</li>
+</ul>
+<p>The most common CRS is the <code>WGS84</code>, which is used by GPS systems.</p>
+<p><strong>Projected coordinate systems</strong> are used to represent the Earth’s surface on a flat map.</p>
+<p>Projected coordinate systems are a type of CRS that is used to represent the Earth’s surface on a flat map. Each version uses a different mathematical model to transform the Earth’s three-dimensional surface into a two-dimensional plane. The choice of a projected coordinate system depends on the region of interest and the purpose of the map.</p>
+<p>Example Developable Surfaces: - Cylindrical - Conic - azimuthal</p>
+<p>Types of distortion: - Conformal - Equal Area - Equidistant</p>
+<p><img src="images/crs_projected.jpg" class="img-fluid"></p>
+<p>In North Carolina,<code>NAD83 North Carolina State Plane</code> (EPSG: 3358) is a commonly used projected coordinate system. It uses the <code>Lambert Conformal Conic</code> projection and has units of meters. You can find other various of CRS at <a href="https://epsg.io">epsg.io</a> that can be used for different regions of the world.</p>
+<p><strong>Web Mapping &amp; Pseudo-Mercator</strong></p>
+<p><code>Pseudo-Mercator</code> (EPSG: 3857) is a projected coordinate system that is used by web mapping services such as Google Maps, OpenStreetMap, and Bing Maps. It uses the <code>Mercator</code> projection and has units of meters.</p>
+<p>Even though it is widely used for web mapping, it is not recommend for professional work because it has a high level of distortion at high latitudes and considers the Earth as a perfect sphere instead of an <code>geoid</code>.</p>
+<p>You can see for yourself the distortion of the Mercator projection by using the <a href="https://thetruesize.com">The true size</a> website.</p>
+<p><strong>Learn More</strong> Learn more about <a href="https://www.jasondavies.com/maps/transition">Map projection transitions</a> Look up CRS at <a href="https://epsg.io">epsg.io</a></p>
+<iframe width="800" height="600" src="https://www.jasondavies.com/maps/transition" title="Flood Map" frameborder="0">
+</iframe>
+</section>
+</section>
+<section id="introduction-grass-gis" class="level2">
+<h2 class="anchored" data-anchor-id="introduction-grass-gis">Introduction GRASS GIS</h2>
+<section id="what-is-a-geospatial-processing-engine" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-a-geospatial-processing-engine">What is a Geospatial Processing Engine?</h3>
+<p>A geospatial processing engine is a tool that allows to efficiently manipulate geospatial data through the development of scriptable geoprocesing workflows. Geoprocessing engines can be used on a local machine, distributed on the cloud, or on HPC (high performance computing) clusters (i.e., super computers).</p>
+<p>With GRASS you can effiently process geospatial data with over 800 tools or develop your own models or tools using its C and Python APIs.</p>
+<p>The tools are prefixed to reflect the type of data they are designe to work with.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 60%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Category</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Examples</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Display (d.*)</strong></td>
+<td>display commands for graphical screen output</td>
+<td><code>d.rast</code>, <code>d.vect</code></td>
+</tr>
+<tr class="even">
+<td><strong>General (g.*)</strong></td>
+<td>general file management commands</td>
+<td><code>g.list</code>, <code>g.copy</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Raster (r.*)</strong></td>
+<td>raster processing commands</td>
+<td><code>r.slope.aspect</code>, <code>r.mapcalc</code></td>
+</tr>
+<tr class="even">
+<td><strong>Vector (v.*)</strong></td>
+<td>vector processing commands</td>
+<td><code>v.digit</code>, <code>v.to.rast</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Imagery (i.*)</strong></td>
+<td>image processing commands</td>
+<td><code>i.atcorr</code>, <code>i.pansharpen</code></td>
+</tr>
+<tr class="even">
+<td><strong>Database (db.*)</strong></td>
+<td>database commands (SQLite, Postgresql, etc..)</td>
+<td><code>db.select</code>, <code>db.in.ogr</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Raster 3D (r3.*)</strong></td>
+<td>3D raster (voxel) processing commands</td>
+<td><code>r3.mapcalc</code>, <code>r3.gwflow</code></td>
+</tr>
+<tr class="even">
+<td><strong>Temporal (t.*)</strong></td>
+<td>spatio-temporal data processing commands</td>
+<td><code>t.rast.aggregate</code>, <code>t.rast.series</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Miscellaneous (m.*)</strong></td>
+<td>miscellaneous commands</td>
+<td><code>m.proj</code>, <code>m.nviz.image</code></td>
+</tr>
+</tbody>
+</table>
+<p><a href="https://grass.osgeo.org/grass-stable/manuals/">GRASS GIS Reference Manual</a></p>
+</section>
+<section id="grass-gis-projects-and-mapsets" class="level3">
+<h3 class="anchored" data-anchor-id="grass-gis-projects-and-mapsets">GRASS GIS Projects and Mapsets</h3>
+<p>In GRASS a <code>project</code> resprests a group of data that is all in the same <em>CRS</em>. Each <code>project</code> can have a collection of subprojects called <em>mapsets</em>. A <code>mapset</code> contains map <em>layers</em> in <code>raster</code> or <code>vector</code> format. Each <code>project</code> has a <code>PERMANENT</code> mapset that is used to store the original data.</p>
+<p><a href="https://grass.osgeo.org/grass-stable/manuals/grass_database.html">Learn More</a>.</p>
+<section id="coordinate-reference-systems-in-grass-gis" class="level4">
+<h4 class="anchored" data-anchor-id="coordinate-reference-systems-in-grass-gis">Coordinate Reference Systems in GRASS GIS</h4>
+<p>Every <code>project</code> in GRASS GIS has a CRS. You can view the CRS of a <code>project</code> using the <code>g.proj</code> tool.</p>
+<p>We are currently in the <code>nc_basic_spm_grass7</code> project, which uses the <code>NAD83 / North Carolina (meters)</code> coordinate reference system (EPSG:3358).</p>
+</section>
+</section>
+<section id="create-a-new-grass-gis-mapset" class="level3">
+<h3 class="anchored" data-anchor-id="create-a-new-grass-gis-mapset">Create a new GRASS GIS Mapset</h3>
+<p>Here we will use the GRASS GIS shell command to create a new GRASS GIS mapset. The <code>!</code> is used to run shell commands in a Jupyter notebook. The <code>grass</code> command is used to start GRASS GIS and the <code>-c</code> flag is used to create a new GRASS GIS mapset and <code>-e</code> tells the command to exit after it finishes.</p>
+<div id="cell-8" class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ! means that we are running a command in the shell</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>grass <span class="op">-</span>e <span class="op">-</span>c .<span class="op">/</span>grassdata<span class="op">/</span>nc_basic_spm_grass7<span class="op">/</span>tutorial</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># You can also create a new project using the Python API</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># gs.create_project('nc_basic_spm_grass7', 'grassdata/nc_basic_spm_grass7/tutorial', epsg=3358)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="grass-gis-with-python" class="level2">
+<h2 class="anchored" data-anchor-id="grass-gis-with-python">GRASS GIS with Python</h2>
+<p>GRASS GIS has two core libraries for working with geospatial data in Python:</p>
+<ul>
+<li><code>grass.script</code> - Python library for working with GRASS GIS modules</li>
+<li><code>grass.pygrass</code> - Python library for working with GRASS GIS data structures</li>
+</ul>
+<p>We will use the <code>grass.script as gs</code> library to perform geoprocessing tasks in this workshop.</p>
+<p>For interaction with Jupiter notebooks, we will use <code>grass.jupyter as gj</code> to display maps and other outputs.</p>
+<section id="grass-python-environment-setup" class="level3">
+<h3 class="anchored" data-anchor-id="grass-python-environment-setup">GRASS Python Environment Setup</h3>
+<p>To use GRASS GIS in Python, we need to set the <code>GISBASE</code> environment variable to the location of the GRASS GIS installation. We also need to add the GRASS GIS Python library to the Python path.</p>
+<div id="cell-11" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> subprocess</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pprint <span class="im">import</span> pprint</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> PIL <span class="im">import</span> Image </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sqlite3</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> IFrame</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Switch to the home directory</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># os.chdir(os.path.expanduser("~")) # Colab only</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Ask GRASS GIS where its Python packages are.</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>gisbase <span class="op">=</span> subprocess.check_output([<span class="st">"grass"</span>, <span class="st">"--config"</span>, <span class="st">"path"</span>], text<span class="op">=</span><span class="va">True</span>).strip()</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"GISBASE"</span>] <span class="op">=</span> gisbase</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Ask GRASS GIS where its Python packages are.</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>sys.path.append(</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    subprocess.check_output([<span class="st">"grass"</span>, <span class="st">"--config"</span>, <span class="st">"python_path"</span>], text<span class="op">=</span><span class="va">True</span>).strip()</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Import the GRASS GIS packages we need.</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> grass.script <span class="im">as</span> gs</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Import GRASS Jupyter</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> grass.jupyter <span class="im">as</span> gj</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="grass-gis-session" class="level3">
+<h3 class="anchored" data-anchor-id="grass-gis-session">GRASS GIS Session</h3>
+<p>With our Python environment setup we can start a GRASS GIS session using the <code>gj.init</code> function. Here we pass the the path to our <code>project/mapset</code> (<code>nc_basic_spm_grass7/tutorial</code>). This will allow us to exectute GRASS GIS commands in Python in the <code>tutorial</code> mapset.</p>
+<div id="cell-13" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Start a GRASS session</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>session <span class="op">=</span> gj.init(<span class="st">"./grassdata"</span>, <span class="st">"nc_basic_spm_grass7"</span>, <span class="st">"tutorial"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s look at the details of the <code>project</code> CRS using the <code>g.proj</code> command.</p>
+<div id="cell-15" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"g.proj"</span>, flags<span class="op">=</span><span class="st">"g"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>name=Lambert Conformal Conic
+proj=lcc
+datum=nad83
+a=6378137.0
+es=0.006694380022900787
+lat_1=36.16666666666666
+lat_2=34.33333333333334
+lat_0=33.75
+lon_0=-79
+x_0=609601.22
+y_0=0
+no_defs=defined
+srid=EPSG:3358
+unit=Meter
+units=Meters
+meters=1</code></pre>
+</div>
+</div>
+</section>
+<section id="grass-gis-layers" class="level3">
+<h3 class="anchored" data-anchor-id="grass-gis-layers">GRASS GIS Layers</h3>
+<p>The <a href="https://grass.osgeo.org/grass83/manuals/g.list.html">g.list</a> command or the Python helper function <code>gs.list_grouped</code> let us list what data we have able in our project. We can search by data <code>type</code> and filter the data by <code>mapset</code>.</p>
+<p>Here we will list all the <code>raster</code> and <code>vector</code> data in the <code>PERMANENT</code> mapset.</p>
+<div id="cell-17" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>gs.list_grouped(<span class="bu">type</span><span class="op">=</span><span class="st">"raster"</span>)[<span class="st">'PERMANENT'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>['basins',
+ 'elevation',
+ 'elevation_shade',
+ 'geology',
+ 'lakes',
+ 'landuse',
+ 'soils']</code></pre>
+</div>
+</div>
+<div id="cell-18" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>gs.list_grouped(<span class="bu">type</span><span class="op">=</span><span class="st">"vector"</span>)[<span class="st">'PERMANENT'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>['boundary_region',
+ 'boundary_state',
+ 'census',
+ 'elev_points',
+ 'firestations',
+ 'geology',
+ 'geonames',
+ 'hospitals',
+ 'points_of_interest',
+ 'railroads',
+ 'roadsmajor',
+ 'schools',
+ 'streams',
+ 'streets',
+ 'zipcodes']</code></pre>
+</div>
+</div>
+<p>Our <code>project</code> has 7 raster and 15 layers for us to examine. However, we must first define computational region before we can work with the data.</p>
+</section>
+<section id="computational-region" class="level3">
+<h3 class="anchored" data-anchor-id="computational-region">Computational Region</h3>
+<p>In GRASS GIS the <code>region</code> or <code>computational region</code> defines the spatial scale used during computation. Spatial scale reprents the resolution (i.e., grain) of each pixel and the total extent (i.e., area) of the raster.</p>
+<p>The <code>computational region</code> impacts your analytical results and the amount of time it takes to process data. You can change the spatial scale by defining regions extent and upscaling (finer data, increased resolution) or downscale (coarser data, decrease resolution) the data.</p>
+<p>We can view and set the computational region using the <code>g.region</code> command or the <code>pygrass</code> function <code>gs.region</code>. The <code>raster</code> flag is used to set the region to the extent of a raster layer. The <code>res</code> flag is used to set the resolution of the region.</p>
+<p>First, let’s view the current computational region.</p>
+<div id="cell-21" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prints the current computational region</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>gs.region()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>{'projection': 99,
+ 'zone': 0,
+ 'n': 228500.0,
+ 's': 215000.0,
+ 'w': 630000.0,
+ 'e': 645000.0,
+ 'nsres': 10.0,
+ 'ewres': 10.0,
+ 'rows': 1350,
+ 'cols': 1500,
+ 'cells': 2025000}</code></pre>
+</div>
+</div>
+<p>Now set the computational region to the spatial scale of the <code>elevation</code> raster layer. The <code>elevation</code> raster data is a Digital Elevation Model (DEM) of the area around Wake County, North Carolina.</p>
+<div id="cell-23" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>gs.region(<span class="st">"elevation"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>{'projection': 99,
+ 'zone': 0,
+ 'n': 228500.0,
+ 's': 215000.0,
+ 'w': 630000.0,
+ 'e': 645000.0,
+ 't': 1.0,
+ 'b': 0.0,
+ 'nsres': 10.0,
+ 'nsres3': 10.0,
+ 'ewres': 10.0,
+ 'ewres3': 10.0,
+ 'tbres': 1.0,
+ 'rows': 1350,
+ 'rows3': 1350,
+ 'cols': 1500,
+ 'cols3': 1500,
+ 'depths': 1,
+ 'cells': 2025000,
+ 'cells3': 2025000}</code></pre>
+</div>
+</div>
+<section id="adjusting-the-computational-region" class="level4">
+<h4 class="anchored" data-anchor-id="adjusting-the-computational-region">Adjusting the Computational Region</h4>
+<p>With raster data we can use spatial interpolation to resample our data.</p>
+<blockquote class="blockquote">
+<p>Note: We use different methods for <code>continuous</code> and <code>discrete</code> spatial data.</p>
+</blockquote>
+<!-- ![Interpolation](https://github.com/OpenPlainsInc/intro-to-geoprocessing-workshop/blob/main/images/interpolation.png?raw=true)
+[Source: Cmglee](https://en.wikipedia.org/wiki/Bilinear_interpolation#/media/File:Comparison_of_1D_and_2D_interpolation.svg) -->
+<p>Here the <code>elevation</code> raster layer is resampled using <code>bliniear</code> interpolation so that each cell has a resolution of <code>250m</code>, <code>500m</code>, and <code>1000m</code> using <a href="https://grass.osgeo.org/grass-stable/manuals/r.resamp.interp.html">r.resample.interp</a>.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the computational region to the extent of the elevation raster layer with a resolution of 250m making sure to align the region with the rasters grid</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">'g.region'</span>, raster<span class="op">=</span><span class="st">'elevation'</span>, res<span class="op">=</span><span class="dv">250</span>, flags<span class="op">=</span><span class="st">'a'</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Resample the elevation raster layer to 250m resolution using bilinear interpolation</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">'r.resamp.interp'</span>, <span class="bu">input</span><span class="op">=</span><span class="st">'elevation'</span>, output<span class="op">=</span><span class="st">'elevation_250m'</span>, method<span class="op">=</span><span class="st">'bilinear'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>What impact does resampling have on our evelation data?</em></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://github.com/OpenPlainsInc/intro-to-geoprocessing-workshop/blob/main/images/dem_spatial_scale.png?raw=true" class="img-fluid figure-img"></p>
+<figcaption>elevation_sc</figcaption>
+</figure>
+</div>
+<p>Let’s look at what happends when we resample <code>discete</code> raster data like <code>landuse</code>.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the computational region to the extent of the landuse raster layer with a resolution of 250m making sure to align the region with the rasters grid</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">'g.region'</span>, raster<span class="op">=</span><span class="st">'landuse'</span>, res<span class="op">=</span><span class="dv">250</span>, flags<span class="op">=</span><span class="st">'a'</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Resample the landuse raster layer to 250m resolution using nearest neighbor interpolation</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">'r.resamp.interp'</span>, <span class="bu">input</span><span class="op">=</span><span class="st">'landuse'</span>, output<span class="op">=</span><span class="st">'landuse_250m'</span>, method<span class="op">=</span><span class="st">'nearest'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://github.com/tomorrownow/intro-to-geoprocessing-workshop/blob/main/images/lc_spatial_scale.png?raw=true" class="img-fluid figure-img"></p>
+<figcaption>discete</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="processing-data" class="level3">
+<h3 class="anchored" data-anchor-id="processing-data">Processing Data</h3>
+<p>Now that we have set the computational region, we can perform geoprocessing tasks on the data. Here we will use the <code>r.slope.aspect</code> tool to calculate the slope and aspect of the <code>elevation</code> raster layer by running the tool with <code>gs.run_command</code>. The <code>run_command</code> should be used when you do not need a return value from the tool.</p>
+<div id="cell-26" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.slope.aspect"</span>, elevation<span class="op">=</span><span class="st">"elevation"</span>, slope<span class="op">=</span><span class="st">"slope"</span>, aspect<span class="op">=</span><span class="st">"aspect"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The slope represents the steepest slope (maximum gradient) angle in degrees from the horizontal plane. The aspect represents the direction that the slope faces.</p>
+<p>We can create a DataFrame of the univariate statistics from the <code>slope</code> layer using the <code>r.univar</code> tool by running the tool with <code>gs.parse_command</code> and setting the format to <code>json</code>.</p>
+<div id="cell-28" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>slope_stats_json <span class="op">=</span> gs.read_command(<span class="st">"r.univar"</span>, <span class="bu">map</span><span class="op">=</span><span class="st">"slope"</span>, <span class="bu">format</span><span class="op">=</span><span class="st">"json"</span>, flags<span class="op">=</span><span class="st">"e"</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>slope_stats_dict <span class="op">=</span> json.loads(slope_stats_json)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>df_slope <span class="op">=</span> pd.DataFrame(slope_stats_dict)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>df_slope <span class="op">=</span> df_slope.T.reset_index()</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>df_slope.columns <span class="op">=</span> [<span class="st">"statistic"</span>, <span class="st">"value"</span>]</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>df_slope.head(<span class="dv">15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">statistic</th>
+<th data-quarto-table-cell-role="th">value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>n</td>
+<td>2019304</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>null_cells</td>
+<td>5696</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>cells</td>
+<td>2025000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>min</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>max</td>
+<td>38.689392</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>range</td>
+<td>38.689392</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>mean</td>
+<td>3.864522</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>mean_of_abs</td>
+<td>3.864522</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>stddev</td>
+<td>3.007914</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>variance</td>
+<td>9.047547</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>coeff_var</td>
+<td>77.834045</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>sum</td>
+<td>7803645.553885</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">12</td>
+<td>first_quartile</td>
+<td>1.854639</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">13</td>
+<td>median</td>
+<td>3.215121</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">14</td>
+<td>third_quartile</td>
+<td>5.024211</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="date-visualization" class="level3">
+<h3 class="anchored" data-anchor-id="date-visualization">Date Visualization</h3>
+<section id="maps" class="level4">
+<h4 class="anchored" data-anchor-id="maps">Maps</h4>
+<p>Map layers can be displayed using the GRASS Jupyter function <code>gj.Map</code> to create a map object. Map objects can use GRASS display tools like <code>d.rast</code> and <code>d.vect</code> to visualize vector and raster map layers.</p>
+<div id="cell-31" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>dem_map <span class="op">=</span> gj.Map() <span class="co"># Create a map object</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>dem_map.d_rast(<span class="bu">map</span><span class="op">=</span><span class="st">"elevation"</span>) <span class="co"># Add the raster map to the map object</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>dem_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"roadsmajor"</span>, color<span class="op">=</span><span class="st">"black"</span>) <span class="co"># Add the vector map to the map object</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Add a raster legend</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>dem_map.d_legend(</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    raster<span class="op">=</span><span class="st">"elevation"</span>,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    at<span class="op">=</span>(<span class="dv">5</span>,<span class="dv">40</span>,<span class="dv">5</span>,<span class="dv">9</span>),</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"Elevation (m)"</span>,</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    font<span class="op">=</span><span class="st">"sans"</span>,</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    flags<span class="op">=</span><span class="st">"b"</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>) </span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>dem_map.d_barscale(at<span class="op">=</span>(<span class="dv">50</span>,<span class="dv">7</span>), flags<span class="op">=</span><span class="st">"n"</span>) <span class="co"># Add a scale bar to the map</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>dem_map.show() <span class="co"># Display the map</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<div>
+<figure class="figure">
+<p><img src="ncssm_workshop_files/figure-html/cell-13-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Let’s overlay the <code>elevation</code> data over the <code>aspect</code> to see how the terrain looks with shaded relief.</p>
+<div id="cell-33" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>dem_map <span class="op">=</span> gj.Map() <span class="co"># Create a map object</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>dem_map.d_shade(color<span class="op">=</span><span class="st">"elevation"</span>, shade<span class="op">=</span><span class="st">"aspect"</span>) <span class="co"># Add a shaded relief map</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>dem_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"roadsmajor"</span>, color<span class="op">=</span><span class="st">"black"</span>) <span class="co"># Add the vector map to the map object</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Add a raster legend</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>dem_map.d_legend(</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    raster<span class="op">=</span><span class="st">"elevation"</span>,</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    at<span class="op">=</span>(<span class="dv">5</span>,<span class="dv">40</span>,<span class="dv">5</span>,<span class="dv">9</span>),</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"Elevation (m)"</span>,</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    font<span class="op">=</span><span class="st">"sans"</span>,</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    flags<span class="op">=</span><span class="st">"b"</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>) </span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>dem_map.d_barscale(at<span class="op">=</span>(<span class="dv">50</span>,<span class="dv">7</span>), flags<span class="op">=</span><span class="st">"n"</span>) <span class="co"># Add a scale bar to the map</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>dem_map.show() <span class="co"># Display the map</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<div>
+<figure class="figure">
+<p><img src="ncssm_workshop_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can also change the color scheme of our map layers using the <code>r.colors</code> tool. Here we will change the color scheme of the <code>aspect</code> layer to <code>aspectcolr</code>.</p>
+<div id="cell-35" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.colors"</span>, <span class="bu">map</span><span class="op">=</span><span class="st">"aspect"</span>, color<span class="op">=</span><span class="st">"aspectcolr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-36" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>dem_shade_map <span class="op">=</span> gj.Map() <span class="co"># Create a map object</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>dem_shade_map.d_shade(color<span class="op">=</span><span class="st">"aspect"</span>, shade<span class="op">=</span><span class="st">"aspect"</span>) <span class="co"># Add a shaded relief map</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>dem_shade_map.d_legend(raster<span class="op">=</span><span class="st">"aspect"</span>, at<span class="op">=</span>(<span class="dv">5</span>,<span class="dv">50</span>,<span class="dv">5</span>,<span class="dv">9</span>), flags<span class="op">=</span><span class="st">"b"</span>) <span class="co"># Add a raster legend</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>dem_shade_map.d_barscale(at<span class="op">=</span>(<span class="dv">50</span>,<span class="dv">7</span>,<span class="dv">1</span>,<span class="dv">1</span>), flags<span class="op">=</span><span class="st">"n"</span>) <span class="co"># Add a scale bar to the map</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>dem_shade_map.show() <span class="co"># Display the map</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<div>
+<figure class="figure">
+<p><img src="ncssm_workshop_files/figure-html/cell-16-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="d-maps" class="level4">
+<h4 class="anchored" data-anchor-id="d-maps">3D Maps</h4>
+<p>GRASS GIS can also create 3D maps using the <code>nviz</code> tool. The <code>nviz</code> tool allows you to visualize raster and vector data in 3D space. Here we will create a 3D map of the <code>elevation</code> data overlayed with the <code>landuse</code> data.</p>
+<div id="cell-38" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>elevation_3dmap <span class="op">=</span> gj.Map3D(use_region<span class="op">=</span><span class="va">False</span>, width<span class="op">=</span><span class="dv">800</span>, height<span class="op">=</span><span class="dv">600</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Full list of options m.nviz.image</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># https://grass.osgeo.org/grass-stable/manuals/m.nviz.image.html</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>elevation_3dmap.render(</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    elevation_map<span class="op">=</span><span class="st">"elevation"</span>,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    color_map<span class="op">=</span><span class="st">"landuse"</span>,</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    perspective<span class="op">=</span><span class="dv">35</span>,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">5000</span>,</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    resolution_fine<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    zexag<span class="op">=</span><span class="dv">5</span>,</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    fringe<span class="op">=</span>[<span class="st">'ne'</span>,<span class="st">'nw'</span>,<span class="st">'sw'</span>,<span class="st">'se'</span>],</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    fringe_elevation<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    arrow_position<span class="op">=</span>[<span class="dv">100</span>,<span class="dv">50</span>],</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>elevation_3dmap.overlay.d_barscale(at<span class="op">=</span>(<span class="dv">60</span>,<span class="dv">10</span>), flags<span class="op">=</span><span class="st">""</span>)</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>elevation_3dmap.overlay.d_legend(raster<span class="op">=</span><span class="st">"landuse"</span>, at<span class="op">=</span>(<span class="dv">5</span>,<span class="dv">35</span>,<span class="dv">5</span>,<span class="dv">9</span>), flags<span class="op">=</span><span class="st">"b"</span>)</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>elevation_3dmap.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<div>
+<figure class="figure">
+<p><img src="ncssm_workshop_files/figure-html/cell-17-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="web-maps" class="level4">
+<h4 class="anchored" data-anchor-id="web-maps">Web Maps</h4>
+<div id="cell-40" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>elevation_map <span class="op">=</span> gj.InteractiveMap(width<span class="op">=</span><span class="dv">800</span>, height<span class="op">=</span><span class="dv">600</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>elevation_map.add_raster(<span class="st">"elevation"</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>elevation_map.add_vector(<span class="st">"roadsmajor"</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>elevation_map.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"4a144d170b864be5ad4a8bf8fc147d79","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="ncssm-ndvi-watershed-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="ncssm-ndvi-watershed-analysis">NCSSM NDVI &amp; Watershed Analysis</h2>
+<div id="cell-42" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>gj.init(<span class="st">"./grassdata/nc_basic_spm_grass7/ncssm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<pre><code>&lt;grass.jupyter.setup._JupyterGlobalSession at 0x76f9ea3dfc40&gt;</code></pre>
+</div>
+</div>
+<div id="cell-43" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"g.region"</span>, raster<span class="op">=</span><span class="st">"ncssm_be_1m"</span>, res<span class="op">=</span><span class="dv">1</span>, flags<span class="op">=</span><span class="st">"ap"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>projection: 99 (Lambert Conformal Conic)
+zone:       0
+datum:      nad83
+ellipsoid:  a=6378137 es=0.006694380022900787
+north:      252984
+south:      251460
+west:       615696
+east:       617223
+nsres:      1
+ewres:      1
+rows:       1524
+cols:       1527
+cells:      2327148</code></pre>
+</div>
+</div>
+<div id="cell-44" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> gj.Map()</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_rast(<span class="bu">map</span><span class="op">=</span><span class="st">"naip_2022_rgb"</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"ncssm"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="st">"white"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"open_channels"</span>, color<span class="op">=</span><span class="st">"#7fcdbb"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"roads"</span>)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"greenways"</span>, color<span class="op">=</span><span class="st">"green"</span>)</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"sidewalks"</span>, color<span class="op">=</span><span class="st">"grey"</span>)</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_barscale(at<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">7</span>), flags<span class="op">=</span><span class="st">"n"</span>)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<div>
+<figure class="figure">
+<p><img src="ncssm_workshop_files/figure-html/cell-21-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="slope-aspect" class="level4">
+<h4 class="anchored" data-anchor-id="slope-aspect">Slope &amp; Aspect</h4>
+<div id="cell-46" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"r.slope.aspect"</span>,</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    elevation<span class="op">=</span><span class="st">"ncssm_be_1m"</span>,</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    slope<span class="op">=</span><span class="st">"slope"</span>,</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    aspect<span class="op">=</span><span class="st">"aspect"</span>,</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    dx<span class="op">=</span><span class="st">"dx"</span>,</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    dy<span class="op">=</span><span class="st">"dy"</span>,</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    overwrite<span class="op">=</span><span class="va">True</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-47" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>ncssm_map <span class="op">=</span> gj.Map()</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>ncssm_map.d_shade(color<span class="op">=</span><span class="st">"ncssm_be_1m"</span>, shade<span class="op">=</span><span class="st">"aspect"</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>ncssm_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"ncssm"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="st">"white"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>ncssm_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"roads"</span>)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>ncssm_map.d_legend(raster<span class="op">=</span><span class="st">"ncssm_be_1m"</span>, at<span class="op">=</span>(<span class="dv">5</span>,<span class="dv">50</span>,<span class="dv">5</span>,<span class="dv">9</span>), flags<span class="op">=</span><span class="st">"b"</span>)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>ncssm_map.d_barscale(at<span class="op">=</span>(<span class="dv">20</span>,<span class="dv">8</span>), flags<span class="op">=</span><span class="st">"n"</span>, length<span class="op">=</span><span class="dv">250</span>)</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>ncssm_map.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="25">
+<div>
+<figure class="figure">
+<p><img src="ncssm_workshop_files/figure-html/cell-23-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="ndvi-normalized-difference-vegetation-index" class="level3">
+<h3 class="anchored" data-anchor-id="ndvi-normalized-difference-vegetation-index">NDVI (Normalized Difference Vegetation Index)</h3>
+<p>NDVI is a simple calculation that measure chlorophyll absorbtion in plants. It utilizes the Red and Near-Infrared (NIR) light to produce an index between -1 and 1 where 1 represents healthy vegetation and values less than or equal to 0 represent bare earth or other forms of imperious surface.</p>
+<p><span class="math display">\[ NDVI = \frac{(NIR - Red)}{(NIR + Red)} \]</span></p>
+<div id="cell-49" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"i.vi"</span>,</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    viname<span class="op">=</span><span class="st">"ndvi"</span>,</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    red<span class="op">=</span><span class="st">"naip2022.red"</span>,</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    nir<span class="op">=</span><span class="st">"naip2022.nir"</span>,</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    output<span class="op">=</span><span class="st">"naip2022_ndvi"</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s viusalize the NDVI for the area around NCSSM.</p>
+<div id="cell-51" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>ndvi_map <span class="op">=</span> gj.Map()</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_shade(color<span class="op">=</span><span class="st">"naip2022_ndvi"</span>, shade<span class="op">=</span><span class="st">"aspect"</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_rast(<span class="bu">map</span><span class="op">=</span><span class="st">"naip2022_ndvi"</span>)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"ncssm"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="st">"#FFE599"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"roads"</span>)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_legend(raster<span class="op">=</span><span class="st">"naip2022_ndvi"</span>, at<span class="op">=</span>(<span class="dv">5</span>,<span class="dv">50</span>,<span class="dv">5</span>,<span class="dv">9</span>), flags<span class="op">=</span><span class="st">"b"</span>)</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_barscale(at<span class="op">=</span>(<span class="dv">20</span>,<span class="dv">8</span>), flags<span class="op">=</span><span class="st">"n"</span>, length<span class="op">=</span><span class="dv">250</span>)</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>ndvi_map.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="27">
+<div>
+<figure class="figure">
+<p><img src="ncssm_workshop_files/figure-html/cell-25-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="shaded-map" class="level4">
+<h4 class="anchored" data-anchor-id="shaded-map">Shaded Map</h4>
+<div id="cell-53" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>ndvi_map <span class="op">=</span> gj.Map()</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_shade(color<span class="op">=</span><span class="st">"naip2022_ndvi"</span>, shade<span class="op">=</span><span class="st">"aspect"</span>, brighten<span class="op">=</span><span class="dv">30</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"ncssm"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="st">"#FFE599"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"roads"</span>)</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_barscale(at<span class="op">=</span>(<span class="dv">20</span>,<span class="dv">8</span>), flags<span class="op">=</span><span class="st">"n"</span>, length<span class="op">=</span><span class="dv">250</span>)</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>ndvi_map.d_legend(raster<span class="op">=</span><span class="st">"naip2022_ndvi"</span>, at<span class="op">=</span>(<span class="dv">5</span>,<span class="dv">50</span>,<span class="dv">5</span>,<span class="dv">9</span>), flags<span class="op">=</span><span class="st">"b"</span>)</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>ndvi_map.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="28">
+<div>
+<figure class="figure">
+<p><img src="ncssm_workshop_files/figure-html/cell-26-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="d-map" class="level4">
+<h4 class="anchored" data-anchor-id="d-map">3D Map</h4>
+<blockquote class="blockquote">
+<p>Does not work in Google Colab</p>
+</blockquote>
+<div id="cell-55" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>elevation_3dmap <span class="op">=</span> gj.Map3D(use_region<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Full list of options m.nviz.image</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="co"># https://grass.osgeo.org/grass83/manuals/m.nviz.image.html</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>elevation_3dmap.render(</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    elevation_map<span class="op">=</span><span class="st">"ncssm_1m"</span>,</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    color_map<span class="op">=</span><span class="st">"naip2022_ndvi"</span>,</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    perspective<span class="op">=</span><span class="dv">20</span>,</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">3000</span>,</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>    resolution_fine<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>    zexag<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># fringe=['ne','nw','sw','se'],</span></span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>    fringe_elevation<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>    arrow_position<span class="op">=</span>[<span class="dv">100</span>,<span class="dv">50</span>],</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>elevation_3dmap.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="29">
+<div>
+<figure class="figure">
+<p><img src="ncssm_workshop_files/figure-html/cell-27-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="watershed" class="level3">
+<h3 class="anchored" data-anchor-id="watershed">Watershed</h3>
+<div id="cell-57" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"r.watershed"</span>, </span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    elevation<span class="op">=</span><span class="st">"ncssm_be_1m"</span>, </span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    threshold<span class="op">=</span><span class="dv">10000</span>,</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    accumulation<span class="op">=</span><span class="st">"accum10k"</span>,</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    drainage<span class="op">=</span><span class="st">"direction10k"</span>,</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    basin<span class="op">=</span><span class="st">"basins10k"</span>, </span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>    stream<span class="op">=</span><span class="st">"streams10k"</span>, </span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>    memory<span class="op">=</span><span class="dv">300</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="basins" class="level4">
+<h4 class="anchored" data-anchor-id="basins">Basins</h4>
+<div id="cell-59" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>basins10k_map <span class="op">=</span> gj.Map()</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>basins10k_map.d_rast(<span class="bu">map</span><span class="op">=</span><span class="st">"basins10k"</span>)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>basins10k_map.d_shade(color<span class="op">=</span><span class="st">"basins10k"</span>, shade<span class="op">=</span><span class="st">"aspect"</span>)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>basins10k_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"ncssm"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="st">"white"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>basins10k_map.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"roads"</span>)</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>basins10k_map.d_barscale(at<span class="op">=</span>(<span class="dv">50</span>,<span class="dv">7</span>,<span class="dv">1</span>,<span class="dv">1</span>), flags<span class="op">=</span><span class="st">"n"</span>)</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>basins10k_map.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="31">
+<div>
+<figure class="figure">
+<p><img src="ncssm_workshop_files/figure-html/cell-29-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="flow-accumulation" class="level4">
+<h4 class="anchored" data-anchor-id="flow-accumulation">Flow Accumulation</h4>
+<div id="cell-61" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>accum10k_map <span class="op">=</span> gj.Map()</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co"># accum10k_map.d_rast(map="accum10k")</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>accum10k_map.d_shade(color<span class="op">=</span><span class="st">"accum10k"</span>, shade<span class="op">=</span><span class="st">"aspect"</span>, brighten<span class="op">=</span><span class="dv">30</span>)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>accum10k_map.d_barscale(at<span class="op">=</span>(<span class="dv">50</span>,<span class="dv">7</span>,<span class="dv">1</span>,<span class="dv">1</span>), flags<span class="op">=</span><span class="st">"n"</span>)</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>accum10k_map.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="32">
+<div>
+<figure class="figure">
+<p><img src="ncssm_workshop_files/figure-html/cell-30-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="streams" class="level4">
+<h4 class="anchored" data-anchor-id="streams">Streams</h4>
+<div id="cell-63" class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.thin"</span>, <span class="bu">input</span><span class="op">=</span><span class="st">"streams10k"</span>, output<span class="op">=</span><span class="st">"streams10k_thin"</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.to.vect"</span>, flags<span class="op">=</span><span class="st">"s"</span>, <span class="bu">input</span><span class="op">=</span><span class="st">"streams10k_thin"</span>, output<span class="op">=</span><span class="st">"streams"</span>, <span class="bu">type</span><span class="op">=</span><span class="st">"line"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-64" class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> gj.Map()</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_rast(<span class="bu">map</span><span class="op">=</span><span class="st">"naip_2022_rgb"</span>)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"ncssm"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="st">"white"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"open_channels"</span>, color<span class="op">=</span><span class="st">"#7fcdbb"</span>, width<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"roads"</span>)</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"greenways"</span>, color<span class="op">=</span><span class="st">"green"</span>)</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"sidewalks"</span>, color<span class="op">=</span><span class="st">"grey"</span>)</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"streams"</span>, color<span class="op">=</span><span class="st">"blue"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_barscale(at<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">7</span>), flags<span class="op">=</span><span class="st">"n"</span>)</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="34">
+<div>
+<figure class="figure">
+<p><img src="ncssm_workshop_files/figure-html/cell-32-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="flood-innundation" class="level3">
+<h3 class="anchored" data-anchor-id="flood-innundation">Flood Innundation</h3>
+<section id="simulate-flood" class="level4">
+<h4 class="anchored" data-anchor-id="simulate-flood">Simulate Flood</h4>
+<div id="cell-66" class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"g.extension"</span>, extension<span class="op">=</span><span class="st">"r.stream.distance"</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.stream.distance"</span>, stream_rast<span class="op">=</span><span class="st">"streams10k"</span>, direction<span class="op">=</span><span class="st">"direction10k"</span>, elevation<span class="op">=</span><span class="st">"ncssm_be_1m"</span>, method<span class="op">=</span><span class="st">"downstream"</span>, difference<span class="op">=</span><span class="st">"above_stream"</span>)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>gs.run_command(<span class="st">"r.lake"</span>, elevation<span class="op">=</span><span class="st">"above_stream"</span>, water_level<span class="op">=</span><span class="dv">5</span>, lake<span class="op">=</span><span class="st">"flood"</span>, seed<span class="op">=</span><span class="st">"streams10k"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Your branch is up to date with 'origin/grass8'.</code></pre>
+</div>
+</div>
+</section>
+<section id="map" class="level4">
+<h4 class="anchored" data-anchor-id="map">Map</h4>
+<div id="cell-68" class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> gj.Map()</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_rast(<span class="bu">map</span><span class="op">=</span><span class="st">"naip_2022_rgb"</span>)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_rast(<span class="bu">map</span><span class="op">=</span><span class="st">"flood"</span>)</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"ncssm"</span>, fill_color<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="st">"white"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"open_channels"</span>, color<span class="op">=</span><span class="st">"#7fcdbb"</span>, width<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"roads"</span>)</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"greenways"</span>, color<span class="op">=</span><span class="st">"green"</span>)</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"sidewalks"</span>, color<span class="op">=</span><span class="st">"grey"</span>)</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_vect(<span class="bu">map</span><span class="op">=</span><span class="st">"streams"</span>, color<span class="op">=</span><span class="st">"blue"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.d_barscale(at<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">7</span>), flags<span class="op">=</span><span class="st">"n"</span>)</span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span>.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="36">
+<div>
+<figure class="figure">
+<p><img src="ncssm_workshop_files/figure-html/cell-34-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="interactive-flood-map" class="level4">
+<h4 class="anchored" data-anchor-id="interactive-flood-map">Interactive Flood Map</h4>
+<div id="cell-70" class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>flood_map <span class="op">=</span> gj.InteractiveMap(height<span class="op">=</span><span class="dv">800</span>,width<span class="op">=</span><span class="dv">800</span>)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>flood_map.add_raster(<span class="st">"naip_2022_rgb"</span>)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>flood_map.add_raster(<span class="st">"flood"</span>)</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>flood_map.add_vector(<span class="st">"streams@ncssm"</span>)</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>flood_map.add_layer_control()</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>flood_map.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"00daf65196bf4003af0b4c7ddbcae9d7","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+</div>
+</section>
+<section id="export-map-as-html" class="level4">
+<h4 class="anchored" data-anchor-id="export-map-as-html">Export Map as HTML</h4>
+<div id="cell-72" class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>flood_map.save(filename<span class="op">=</span><span class="st">"./output/index.html"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="create-a-new-project-location-and-mapset" class="level2">
+<h2 class="anchored" data-anchor-id="create-a-new-project-location-and-mapset">Create a new Project (Location and Mapset)</h2>
+<p>Create a new subproject (i.e.&nbsp;Mapset)</p>
+<p>This example uses a temprary directory to create a new project call <code>myfirstproject</code> with the <code>EPSG:3358</code> CRS.</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tempfile</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>tempdir <span class="op">=</span> tempfile.TemporaryDirectory()</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>gs.create_project(path<span class="op">=</span>tempdir, name<span class="op">=</span><span class="st">"myfirstproject"</span>, epsg<span class="op">=</span><span class="st">"3358"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Start a new GRASS GIS session in the new subproject</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>gj.init(Path(tempdir.name), <span class="st">"myfirstproject"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="local-data-resources" class="level3">
+<h3 class="anchored" data-anchor-id="local-data-resources">Local Data Resources</h3>
+<section id="where-can-i-get-my-own-geospatial-data" class="level4">
+<h4 class="anchored" data-anchor-id="where-can-i-get-my-own-geospatial-data">Where can I get my own geospatial data?</h4>
+<p><strong>North Carolina Online Data Portals</strong></p>
+<ul>
+<li><a href="https://www.nconemap.gov/">NC OneMap</a></li>
+<li><a href="https://live-durhamnc.opendata.arcgis.com/">Durham OpenData Portal</a></li>
+</ul>
+<div id="cell-74" class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Point Data</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>hospitals <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Community/MapServer/0/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>schools <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Education/MapServer/0/query?outFields=*&amp;where=1%3D1&amp;f=geojson"</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Line Data</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>roads <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Transportation/MapServer/6/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>greenways <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/ProjectServices/Trans_ExistingFutureBikePedFacilities/MapServer/1/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>sidewalks <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Community/MapServer/5/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Polygon Datahttps://earth.nullschool.net</span></span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>zipcodes <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Administrative/MapServer/0/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>county_boundary <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Administrative/MapServer/2/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>durham_city_boundary <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Administrative/MapServer/1/query?outFields=*&amp;where=1%3D1f=geojson"</span></span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>school_districts <span class="op">=</span> <span class="st">"https://webgis2.durhamnc.gov/server/rest/services/PublicServices/Education/MapServer/1/query?outFields=*&amp;where=1%3D1f=geojson"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-75" class="cell" data-execution_count="98">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>v.<span class="im">import</span> <span class="op">--</span><span class="bu">help</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Imports vector data into a GRASS vector map using OGR library and reprojects on the fly.
+
+Usage:
+ v.import [-flo] input=string [layer=string[,string,...]] [output=name]
+   [extent=string] [encoding=string] [snap=value] [epsg=value]
+   [datum_trans=value] [--overwrite] [--help] [--verbose] [--quiet]
+   [--ui]
+
+Flags:
+  -f   List supported OGR formats and exit
+  -l   List available OGR layers in data source and exit
+  -o   Override projection check (use current location's projection)
+
+Parameters:
+        input   Name of OGR datasource to be imported
+        layer   OGR layer name. If not given, all available layers are imported
+       output   Name for output vector map (default: input)
+       extent   Output vector map extent
+                options: input,region
+                default: input
+     encoding   Encoding value for attribute data
+         snap   Snapping threshold for boundaries (map units)
+                default: -1
+         epsg   EPSG projection code
+                options: 1-1000000
+  datum_trans   Index number of datum transform parameters
+                options: -1-100</code></pre>
+</div>
+</div>
+<div id="cell-76" class="cell" data-execution_count="97">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>r.<span class="im">import</span> <span class="op">--</span><span class="bu">help</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Imports raster data into a GRASS raster map using GDAL library and reprojects on the fly.
+
+Usage:
+ r.import [-enlo] input=name [band=value[,value,...]]
+   [memory=memory in MB] [output=name] [resample=string] [extent=string]
+   [resolution=string] [resolution_value=value] [title=phrase]
+   [--overwrite] [--help] [--verbose] [--quiet] [--ui]
+
+Flags:
+  -e   Estimate resolution only
+  -n   Do not perform region cropping optimization
+  -l   Force Lat/Lon maps to fit into geographic coordinates (90N,S; 180E,W)
+  -o   Override projection check (use current location's projection)
+
+Parameters:
+             input   Name of GDAL dataset to be imported
+              band   Input band(s) to select (default is all bands)
+            memory   Maximum memory to be used (in MB)
+                     default: 300
+            output   Name for output raster map
+          resample   Resampling method to use for reprojection
+                     options: nearest,bilinear,bicubic,lanczos,bilinear_f,
+                              bicubic_f,lanczos_f
+                     default: nearest
+            extent   Output raster map extent
+                     options: input,region
+                     default: input
+        resolution   Resolution of output raster map (default: estimated)
+                     options: estimated,value,region
+                     default: estimated
+  resolution_value   Resolution of output raster map (use with option resolution=value)
+             title   Title for resultant raster map</code></pre>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="install-add-ons" class="level2">
+<h2 class="anchored" data-anchor-id="install-add-ons">Install Add-Ons</h2>
+<p><a href="https://grass.osgeo.org/grass82/manuals/addons/index.html">Add-On Index</a></p>
+<div id="cell-78" class="cell" data-execution_count="99">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>g.extension <span class="op">--</span><span class="bu">help</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Maintains GRASS Addons extensions in local GRASS installation.
+
+Usage:
+ g.extension [-lcgasdifto] extension=name operation=string [url=url]
+   [prefix=path] [proxy=proxy[,proxy,...]] [branch=branch] [--help]
+   [--verbose] [--quiet] [--ui]
+
+Flags:
+  -l   List available extensions in the official GRASS GIS Addons repository
+  -c   List available extensions in the official GRASS GIS Addons repository including module description
+  -g   List available extensions in the official GRASS GIS Addons repository (shell script style)
+  -a   List locally installed extensions
+  -s   Install system-wide (may need system administrator rights)
+  -d   Download source code and exit
+  -i   Do not install new extension, just compile it
+  -f   Force removal when uninstalling extension (operation=remove)
+  -t   Operate on toolboxes instead of single modules (experimental)
+  -o   url refers to a fork of the official extension repository
+
+Parameters:
+  extension   Name of extension to install or remove
+  operation   Operation to be performed
+              options: add,remove
+              default: add
+        url   URL or directory to get the extension from (supported only on Linux and Mac)
+     prefix   Prefix where to install extension (ignored when flag -s is given)
+              default: $GRASS_ADDON_BASE
+      proxy   Set the proxy with: "http=&lt;value&gt;,ftp=&lt;value&gt;"
+     branch   Specific branch to fetch addon from (only used when fetching from git)</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/OpenPlainsInc\.github\.io\/openplainsinc\.github\.io\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
