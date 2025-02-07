@@ -167,3 +167,5 @@ venv/
 
 content/notebooks/hurricane_helene_2024/lidar_array/
 content/notebooks/hurricane_helene_2024/outputs/
+
+grassdata/
