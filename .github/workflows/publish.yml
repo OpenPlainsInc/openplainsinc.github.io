@@ -23,6 +23,8 @@ jobs:
               uses: actions/upload-pages-artifact@v3
               with:
                 path: docs/
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     # Deployment job
     deploy:
