@@ -164,6 +164,7 @@ cython_debug/
 venv/
 /.quarto/
 /_site/
+docs/
 
 content/notebooks/hurricane_helene_2024/lidar_array/
 content/notebooks/hurricane_helene_2024/outputs/
