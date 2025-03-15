@@ -5,7 +5,17 @@ website:
   navbar:
     title: "OpenPlains Learning"
     background: primary
+    favicon: content/images/openplains-logo.svg
+    twitter-card: true
+    open-graph: true
+    site-url: https://learning.openplains.com
     search: true
+    google-analytics: 
+      tracking-id: "G-HDN65TH0DF"
+      version: "gtag"
+    cookie-consent:
+      policy-url: "https://openplains.com/privacy"
+      prefs-text: "Cookie Preferences"		
     left:
       - text: "Home"
         href: index.qmd

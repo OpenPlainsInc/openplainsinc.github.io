@@ -5,7 +5,7 @@ title-slide-attributes:
     data-color: grass-color-primary
 page-layout: full
 title-block-banner: true    
-image: ../images/logos/grassgis_logo_colorlogo_text_whitebg.png
+image: ../images/logos/grass_gis_icon_128x128.png
 subtitle: "FOSS4G NA 2024, St. Louis Missouri"
 author:
   - name: "Corey White"
