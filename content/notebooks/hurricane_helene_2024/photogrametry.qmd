@@ -4,15 +4,15 @@ description: This tutorial demonstrates how download images from ArcGIS Server i
 format: html
 author: Corey T. White
 date: '2024-10-9'
-keep-ipynb: false
+keep-ipynb: true
 toc: true
 toc-depth: 4
 engine: jupyter
 execute:
   eval: false
 jupyter: python3
-image: ../imagery_data/nadir/A0046B/0_000_00_000.jpg
-categories: [geospatial, GRASS v8.5, jupyter, helene]
+image: images/DSC_0067.JPG
+categories: [geospatial, GRASS, jupyter, helene]
 page-layout: full
 title-block-banner: true
 draft: true
@@ -94,9 +94,9 @@ gs.run_command("g.region", vector="image_points", res=10)
 ### View Data
 
 ```{python}
-# m = gj.Map()
-# m.d_vect(map="image_points")
-# display(m.show())
+m = gj.Map(use_region=True)
+m.d_vect(map="image_points")
+display(m.show())
 ```
 
 ### Read data into pandas DataFrame
@@ -183,10 +183,10 @@ run(urls=url_list, save_dir="imagery_data/nadir/{flight}", num_threads=32)
 ### Example output
 
 | | | |
-|-|-|-|
-|![0_000_00_018.jpg](imagery_data/nadir/A0046B/0_000_00_018.jpg)|![0_000_00_019.jpg](imagery_data/nadir/A0046B/0_000_00_019.jpg)|![0_000_00_020.jpg](imagery_data/nadir/A0046B/0_000_00_020.jpg)|
-|![](imagery_data/nadir/A0046B/0_000_00_021.jpg)|![](imagery_data/nadir/A0046B/0_000_00_022.jpg)|![](imagery_data/nadir/A0046B/0_000_00_023.jpg)|
-|![](imagery_data/nadir/A0046B/0_000_00_024.jpg)|![](imagery_data/nadir/A0046B/0_000_00_025.jpg)|![](imagery_data/nadir/A0046B/0_000_00_026.jpg)|
+|-|-|-
+|![](images/CAP_2147.JPG)|![](images/CAP_2148.JPG)|![](images/CAP_2149.JPG)
+|![](images/CAP_2150.JPG)|![](images/CAP_2151.JPG)|![](images/CAP_2152.JPG)
+|![](images/CAP_2153.JPG)|![](images/CAP_2154.JPG)|![](images/CAP_2155.JPG)
 
 
 <!-- ## WIP -->
@@ -201,16 +201,4 @@ run(urls=url_list, save_dir="imagery_data/nadir/{flight}", num_threads=32)
 #| eval: false
 
 image_urls = query_feature_service(flight_id="A0046B")
-len(image_urls)
-# docker run -ti --rm -v /my/project:/datasets/code opendronemap/odm --project-path /datasets
-```
-
-```{python}
-url_list = None
-with open("data(2).txt", "r") as data:
-    url_list = [line.strip() for line in data.readlines()]
-
-run(urls=url_list, save_dir="outputs/3dep_lidar2", num_threads=32)
-
-
 ```

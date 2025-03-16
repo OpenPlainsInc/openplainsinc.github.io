@@ -77,3 +77,4 @@ format:
     theme: [pandoc, theme.scss]
     toc: true
     toc-title: Table of Contents
+    link-external-newwindow: true
