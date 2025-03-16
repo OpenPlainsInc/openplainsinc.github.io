@@ -17,7 +17,7 @@ jobs:
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
         with:
-          version: "1.5.57" # Specify the desired version
+          version: "1.6.42" # Specify the desired version
 
       - name: Render Quarto Project
         uses: quarto-dev/quarto-actions/render@v2

@@ -1,0 +1,7 @@
+{
+  "sm.tile_cache_size": "100MB",
+  "vfs.s3.region": "us-east-2",
+  "vfs.s3.use_virtual_addressing": true,
+  "sm.check_coord_dups": true,
+  "sm.check_coord_oob": false
+}

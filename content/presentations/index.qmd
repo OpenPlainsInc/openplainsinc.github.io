@@ -1,0 +1,11 @@
+---
+title: "Talks"
+listing:
+    contents: 
+        - talks/
+    sort: "date desc"
+    type: default
+    categories: true
+page-layout: full
+title-block-banner: true
+---

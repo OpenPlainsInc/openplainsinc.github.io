@@ -2,23 +2,45 @@ project:
   type: website
   output-dir: docs
 website:
+
+  # Site Settings
+  title: "OpenPlains"
+  description: "Learn how to build interactive geospatial modeling applications with OpenPlains."
+  site-url: https://learning.openplains.com
+  favicon: content/images/logos/openplains-logo.svg
+
+  # Analytics
+  google-analytics: 
+    tracking-id: "G-HDN65TH0DF"
+    version: 4
+  cookie-consent:
+    policy-url: "https://openplains.com/privacy"
+    prefs-text: "Cookie Preferences"
+
+  # Meta Tags
+  twitter-card: true
+  open-graph: true
+  
+  # Navbar
   navbar:
-    title: "OpenPlains Learning"
+    title: "OpenPlains"
+    logo: content/images/logos/openplains/openplains-logo-05x-400x393.png
+    logo-alt: "OpenPlains"
+    logo-href: https://openplains.com
     background: primary
-    favicon: content/images/openplains-logo.svg
-    twitter-card: true
-    open-graph: true
-    site-url: https://learning.openplains.com
+    foreground: light
     search: true
-    google-analytics: 
-      tracking-id: "G-HDN65TH0DF"
-      version: "gtag"
-    cookie-consent:
-      policy-url: "https://openplains.com/privacy"
-      prefs-text: "Cookie Preferences"		
     left:
       - text: "Home"
         href: index.qmd
+      - text: "Tutorials"
+        href: content/notebooks/index.qmd
+      - text: "Workshops"
+        href: content/workshops/index.qmd
+      - text: "Talks"
+        href: content/presentations/index.qmd
+
+    # Tools
     tools:
       - icon: github
         menu: 
@@ -26,6 +48,27 @@ website:
             href: "https://github.com/OpenPlainsInc/openplainsinc.github.io/"
           - text: "Report an Issue"
             href: "https://github.com/OpenPlainsInc/openplainsinc.github.io/issues"
+
+    # Footer
+  page-footer:
+    left: |
+      [OpenPlains&trade; &copy; 2025. All rights reserved.](https://openplains.com) |
+      [Privacy Policy](https://openplains.com/privacy) |
+      [Terms of Service](https://openplains.com/terms) |
+      [Contact Us](https://openplains.com/contact)
+    right:
+        - icon: twitter
+          href: https://twitter.com/OpenPlainsInc
+        - icon: bullseye
+          href: https://bsky.app/profile/openplains.bsky.social
+        - icon: github
+          href: https://github.com/OpenPlainsInc
+        - icon: linkedin
+          href: https://www.linkedin.com/company/openplains-inc/
+        - icon: instagram
+          href: https://www.instagram.com/openplainsinc/
+        - icon: youtube
+          href: https://www.youtube.com/@OpenPlainsInc
 
 execute:
   freeze: auto

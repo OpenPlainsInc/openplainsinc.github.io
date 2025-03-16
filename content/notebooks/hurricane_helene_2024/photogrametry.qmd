@@ -11,7 +11,7 @@ engine: jupyter
 execute:
   eval: false
 jupyter: python3
-image: imagery_data/nadir/A0046B/0_000_00_000.jpg
+image: ../imagery_data/nadir/A0046B/0_000_00_000.jpg
 categories: [geospatial, GRASS v8.5, jupyter, helene]
 page-layout: full
 title-block-banner: true

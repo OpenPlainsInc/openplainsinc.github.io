@@ -1,13 +1,21 @@
 ---
-title: "OpenPlains - Learning"
+title: "Start Learning"
+about:
+    id: hero-heading
+    template: marquee
+    image: content/images/logos/logo_320w-132.jpg
+    image-width: 220px
 listing:
-    contents: 
-        - content/notebooks
-        - content/presentations
-        - content/workshops
+    contents:
+        - content/workshops/foss4gna_2024/workshop.qmd
+        - content/workshops/smackhack25/ncssm_workshop.ipynb
     sort: "date desc"
     type: default
     categories: true
 page-layout: full
 title-block-banner: false
 ---
+
+:::{#hero-heading}
+
+Learn how to build interactive geospatial modeling applications for [GRASS](https://grass.osgeo.org) with [OpenPlains](https://openplains.com).

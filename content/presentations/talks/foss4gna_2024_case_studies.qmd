@@ -5,7 +5,7 @@ title-slide-attributes:
     data-color: grass-color-primary
 page-layout: full
 title-block-banner: true    
-image: ../images/logos/grass_gis_icon_128x128.png
+image: ../../images/logos/grass_gis_icon_128x128.png
 subtitle: "FOSS4G NA 2024, St. Louis Missouri"
 author:
   - name: "Corey White"
@@ -45,11 +45,11 @@ affiliations:
     url: "https://www.mundialis.de/en/"
 format:
   revealjs:
-    theme: [simple, ../themes/grass.scss]
+    theme: [simple, ../../themes/grass.scss]
     footer: "[Return Home](/)"
 
     template-partials:
-      - ../templates/title-slide.html
+      - ../../templates/title-slide.html
     controls-layout: bottom-right
 ---
 
@@ -64,7 +64,7 @@ format:
 
 :::{.column width=40%}
 <div class="circle-image-container">
-![](../images/corey_headshot.jpeg){.circle-image}
+![](../../images/corey_headshot.jpeg){.circle-image}
 </div>
 :::
 
@@ -74,7 +74,7 @@ format:
 
 :::{.columns}
 :::{.column width=50%}
-![](images/mcdonnells-curry.gif)
+![](../images/mcdonnells-curry.gif)
 :::
 :::{.column width=50%}
 ::: {.incremental}
@@ -100,7 +100,7 @@ format:
     - GUI
 :::
 :::{.column width=50%}
-![](images/GRASS_Jupyter_Notebooks.png)
+![](../images/GRASS_Jupyter_Notebooks.png)
 :::
 :::
 
@@ -123,7 +123,7 @@ format:
 - Startups
 :::
 :::{.column width=50%}
-![](images/arnold-schwarzenegger-whos-your-daddy.gif)
+![](../images/arnold-schwarzenegger-whos-your-daddy.gif)
 :::
 :::
 
@@ -139,7 +139,7 @@ format:
 - Lidar
 :::
 :::{.column width=40%}
-![](images/depth.webp)
+![](../images/depth.webp)
 :::
 :::
 
@@ -187,7 +187,7 @@ format:
 
 :::
 :::{.column width=40%}
-![](images/lawnmower-garden.gif)
+![](../images/lawnmower-garden.gif)
 :::
 :::
 
@@ -208,7 +208,7 @@ Civil Engineeering firm based out of New Mexico
 
 :::
 :::{.column width=50%}
-![](images/bohan.png)
+![](../images/bohan.png)
 :::
 :::
 
@@ -257,7 +257,7 @@ Data: North Carolina Phase 4 Geiger - images:			22,519
 - m.analyse.trees
 :::
 :::{.column width=50%}
-![](images/rvr_herne_building_identification.png)
+![](../images/rvr_herne_building_identification.png)
 :::
 :::
 
@@ -271,13 +271,13 @@ Source code: [https://github.com/mundialis/rvr_interface/](https://github.com/mu
 
 :::{.columns}
 :::{.column width=30%}
-![](images/bonn_DOP_nDOM.png)
+![](../images/bonn_DOP_nDOM.png)
 :::
 :::{.column width=33%}
-![](images/actinia_random_forest.png)
+![](../images/actinia_random_forest.png)
 :::
 :::{.column width=33%}
-![](images/actinia_leafmap_incora.jpg)
+![](../images/actinia_leafmap_incora.jpg)
 :::
 :::
 
@@ -289,7 +289,7 @@ Machine learning based image classification using an aerial image and surface mo
 
 HPC - High Performance Computing
 
-![](images/thunder-cats-thundera.gif)
+![](../images/thunder-cats-thundera.gif)
 
 ## HPC Case-Study
 
@@ -299,7 +299,7 @@ HPC - High Performance Computing
 - Cores: 13844
 - Python, R, GRASS GIS
 
-## <span class="text-white">HPC Case-Study</span> { background-image="images/animation_CONUS.gif"}
+## <span class="text-white">HPC Case-Study</span> { background-image="../images/animation_CONUS.gif"}
 
 ##### <span class="text-white">NCSU: CONUS Urban Growth Model</span>
 
@@ -317,7 +317,7 @@ HPC - High Performance Computing
 
 :::{.columns}
 :::{.column width=40%}
-![](../images/logos/grassgis_logo_colorlogo_text_whitebg.png)
+![](../../images/logos/grassgis_logo_colorlogo_text_whitebg.png)
 :::
 :::{.column width=60%}
 - <span class="highlight">GRASS</span> is geospatial computational engine
@@ -328,5 +328,5 @@ HPC - High Performance Computing
 :::
 
 
-## <span class="text-white">Questions</span> {.text-center background-video="images/grass_prauge.mp4" background-video-muted=true}
+## <span class="text-white">Questions</span> {.text-center background-video="../images/grass_prauge.mp4" background-video-muted=true}
 

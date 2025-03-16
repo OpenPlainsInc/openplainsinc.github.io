@@ -5,7 +5,7 @@ author:
     - Vaclav Petras
 title: Developing web-application with GRASS GIS 
 subtitle: FOSS4G NA 2024, St. Louis Missouri
-date: September 9, 2024
+date: September 8, 2024
 categories: [workshop, foss4gna, webdev, grass]
 page-layout: full
 image:  images/webinar_title.webp

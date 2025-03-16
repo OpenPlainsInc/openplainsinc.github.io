@@ -1,0 +1,12 @@
+---
+title: "Workshops"
+listing:
+    contents:
+        - smackhack25/
+        - foss4gna_2024/
+    sort: "date desc"
+    type: default
+    categories: true
+page-layout: full
+title-block-banner: true
+---
