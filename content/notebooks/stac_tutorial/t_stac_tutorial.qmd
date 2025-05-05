@@ -1,14 +1,503 @@
 ---
 title: "STAC Tutorial"
-format: html
+description: "Learn how to use the GRASS addon t.stac to search and import STAC API data into a GRASS project."
+toc: true
+toc-depth: 4
+format:
+  html:
+    code-copy: true
+    code-fold: false
+    code-tools: true
+execute:
+  enabled: true
+  keep-ipynb: true
+  eval: false
+  freeze: auto
+  cache: true
 jupyter: python3
 author: Corey T. White
-date: '2024-08-26'
+date: '2025-03-01'
 categories: [stac, grass-addon, tutorial]
 page-layout: full
 title-block-banner: true
 draft: true
 ---
 
+In this tutorial we will learn about the [t.stac](https://grass.osgeo.org/grass-stable/manuals/addons/t.stac.html) suite of tools for [GRASS](https://grass.osgeo.org).
+
+* [t.stac.catalog](https://grass.osgeo.org/grass-stable/manuals/addons/t.stac.catalog.html) - is a tool for exploring SpatioTemporal Asset Catalogs metadata from a STAC API.
+* [t.stac.collection](https://grass.osgeo.org/grass-stable/manuals/addons/t.stac.collection.html) - is a tool for exploring SpatioTemporal Asset Catalog (STAC) collection metadata.
+* [t.stac.item](https://grass.osgeo.org/grass-stable/manuals/addons/t.stac.item.html) - is a tool for exploring and importing SpatioTemporal Asset Catalog item metadata and assets into GRASS.
+
+## Introduction
+
+SpatioTemporal Asset Catalog (STAC)...
 
 
+The tutorial assumes you already have GRASS installed on your machine. If not please [download and install GRASS](https://grass.osgeo.org/download/) before continuing the tutorial.
+
+
+## Getting Started
+
+### Start GRASS Session
+
+```{python}
+# | label: config-grass
+# | eval: true
+# Import standard python packages
+import sys
+import subprocess
+from IPython.display import display, JSON, HTML
+import json
+import pandas as pd
+# import polars as pl
+
+# Ask GRASS where its Python packages are and add them to the path
+sys.path.append(
+    subprocess.check_output(["grass", "--config", "python_path"], text=True).strip()
+)
+
+# Import the GRASS python packages we need
+import grass.script as gs
+import grass.jupyter as gj
+
+```
+
+Create a GRASS project
+
+```{python}
+# | label: create-project
+gs.create_project("stac", epsg="32119", overwrite=True)
+```
+
+and start a GRASS session
+
+```{python}
+# | label: start-grass-session
+# | eval: true
+session = gj.init("stac")
+```
+
+### Install Addon
+
+The [t.stac](https://grass.osgeo.org/grass-stable/manuals/addons/t.stac.html) addons require the following Python packages.
+
+* [pystac (>=1.12)](https://pystac.readthedocs.io/en/latest/installation.html)
+* [pystac_client (>=0.8)](https://pystac-client.readthedocs.io/en/stable/)
+* [tqdm (>=4.67)](https://tqdm.github.io/)
+
+You can install them using pip or the Python package manager of your choice. 
+
+```bash
+pip install pystac pystac_client tqdm
+```
+
+Now you can install the extensions.
+
+```{python}
+# | label: install-t-stac
+gs.run_command("g.extension", extension="t.stac")
+```
+
+## Set computational region
+
+```{python}
+# | label: grass-set-region
+# | echo: true
+# | eval: true
+# | include: true
+# | output: true
+gs.run_command(
+    "g.region", n=236687, s=210391, e=616042, w=598921, nsres=10, ewres=10, flags="pa"
+)
+```
+
+```{python}
+# | label: display-interactive-region
+# | echo: true
+# | eval: true
+# | include: true
+# | output: true
+
+m = gj.InteractiveMap(use_region=True)
+display(m.show())
+
+```
+
+## STAC API
+
+```{python}
+# | label: set-stac-catalog-url
+# | eval: true
+stac_url = "https://earth-search.aws.element84.com/v1/"
+```
+
+### Searching STAC Catalogs
+
+```{python}
+# | label: tbl-stac-catalog
+# | echo: true
+# | eval: true
+# | include: true
+# | output: true
+catalogs_json = gs.parse_command(
+    "t.stac.catalog", url=stac_url, flags="b", format="json"
+)
+df_catalogs = pd.json_normalize(catalogs_json)
+display(df_catalogs.head(10))
+```
+
+#### Collection Metadata
+
+```{python}
+# | label: tbl-stac-items
+# | echo: true
+# | eval: true
+# | include: true
+# | output: true
+
+items_json = gs.parse_command(
+    "t.stac.item",
+    url=stac_url,
+    collection_id="sentinel-2-l2a",
+    flags="m",
+    format="json",
+)
+
+df_items = pd.json_normalize(items_json, max_level=0)
+display(df_items.T.head(5))
+```
+
+#### Query Items by datetime and display table
+
+```{python}
+# | label: tbl-items
+# | tbl-cap: Sentinel 2 Items
+# | echo: true
+# | eval: true
+# | include: true
+# | output: true
+
+items_json = gs.parse_command(
+    "t.stac.item",
+    url=stac_url,
+    collection_id="sentinel-2-l2a",
+    flags="i",
+    datetime="2024-04-01/2024-09-30",
+    format="json",
+)
+num_items = len(df_items)
+df_items = pd.json_normalize(items_json, max_level=0)
+display(df_items.head(5))
+```
+
+
+```{python}
+# | echo: false
+# | eval: true
+# | include: true
+# | output: true
+
+num_items = len(df_items)
+# Can't use inline python with using Jupyter cache
+print(f"There are {num_items} Sentinel 2 items found in our computational region.")
+```
+
+
+Let's look closer at the properties of item id `S2A_17SPV_20240919_0_L2A`.
+
+```{python}
+# | echo: true
+# | eval: true
+# | include: true
+# | output: true
+
+df_item = df_items.query("id == 'S2A_17SPV_20240919_0_L2A'")
+df_properties = df_item["properties"].apply(pd.Series)
+df_item = pd.concat([df_item, df_properties], axis=1)
+df_item = df_item.drop("properties", axis=1)
+display(df_item.T)
+```
+
+Let's look at the items properties
+```{python}
+# | echo: true
+# | eval: true
+# | include: true
+# | output: true
+df_item = df_items.query("id == 'S2A_17SPV_20240919_0_L2A'")
+df_properties = df_item["properties"].apply(pd.Series)
+display(df_properties.T)
+```
+
+Now we let's look at the items assets.
+
+```{python}
+# | echo: true
+# | eval: true
+# | include: true
+# | output: true
+df_item = df_items.query("id == 'S2A_17SPV_20240919_0_L2A'")
+df_assets = df_item["assets"].apply(pd.Series)
+display(df_assets.T.reset_index())
+```
+
+#### Assets
+
+```{python}
+# | label: tbl-items-assets
+# | tbl-cap: Sentinel 2 Items Assets Metadata
+# | echo: true
+# | eval: true
+# | include: true
+# | output: true
+
+stac_query = {"eo:cloud_cover": {"lt": 10}}
+
+assets_json = gs.parse_command(
+    "t.stac.item",
+    url=stac_url,
+    collection_id="sentinel-2-l2a",
+    flags="a",
+    datetime="2024-04-01/2024-09-30",
+    asset_keys="red,nir",
+    query=json.dumps(stac_query),
+    format="json",
+)
+
+
+df_items_assets = pd.json_normalize(assets_json, max_level=0)
+display(df_items_assets.head(5))
+```
+
+```{python}
+# | echo: false
+# | eval: true
+# | include: true
+# | output: true
+
+num_assets = len(assets_json)
+# Can't use inline python with using Jupyter cache
+print(f"There are {num_assets} Sentinel 2 assets found in our computational region.")
+```
+
+#### EO Parameters
+
+### Create Metadata Vector
+
+```{python}
+# | label: assets-metadata-vector
+# | tbl-cap: Sentinel 2 Items Assets Metadata
+# | echo: true
+# | eval: true
+# | include: true
+# | output: true
+
+stac_query = {"eo:cloud_cover": {"lt": 10}}
+
+assets_json = gs.parse_command(
+    "t.stac.item",
+    url=stac_url,
+    collection_id="sentinel-2-l2a",
+    flags="a",
+    datetime="2024-04-01/2024-09-30",
+    asset_keys="red,nir",
+    query=json.dumps(stac_query),
+    items_vector="sentinel_2_items",
+    format="json",
+)
+
+
+df_items_assets = pd.json_normalize(assets_json, max_level=0)
+display(df_items_assets.head(5))
+```
+
+#### View the items with iPyleaflet
+
+```{python}
+# | echo: true
+# | eval: true
+# | include: true
+# | output: true
+import random
+
+m = gj.InteractiveMap(use_region=False)
+m.add_vector(
+    "sentinel_2_items",
+    style={"opacity": 1, "dashArray": "9", "fillOpacity": 0.1, "weight": 1},
+    hover_style={"color": "white", "dashArray": "0", "fillOpacity": 0.5},
+    style_callback=lambda f: {
+        "color": "black",
+        "fillColor": random.choice(["red", "yellow", "green", "orange"]),
+    }
+)
+display(m.show())
+
+```
+
+### Download and Import Rasters
+
+### Register STRDS
+
+```{python}
+# | label: tbl-collection-items-assets
+# | tbl-cap: Sentinel 2 Items Assets Metadata
+# | echo: true
+# | eval: true
+# | include: true
+# | output: true
+
+stac_query = {"eo:cloud_cover": {"lt": 10}}
+
+collection_items_assets_json = gs.parse_command(
+    "t.stac.item",
+    url=stac_url,
+    collection_id="sentinel-2-l2a",
+    datetime="2024-04-01/2024-09-30",
+    asset_keys="red",
+    query=json.dumps(stac_query),
+    format="json"
+)
+
+```
+
+```{python}
+# | label: download-estimate
+# | echo: true
+# | eval: true
+# | include: true
+# | output: true
+print(f"""
+Download Estimate
+ 
+Files:  {collection_items_assets_json["count"]}
+Total Download Size: {collection_items_assets_json["bytes"] ** 1e-9:.2f} GB
+""")
+
+```
+
+```{python}
+# | label: tbl-collection-items-assets-strds
+# | tbl-cap: Sentinel 2 Items Assets Metadata
+# | echo: true
+# | eval: false
+# | include: true
+# | output: true
+stac_query = {"eo:cloud_cover": {"lt": 10}}
+
+collection_items_assets_json = gs.parse_command(
+    "t.stac.item",
+    url=stac_url,
+    collection_id="sentinel-2-l2a",
+    datetime="2024-04-01/2024-09-30",
+    asset_keys="red",
+    query=json.dumps(stac_query),
+    strds_output="outputs/s2_red.txt",
+    format="json",
+)
+```
+
+```plain
+sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.red.1|2024-09-09 16:13:25|red
+sentinel-2-l2a.S2B_17SPV_20240825_0_L2A.red.1|2024-08-25 16:13:26|red
+sentinel-2-l2a.S2A_17SPV_20240731_0_L2A.red.1|2024-07-31 16:13:28|red
+sentinel-2-l2a.S2A_17SPV_20240611_0_L2A.red.1|2024-06-11 16:13:32|red
+sentinel-2-l2a.S2A_17SPV_20240522_0_L2A.red.1|2024-05-22 16:13:25|red
+sentinel-2-l2a.S2A_17SPV_20240502_0_L2A.red.1|2024-05-02 16:13:29|red
+sentinel-2-l2a.S2B_17SPV_20240407_0_L2A.red.1|2024-04-07 16:13:25|red
+```
+
+Create STRDS
+
+```{python}
+# | label: register-strds
+# | echo: true
+# | eval: true
+# | include: true
+# | output: true
+
+# Create the space time dataset
+gs.run_command(
+    "t.create",
+    output="sentinel_2_red",
+    type="strds",
+    temporaltype="absolute",
+    title="Sentinel 2 Red Band",
+    description="Sentinel 2 Red Band from 2024-04-01/2024-09-30",
+    overwrite=True,
+)
+
+```
+
+Download the data
+
+```{python}
+# | label: download-assets
+# | echo: true
+# | eval: false
+# | include: true
+# | output: true
+print(gs.run_command(
+    "t.stac.item",
+    url=stac_url,
+    collection_id="sentinel-2-l2a",
+    datetime="2024-04-01/2024-09-30",
+    asset_keys="red",
+    query=json.dumps(stac_query),
+    strds_output="outputs/s2_red.txt",
+    format="json",
+    method="nearest",
+    resolution="value",
+    resolution_value="10",
+    extent="region",
+    nprocs=7,
+    memory=1024 * 7,
+    flags="d",
+))
+```
+
+
+Register the data
+```{python}
+# | label: register-strds
+# | echo: true
+# | eval: true
+# | include: true
+# | output: true
+
+# Register the output maps into a space time dataset
+gs.run_command(
+    "t.register",
+    input="sentinel_2_red",
+    start="2024-04-07 16:13:25",
+    end="2024-09-09 16:13:25",
+    file="outputs/s2_red.txt",
+)
+
+```
+
+```{python}
+# | label: display-time-series
+# | echo: true
+# | eval: true
+# | include: true
+# | output: true
+
+# Create Time Series Map
+# m = gj.TimeSeriesMap(use_region=True)
+# m.add_raster_series("sentinel_2_red", fill_gaps=False)
+# m.d_barscale()
+# m.render()
+# display(m.show())
+
+m = gj.Map(use_region=True)
+m.d_rast(map="sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.red")
+m.d_barscale()
+display(m.show())
+
+```
+
+## References
+
+- [pystac Documentation](https://pystac.readthedocs.io/)
+- [pystac_client Documentation](https://pystac-client.readthedocs.io/)
