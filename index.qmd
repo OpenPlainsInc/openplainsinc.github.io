@@ -19,3 +19,5 @@ title-block-banner: false
 :::{#hero-heading}
 
 Learn how to build interactive geospatial modeling applications for [GRASS](https://grass.osgeo.org) with [OpenPlains](https://openplains.com).
+
+:::
