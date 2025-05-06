@@ -20,7 +20,7 @@ date: '2025-03-01'
 categories: [stac, grass-addon, tutorial]
 page-layout: full
 title-block-banner: true
-draft: true
+draft: false
 ---
 
 In this tutorial we will learn about the [t.stac](https://grass.osgeo.org/grass-stable/manuals/addons/t.stac.html) suite of tools for [GRASS](https://grass.osgeo.org).
@@ -410,7 +410,7 @@ sentinel-2-l2a.S2B_17SPV_20240407_0_L2A.red.1|2024-04-07 16:13:25|red
 Create STRDS
 
 ```{python}
-# | label: register-strds
+# | label: create-strds
 # | echo: true
 # | eval: true
 # | include: true
@@ -458,6 +458,7 @@ print(gs.run_command(
 
 
 Register the data
+
 ```{python}
 # | label: register-strds
 # | echo: true

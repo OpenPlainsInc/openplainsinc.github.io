@@ -78,3 +78,6 @@ format:
     toc: true
     toc-title: Table of Contents
     link-external-newwindow: true
+    include-in-header:
+      - text: |
+          <script src="https://kit.fontawesome.com/022499bbbe.js" crossorigin="anonymous"></script>

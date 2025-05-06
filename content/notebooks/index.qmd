@@ -2,6 +2,7 @@
 title: "Tutorials"
 listing:
     contents:
+        - actinia/
         - hurricane_helene_2024/
         - us_doi/
         - stac_tutorial/

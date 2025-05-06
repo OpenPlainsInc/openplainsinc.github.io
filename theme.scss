@@ -93,3 +93,12 @@ $presentation-heading-color: $primary;
 .text-center {
   text-align: center !important;
 }
+
+.list-unstyled {
+  list-style: none;
+}
+
+// icons
+i.fa-sharp-duotone {
+  color: $op-secondary;
+}
