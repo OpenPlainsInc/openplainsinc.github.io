@@ -20,7 +20,7 @@ date: '2025-03-01'
 categories: [stac, grass-addon, tutorial]
 page-layout: full
 title-block-banner: true
-draft: false
+draft: true
 ---
 
 In this tutorial we will learn about the [t.stac](https://grass.osgeo.org/grass-stable/manuals/addons/t.stac.html) suite of tools for [GRASS](https://grass.osgeo.org).
