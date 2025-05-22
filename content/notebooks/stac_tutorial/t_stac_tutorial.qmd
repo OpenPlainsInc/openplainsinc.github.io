@@ -1,6 +1,7 @@
 ---
 title: "STAC Tutorial"
 description: "Learn how to use the GRASS addon t.stac to search and import STAC API data into a GRASS project."
+image: images/stac-to-the-future.png
 toc: true
 toc-depth: 4
 format:
@@ -8,6 +9,13 @@ format:
     code-copy: true
     code-fold: false
     code-tools: true
+    mermaid: 
+      theme: forest
+    other-links:
+      - text: grass
+        href: https://grass.osgeo.org
+      - text: STAC
+        href: https://stacspec.org/en
 execute:
   enabled: true
   keep-ipynb: true
@@ -20,7 +28,7 @@ date: '2025-03-01'
 categories: [stac, grass-addon, tutorial]
 page-layout: full
 title-block-banner: true
-draft: true
+draft: false
 ---
 
 In this tutorial we will learn about the [t.stac](https://grass.osgeo.org/grass-stable/manuals/addons/t.stac.html) suite of tools for [GRASS](https://grass.osgeo.org).
@@ -50,6 +58,8 @@ import subprocess
 from IPython.display import display, JSON, HTML
 import json
 import pandas as pd
+from pathlib import Path
+import seaborn as sns
 # import polars as pl
 
 # Ask GRASS where its Python packages are and add them to the path
@@ -120,8 +130,14 @@ gs.run_command(
 # | output: true
 
 m = gj.InteractiveMap(use_region=True)
+m.save(filename="outputs/basic_map.html")
 display(m.show())
 
+```
+
+```{python}
+m_html = Path("outputs/basic_map.html")
+HTML(m_html.read_text())
 ```
 
 ## STAC API
@@ -133,6 +149,10 @@ stac_url = "https://earth-search.aws.element84.com/v1/"
 ```
 
 ### Searching STAC Catalogs
+
+::: {.panel-tabset}
+
+## Python
 
 ```{python}
 # | label: tbl-stac-catalog
@@ -147,8 +167,23 @@ df_catalogs = pd.json_normalize(catalogs_json)
 display(df_catalogs.head(10))
 ```
 
+## Terminal
+```{python}
+# | label: tbl-stac-catalog-shell
+# | echo: true
+# | eval: true
+# | include: true
+# | output: true
+!t.stac.catalog url={stac_url} format=plain -b
+```
+
+:::
+
 #### Collection Metadata
 
+::: {.panel-tabset}
+
+## Python
 ```{python}
 # | label: tbl-stac-items
 # | echo: true
@@ -168,8 +203,23 @@ df_items = pd.json_normalize(items_json, max_level=0)
 display(df_items.T.head(5))
 ```
 
+## Terminal
+```{python}
+# | label: tbl-stac-items-m-shell
+# | echo: true
+# | eval: true
+# | include: true
+# | output: true
+!t.stac.item url={stac_url} collection_id="sentinel-2-l2a" format=plain -m
+```
+
+:::
+
 #### Query Items by datetime and display table
 
+::: {.panel-tabset}
+
+## Python
 ```{python}
 # | label: tbl-items
 # | tbl-cap: Sentinel 2 Items
@@ -191,6 +241,17 @@ df_items = pd.json_normalize(items_json, max_level=0)
 display(df_items.head(5))
 ```
 
+## Terminal
+```{python}
+# | label: tbl-stac-items-i-shell
+# | echo: true
+# | eval: true
+# | include: true
+# | output: true
+!t.stac.item url={stac_url} collection_id="sentinel-2-l2a" datetime="2024-04-01/2024-09-30" format=plain -i
+```
+
+:::
 
 ```{python}
 # | echo: false
@@ -265,9 +326,12 @@ assets_json = gs.parse_command(
     format="json",
 )
 
-
 df_items_assets = pd.json_normalize(assets_json, max_level=0)
-display(df_items_assets.head(5))
+display(df_items_assets.head(10))
+```
+
+```{python}
+display(assets_json)
 ```
 
 ```{python}
@@ -339,6 +403,9 @@ display(m.show())
 
 ### Register STRDS
 
+::: {.panel-tabset}
+
+## Python
 ```{python}
 # | label: tbl-collection-items-assets
 # | tbl-cap: Sentinel 2 Items Assets Metadata
@@ -347,19 +414,33 @@ display(m.show())
 # | include: true
 # | output: true
 
+import grass.script as gs
+import grass.jupyter as gj
 stac_query = {"eo:cloud_cover": {"lt": 10}}
 
-collection_items_assets_json = gs.parse_command(
+items_assets_json = gs.parse_command(
     "t.stac.item",
     url=stac_url,
     collection_id="sentinel-2-l2a",
     datetime="2024-04-01/2024-09-30",
-    asset_keys="red",
-    query=json.dumps(stac_query),
-    format="json"
+    asset_keys="red,nir",
+    format="json",
+    query=json.dumps(stac_query)
 )
-
 ```
+
+## Terminal
+```{python}
+# | label: tbl-collection-items-assets-terminal
+# | tbl-cap: Sentinel 2 Items Assets Metadata
+# | echo: true
+# | eval: true
+# | include: true
+# | output: true
+!t.stac.item url="https://earth-search.aws.element84.com/v1/" collection_id="sentinel-2-l2a" datetime="2024-04-01/2024-09-30" asset_keys="red,nir" format="json" query='{"eo:cloud_cover": {"lt": 10}}'
+```
+
+:::
 
 ```{python}
 # | label: download-estimate
@@ -367,11 +448,12 @@ collection_items_assets_json = gs.parse_command(
 # | eval: true
 # | include: true
 # | output: true
+
 print(f"""
 Download Estimate
  
-Files:  {collection_items_assets_json["count"]}
-Total Download Size: {collection_items_assets_json["bytes"] ** 1e-9:.2f} GB
+Files:  {items_assets_json["count"]}
+Total Download Size: {items_assets_json["bytes"] ** 1e-9:.2f} GB
 """)
 
 ```
@@ -390,21 +472,21 @@ collection_items_assets_json = gs.parse_command(
     url=stac_url,
     collection_id="sentinel-2-l2a",
     datetime="2024-04-01/2024-09-30",
-    asset_keys="red",
+    asset_keys="red,nir",
     query=json.dumps(stac_query),
     strds_output="outputs/s2_red.txt",
-    format="json",
+    format="json"
 )
 ```
 
-```plain
-sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.red.1|2024-09-09 16:13:25|red
-sentinel-2-l2a.S2B_17SPV_20240825_0_L2A.red.1|2024-08-25 16:13:26|red
-sentinel-2-l2a.S2A_17SPV_20240731_0_L2A.red.1|2024-07-31 16:13:28|red
-sentinel-2-l2a.S2A_17SPV_20240611_0_L2A.red.1|2024-06-11 16:13:32|red
-sentinel-2-l2a.S2A_17SPV_20240522_0_L2A.red.1|2024-05-22 16:13:25|red
-sentinel-2-l2a.S2A_17SPV_20240502_0_L2A.red.1|2024-05-02 16:13:29|red
-sentinel-2-l2a.S2B_17SPV_20240407_0_L2A.red.1|2024-04-07 16:13:25|red
+```{python}
+print(Path("outputs/s2_red.txt").read_text())
+```
+
+```{python}
+startdate = df_items_assets["datetime"].min()
+enddate = df_items_assets["datetime"].max()
+print(f"Start Date: {startdate}\nEnd Date: {enddate}")
 ```
 
 Create STRDS
@@ -419,11 +501,11 @@ Create STRDS
 # Create the space time dataset
 gs.run_command(
     "t.create",
-    output="sentinel_2_red",
+    output="sentinel_2_red_nir",
     type="strds",
     temporaltype="absolute",
-    title="Sentinel 2 Red Band",
-    description="Sentinel 2 Red Band from 2024-04-01/2024-09-30",
+    title="Sentinel 2 Red/NIR Bands",
+    description="Sentinel 2 Red/NIR Bands from 2024-04-01/2024-09-30",
     overwrite=True,
 )
 
@@ -442,9 +524,9 @@ print(gs.run_command(
     url=stac_url,
     collection_id="sentinel-2-l2a",
     datetime="2024-04-01/2024-09-30",
-    asset_keys="red",
+    asset_keys="red,nir",
     query=json.dumps(stac_query),
-    strds_output="outputs/s2_red.txt",
+    strds_output="outputs/s2_red_nir.txt",
     format="json",
     method="nearest",
     resolution="value",
@@ -462,18 +544,40 @@ Register the data
 ```{python}
 # | label: register-strds
 # | echo: true
-# | eval: true
+# | eval: false
 # | include: true
 # | output: true
 
 # Register the output maps into a space time dataset
 gs.run_command(
     "t.register",
-    input="sentinel_2_red",
-    start="2024-04-07 16:13:25",
-    end="2024-09-09 16:13:25",
-    file="outputs/s2_red.txt",
+    input="sentinel_2_red_nir",
+    file="outputs/s2_red_nir.txt",
+    type="raster",
+    unit="days"
 )
+
+```
+
+```{python}
+gs.run_command("t.info", type="strds", input="sentinel_2_red_nir")
+```
+
+```{python}
+# | label: display-composite
+# | echo: true
+# | eval: true
+# | include: true
+# | output: true
+
+m = gj.Map(use_region=True)
+m.d_rgb(
+    red="sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.red",
+    blue="sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.nir",
+    green="sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.nir",
+)
+m.d_barscale()
+display(m.show())
 
 ```
 
@@ -486,15 +590,77 @@ gs.run_command(
 
 # Create Time Series Map
 # m = gj.TimeSeriesMap(use_region=True)
-# m.add_raster_series("sentinel_2_red", fill_gaps=False)
+# m.add_raster_series("sentinel_2_red_nir", fill_gaps=False)
 # m.d_barscale()
 # m.render()
 # display(m.show())
 
-m = gj.Map(use_region=True)
-m.d_rast(map="sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.red")
-m.d_barscale()
-display(m.show())
+```
+
+
+```{python}
+strds_df = pd.DataFrame(
+    gs.parse_command(
+        "t.rast.list",
+        input="sentinel_2_red_nir",
+        order="start_time",
+        columns=["name", "semantic_label", "start_time", "end_time", "min", "max"],
+        format="csv",
+    )
+)
+
+# Convert start_time to datetime for better formatting
+strds_df["start_time"] = pd.to_datetime(strds_df["start_time"])
+
+sns.lineplot(
+    x="start_time", y="max", hue="semantic_label", style="semantic_label", data=strds_df
+)
+
+# Format x-axis labels for better readability
+import matplotlib.dates as mdates
+import matplotlib.pyplot as plt
+
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+plt.gcf().autofmt_xdate()  # Auto-rotate date labels
+
+```
+
+```{python}
+
+gs.run_command(
+    "t.rast.mapcalc",
+    inputs=["sentinel_2_red_nir.nir", "sentinel_2_red_nir.red"],
+    output="ndvi",
+    basename="ndvi",
+    method="follows",
+    expression="float('sentinel_2_red_nir.red' - 'sentinel_2_red_nir.nir') / ('sentinel_2_red_nir.red' + 'sentinel_2_red_nir.nir')",
+    overwrite=True,
+    flags="n"
+)
+```
+
+```{python}
+gs.run_command("t.list", type="strds")
+```
+
+```{python}
+# | layout-ncol: 3
+ndvi_list = gs.parse_command(
+    "t.rast.list",
+    input="ndvi",
+    order="start_time",
+    columns=["name", "semantic_label", "start_time", "end_time", "min", "max"],
+    format="csv",
+)
+gs.run_command("t.rast.colors", input="ndvi", color="ndvi")
+
+for ndvi in ndvi_list:
+    map_name = ndvi.get("name")
+    m = gj.Map(use_region=True, width=500)
+    m.d_rast(map=map_name)
+    m.d_barscale()
+    m.d_legend(raster=map_name, flags="b")
+    display(m.show())
 
 ```
 
