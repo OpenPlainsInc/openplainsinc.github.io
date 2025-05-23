@@ -2,10 +2,20 @@
 title: "STAC Tutorial"
 description: "Learn how to use the GRASS addon t.stac to search and import STAC API data into a GRASS project."
 image: images/stac-to-the-future.png
-toc: true
-toc-depth: 4
+author: Corey T. White
+date: '2025-03-01'
+categories: [stac, grass-addon, tutorial]
+date-modified: today
+
+page-layout: full
+title-block-banner: true
+draft: false
+
 format:
   html:
+    toc: true
+    toc-depth: 4
+    tabsets: true
     code-copy: true
     code-fold: false
     code-tools: true
@@ -16,19 +26,20 @@ format:
         href: https://grass.osgeo.org
       - text: STAC
         href: https://stacspec.org/en
+    lightbox: true
+    canonical-url: true
+    notebook-links: true	
+
+jupyter: python3
+
+
 execute:
   enabled: true
   keep-ipynb: true
   eval: false
   freeze: auto
   cache: true
-jupyter: python3
-author: Corey T. White
-date: '2025-03-01'
-categories: [stac, grass-addon, tutorial]
-page-layout: full
-title-block-banner: true
-draft: false
+
 ---
 
 In this tutorial we will learn about the [t.stac](https://grass.osgeo.org/grass-stable/manuals/addons/t.stac.html) suite of tools for [GRASS](https://grass.osgeo.org).
@@ -102,7 +113,7 @@ You can install them using pip or the Python package manager of your choice.
 pip install pystac pystac_client tqdm
 ```
 
-Now you can install the extensions.
+Now you can install the *t.stac* extensions.
 
 ```{python}
 # | label: install-t-stac
@@ -135,11 +146,6 @@ display(m.show())
 
 ```
 
-```{python}
-m_html = Path("outputs/basic_map.html")
-HTML(m_html.read_text())
-```
-
 ## STAC API
 
 ```{python}
@@ -164,7 +170,7 @@ catalogs_json = gs.parse_command(
     "t.stac.catalog", url=stac_url, flags="b", format="json"
 )
 df_catalogs = pd.json_normalize(catalogs_json)
-display(df_catalogs.head(10))
+display(df_catalogs.T.head(10))
 ```
 
 ## Terminal
@@ -453,7 +459,7 @@ print(f"""
 Download Estimate
  
 Files:  {items_assets_json["count"]}
-Total Download Size: {items_assets_json["bytes"] ** 1e-9:.2f} GB
+Total Download Size: {items_assets_json["bytes"] / 1e9:.2f} GB
 """)
 
 ```
@@ -474,8 +480,8 @@ collection_items_assets_json = gs.parse_command(
     datetime="2024-04-01/2024-09-30",
     asset_keys="red,nir",
     query=json.dumps(stac_query),
-    strds_output="outputs/s2_red.txt",
-    format="json"
+    strds_output="outputs/s2_red_nir.txt",
+    format="json",
 )
 ```
 
@@ -501,7 +507,7 @@ Create STRDS
 # Create the space time dataset
 gs.run_command(
     "t.create",
-    output="sentinel_2_red_nir",
+    output="sentinel_2",
     type="strds",
     temporaltype="absolute",
     title="Sentinel 2 Red/NIR Bands",
@@ -551,16 +557,15 @@ Register the data
 # Register the output maps into a space time dataset
 gs.run_command(
     "t.register",
-    input="sentinel_2_red_nir",
+    input="sentinel_2",
     file="outputs/s2_red_nir.txt",
-    type="raster",
-    unit="days"
+    type="raster"
 )
 
 ```
 
 ```{python}
-gs.run_command("t.info", type="strds", input="sentinel_2_red_nir")
+gs.run_command("t.info", type="strds", input="sentinel_2")
 ```
 
 ```{python}
@@ -577,32 +582,39 @@ m.d_rgb(
     green="sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.nir",
 )
 m.d_barscale()
-display(m.show())
+m.show()
 
+```
+
+#### Calculate NDVI
+
+```{python}
+
+gs.run_command(
+    "t.rast.mapcalc",
+    inputs=["sentinel_2.nir", "sentinel_2.red"],
+    output="ndvi",
+    basename="ndvi",
+    method="follows",
+    expression=(
+        "float(if('sentinel_2.nir' >= 10000.0, 10000.0, 'sentinel_2.nir') - if('sentinel_2.red' >= 10000.0, 10000.0, 'sentinel_2.red')) / (if('sentinel_2.nir' >= 10000.0, 10000.0, 'sentinel_2.nir') + if('sentinel_2.red' >= 10000.0, 10000.0, 'sentinel_2.red'))"
+    ),
+    overwrite=True,
+    flags="n",
+)
 ```
 
 ```{python}
-# | label: display-time-series
-# | echo: true
-# | eval: true
-# | include: true
-# | output: true
-
-# Create Time Series Map
-# m = gj.TimeSeriesMap(use_region=True)
-# m.add_raster_series("sentinel_2_red_nir", fill_gaps=False)
-# m.d_barscale()
-# m.render()
-# display(m.show())
-
+gs.run_command("t.list", type="strds")
 ```
 
+Plot the NDVI
 
 ```{python}
 strds_df = pd.DataFrame(
     gs.parse_command(
         "t.rast.list",
-        input="sentinel_2_red_nir",
+        input="ndvi",
         order="start_time",
         columns=["name", "semantic_label", "start_time", "end_time", "min", "max"],
         format="csv",
@@ -613,7 +625,7 @@ strds_df = pd.DataFrame(
 strds_df["start_time"] = pd.to_datetime(strds_df["start_time"])
 
 sns.lineplot(
-    x="start_time", y="max", hue="semantic_label", style="semantic_label", data=strds_df
+    x="start_time", y="max", data=strds_df
 )
 
 # Format x-axis labels for better readability
@@ -623,24 +635,6 @@ import matplotlib.pyplot as plt
 plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
 plt.gcf().autofmt_xdate()  # Auto-rotate date labels
 
-```
-
-```{python}
-
-gs.run_command(
-    "t.rast.mapcalc",
-    inputs=["sentinel_2_red_nir.nir", "sentinel_2_red_nir.red"],
-    output="ndvi",
-    basename="ndvi",
-    method="follows",
-    expression="float('sentinel_2_red_nir.red' - 'sentinel_2_red_nir.nir') / ('sentinel_2_red_nir.red' + 'sentinel_2_red_nir.nir')",
-    overwrite=True,
-    flags="n"
-)
-```
-
-```{python}
-gs.run_command("t.list", type="strds")
 ```
 
 ```{python}
@@ -660,7 +654,71 @@ for ndvi in ndvi_list:
     m.d_rast(map=map_name)
     m.d_barscale()
     m.d_legend(raster=map_name, flags="b")
-    display(m.show())
+    m.show()
+```
+
+
+```{python}
+# | label: display-time-series
+# | echo: true
+# | eval: true
+# | include: true
+# | output: true
+
+ndvi_rasters = [
+    i.get("name")
+    for i in gs.parse_command(
+        "t.rast.list",
+        input="ndvi",
+        order="start_time",
+        columns=["name"],
+        format="csv",
+    )
+]
+
+# Create Time Series Map
+m = gj.SeriesMap(use_region=True)
+m.add_rasters(
+    rasters=ndvi_rasters
+)
+m.d_barscale()
+m.render()
+m.show()
+
+```
+
+```{python}
+# | label: display-ndvi-maps
+# | echo: true
+# | eval: true
+# | include: true
+# | output: true
+# | layout-ncol: 3
+# | fig-cap:
+# |     - Day 1
+# |     - Day 2
+# |     - Day 3
+# |     - Day 4
+# |     - Day 5
+# |     - Day 6
+# |     - Day 7
+
+import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
+from PIL import Image
+
+
+def generate_map(map_name):
+    m = gj.Map(use_region=True)
+    m.d_rast(map=map_name)
+    m.d_legend(raster=map_name, flags="b")
+    m.d_barscale()
+    return m
+
+
+for raster in ndvi_rasters:
+    ndvi_map = generate_map(raster)
+    ndvi_map.show()
 
 ```
 
