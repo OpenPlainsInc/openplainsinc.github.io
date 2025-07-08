@@ -30,6 +30,7 @@ format:
     canonical-url: true
     notebook-links: true	
 
+engine: jupyter
 jupyter: python3
 
 
@@ -91,7 +92,7 @@ Create a GRASS project
 gs.create_project("stac", epsg="32119", overwrite=True)
 ```
 
-and start a GRASS session
+and start a GRASS session.
 
 ```{python}
 # | label: start-grass-session
@@ -120,7 +121,7 @@ Now you can install the *t.stac* extensions.
 gs.run_command("g.extension", extension="t.stac")
 ```
 
-## Set computational region
+### Define computational region
 
 ```{python}
 # | label: grass-set-region
@@ -133,19 +134,6 @@ gs.run_command(
 )
 ```
 
-```{python}
-# | label: display-interactive-region
-# | echo: true
-# | eval: true
-# | include: true
-# | output: true
-
-m = gj.InteractiveMap(use_region=True)
-m.save(filename="outputs/basic_map.html")
-display(m.show())
-
-```
-
 ## STAC API
 
 ```{python}
@@ -156,7 +144,7 @@ stac_url = "https://earth-search.aws.element84.com/v1/"
 
 ### Searching STAC Catalogs
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ## Python
 
@@ -166,11 +154,14 @@ stac_url = "https://earth-search.aws.element84.com/v1/"
 # | eval: true
 # | include: true
 # | output: true
+
 catalogs_json = gs.parse_command(
-    "t.stac.catalog", url=stac_url, flags="b", format="json"
+    "t.stac.catalog", url=stac_url, format="json"
 )
+
 df_catalogs = pd.json_normalize(catalogs_json)
-display(df_catalogs.T.head(10))
+df_catalogs.head()
+
 ```
 
 ## Terminal
@@ -180,6 +171,7 @@ display(df_catalogs.T.head(10))
 # | eval: true
 # | include: true
 # | output: true
+
 !t.stac.catalog url={stac_url} format=plain -b
 ```
 
@@ -187,7 +179,7 @@ display(df_catalogs.T.head(10))
 
 #### Collection Metadata
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ## Python
 ```{python}
@@ -223,7 +215,7 @@ display(df_items.T.head(5))
 
 #### Query Items by datetime and display table
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ## Python
 ```{python}
@@ -478,7 +470,7 @@ collection_items_assets_json = gs.parse_command(
     url=stac_url,
     collection_id="sentinel-2-l2a",
     datetime="2024-04-01/2024-09-30",
-    asset_keys="red,nir",
+    asset_keys="red,green,blue,nir",
     query=json.dumps(stac_query),
     strds_output="outputs/s2_red_nir.txt",
     format="json",
@@ -530,7 +522,7 @@ print(gs.run_command(
     url=stac_url,
     collection_id="sentinel-2-l2a",
     datetime="2024-04-01/2024-09-30",
-    asset_keys="red,nir",
+    asset_keys="red,green,blue,nir",
     query=json.dumps(stac_query),
     strds_output="outputs/s2_red_nir.txt",
     format="json",
@@ -538,7 +530,7 @@ print(gs.run_command(
     resolution="value",
     resolution_value="10",
     extent="region",
-    nprocs=7,
+    nprocs=12,
     memory=1024 * 7,
     flags="d",
 ))
@@ -578,8 +570,8 @@ gs.run_command("t.info", type="strds", input="sentinel_2")
 m = gj.Map(use_region=True)
 m.d_rgb(
     red="sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.red",
-    blue="sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.nir",
-    green="sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.nir",
+    blue="sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.blue",
+    green="sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.green",
 )
 m.d_barscale()
 m.show()
@@ -597,7 +589,7 @@ gs.run_command(
     basename="ndvi",
     method="follows",
     expression=(
-        "float(if('sentinel_2.nir' >= 10000.0, 10000.0, 'sentinel_2.nir') - if('sentinel_2.red' >= 10000.0, 10000.0, 'sentinel_2.red')) / (if('sentinel_2.nir' >= 10000.0, 10000.0, 'sentinel_2.nir') + if('sentinel_2.red' >= 10000.0, 10000.0, 'sentinel_2.red'))"
+        "float(if('sentinel_2.nir' >= 10000, 10000, 'sentinel_2.nir') - if('sentinel_2.red' >= 10000, 10000, 'sentinel_2.red')) / (if('sentinel_2.nir' >= 10000, 10000, 'sentinel_2.nir') + if('sentinel_2.red' >= 10000, 10000, 'sentinel_2.red'))"
     ),
     overwrite=True,
     flags="n",
@@ -634,7 +626,7 @@ import matplotlib.pyplot as plt
 
 plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
 plt.gcf().autofmt_xdate()  # Auto-rotate date labels
-
+plt.show()
 ```
 
 ```{python}
