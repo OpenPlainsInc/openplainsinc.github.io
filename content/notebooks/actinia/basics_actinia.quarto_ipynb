@@ -1,0 +1,510 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: Introduction to Actinia\n",
+        "description: Learn how to use actinia to create a cloud-based processing environment for GRASS.\n",
+        "format:\n",
+        "  html:\n",
+        "    toc: true\n",
+        "    code-tools: true\n",
+        "    code-copy: true\n",
+        "    code-fold: false\n",
+        "    other-links:\n",
+        "      - text: actinia\n",
+        "        href: https://github.com/actinia-org\n",
+        "      - text: grass\n",
+        "        href: https://grass.osgeo.org\n",
+        "    code-links:\n",
+        "      - text: Docker Container\n",
+        "        icon: file-code\n",
+        "        href: https://github.com/OpenPlainsInc/foss4gna-2024-workshop\n",
+        "      - text: OpenPlainsInc/actinia_openapi_python_client\n",
+        "        icon: file-code\n",
+        "        href: https://github.com/OpenPlainsInc/actinia_openapi_python_client\n",
+        "author:\n",
+        "  - Corey T. White\n",
+        "date: May 6, 2025\n",
+        "keep-ipynb: true\n",
+        "toc: true\n",
+        "toc-depth: 4\n",
+        "image: ../../images/logos/actinia/actinia_logo.svg\n",
+        "categories:\n",
+        "  - geospatial\n",
+        "  - actinia\n",
+        "  - GRASS v8.5\n",
+        "  - jupyter\n",
+        "  - lidar\n",
+        "  - STAC\n",
+        "page-layout: full\n",
+        "title-block-banner: true\n",
+        "jupyter: python3\n",
+        "filters:\n",
+        "  - include-code-files\n",
+        "draft: true\n",
+        "---\n"
+      ],
+      "id": "64ce69cd"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "!figlet \"actinia 101\""
+      ],
+      "id": "1ddfa56f",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## A REST API for GRASS GIS\n",
+        "\n",
+        "<div>\n",
+        "  <i class=\"fa-sharp-duotone fa-thin fa-glass\"></i> <a href=\"https://grass.osgeo.org/\">GRASS</a> is a Geospatial Processing Engine<br>\n",
+        "  <i class=\"fa-sharp-duotone fa-light fa-code\"></i> Open Source (GPL v2)<br>\n",
+        "  <i class=\"fa-sharp-duotone fa-light fa-earth-americas\"></i> Developed by International and Multi-institutional groups and individuals (GRASS Development Team)<br>\n",
+        "  <i class=\"fa-sharp-duotone fa-light fa-scale-balanced\"></i> Member of the Open Source Geospatial Foundation<br>\n",
+        "  <i class=\"fa-sharp-duotone fa-light fa-shield-halved\"></i> Received Open Source Security Foundation (OpenSSF) Best Practices Badge - 2024\n",
+        "</div>\n",
+        "\n",
+        "```{mermaid}\n",
+        "flowchart LR\n",
+        "  A[Client] -->|Http Request| B[Actinia REST API]\n",
+        "  B <--> D[GRASS Processing Node]\n",
+        "  B -->|Http Response| A\n",
+        "```\n",
+        "\n",
+        "## Import Python Libraries"
+      ],
+      "id": "0d644db4"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import os\n",
+        "import subprocess\n",
+        "from pprint import pprint\n",
+        "import sys\n",
+        "import json\n",
+        "import time\n",
+        "from IPython.display import JSON, display\n",
+        "\n",
+        "import requests\n",
+        "from requests.auth import HTTPBasicAuth"
+      ],
+      "id": "fb2f626b",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Setup Environment\n",
+        "\n",
+        "Deploy Docker container with Actinia\n",
+        "\n",
+        "Follow Instructions at : [https://github.com/OpenPlainsInc/foss4gna-2024-workshop](https://github.com/OpenPlainsInc/foss4gna-2024-workshop)\n",
+        "\n",
+        "### Setup Variables"
+      ],
+      "id": "1ca0b0c5"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "ACTINIA_USER = 'actinia-gdi'\n",
+        "ACTINIA_PASSWORD = 'actinia-gdi'\n",
+        "ACTINIA_VERSION = 'v3'\n",
+        "ACTINIA_BASEURL = 'http://localhost:8088'\n",
+        "ACTINIA_URL = ACTINIA_BASEURL + \"/api/\" + ACTINIA_VERSION\n",
+        "ACTINIA_AUTH = HTTPBasicAuth(ACTINIA_USER, ACTINIA_PASSWORD)"
+      ],
+      "id": "0878570d",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "def print_as_json(data):\n",
+        "    json.dumps(data, indent=2)"
+      ],
+      "id": "aa339ebf",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## actinia REST API\n",
+        "\n",
+        "[actinia](https://github.com/actinia-org)\n",
+        "[Docker Image](https://github.com/actinia-org/actinia-docker/tree/main)\n",
+        "\n",
+        "### Tools\n",
+        "\n",
+        "- [actinia OpenApi Python Client](https://github.com/OpenPlainsInc/actinia_openapi_python_client)\n",
+        "- [actinia-python-client](https://github.com/actinia-org/actinia-python-client)\n",
+        "\n",
+        "\n",
+        "## Acinia Basics"
+      ],
+      "id": "2c4edcad"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: actinia-version\n",
+        "#| echo: false\n",
+        "#| output: true\n",
+        "\n",
+        "url = f\"{ACTINIA_URL}/version\"\n",
+        "response = requests.get(url)\n",
+        "print_as_json(response.json())"
+      ],
+      "id": "actinia-version",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## User Roles\n",
+        "\n",
+        "1. **Superadmin**\n",
+        "    - Create, modify and delete users\n",
+        "    - Read/write access to all databases\n",
+        "    - Can access all API calls\n",
+        "\n",
+        "2. **Admin**\n",
+        "    - All API Calls\n",
+        "    - Create, modify and delete users with the maximum user-role user of the same user grou\n",
+        "    - Access to persistent databases that were granted by a **superadmin**\n",
+        "\n",
+        "3. **User**\n",
+        "    - Can run computational tasks in ephemeral and user specific databases\n",
+        "    - Create, modify and delete locations in a user specific database\n",
+        "    - Create, modify and delete mapsets in user specific databases\n",
+        "    - Limited access to API calls\n",
+        "    - Has limited access to persistent databases\n",
+        "\n",
+        "4. **Guest**\n",
+        "    - Has very limited access to API calls\n",
+        "    - Limited access to persistent databases\n",
+        "\n",
+        ":::aside\n",
+        "https://actinia-org.github.io/actinia-core/actinia_concepts/\n",
+        ":::\n",
+        "\n",
+        "### GRASS Projects\n",
+        "\n",
+        "Let's start by requesting a list of GRASS projects from actinia.\n",
+        "\n",
+        "```{mermaid}\n",
+        "flowchart LR\n",
+        "  A[\"/api/v3/locations\"]\n",
+        "```"
+      ],
+      "id": "dbea0817"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "url = f\"{ACTINIA_URL}/locations\"\n",
+        "response = requests.get(url, auth=ACTINIA_AUTH)\n",
+        "print_as_json(response.json().get('locations'))"
+      ],
+      "id": "aa2e06c7",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Now we will get extra information about a specific project.\n",
+        "\n",
+        "```{mermaid}\n",
+        "flowchart LR\n",
+        "  A[\"/api/v3/locations/\"]\n",
+        "  A --- C[\"{location_id}\"]\n",
+        "  C --- D[\"/info\"]\n",
+        "```"
+      ],
+      "id": "8a8ab4c8"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "location_id = 'nc_spm_08'\n",
+        "url = f\"{ACTINIA_URL}/locations/{location_id}/info\"\n",
+        "\n",
+        "response = requests.get( url, auth=ACTINIA_AUTH)\n",
+        "\n",
+        "pprint(response.json().get('process_results'))"
+      ],
+      "id": "7398cf7a",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Mapsets\n",
+        "\n",
+        "We will now get a list of mapsets for a specific project.\n",
+        "\n",
+        "```{mermaid}\n",
+        "flowchart LR\n",
+        "  A[\"/api/v3/locations/\"]\n",
+        "  A --- B(\"{location_id}\")\n",
+        "  B --- C[\"/mapsets\"]\n",
+        "```"
+      ],
+      "id": "2b1fbffc"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# mapset = 'nc_spm_08'\n",
+        "location_id = 'nc_spm_08_grass7'\n",
+        "url = f\"{ACTINIA_URL}/locations/{location_id}/mapsets\"\n",
+        "\n",
+        "response = requests.get( url, auth=ACTINIA_AUTH)\n",
+        "\n",
+        "pprint(response.json().get('process_results'))"
+      ],
+      "id": "fdd00b05",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Now let's get extra information about a specific mapset `PERMANENT`.\n",
+        "\n",
+        "```{mermaid}\n",
+        "flowchart LR\n",
+        "  A[\"/api/v3/locations/\"]\n",
+        "  A --- B(\"{location_id}\")\n",
+        "  B --- C[\"/mapsets/\"]\n",
+        "  C --- D(\"{mapset_id}\")\n",
+        "  D --- E[\"/info\"]\n",
+        "```"
+      ],
+      "id": "e30e3213"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "mapset_id = 'PERMANENT'\n",
+        "location_id = 'nc_spm_08_grass7'\n",
+        "url = f\"{ACTINIA_URL}/locations/{location_id}/mapsets/{mapset_id}/info\"\n",
+        "\n",
+        "response = requests.get( url, auth=ACTINIA_AUTH)\n",
+        "\n",
+        "pprint(response.json().get('process_results'))"
+      ],
+      "id": "c77e41d0",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Layers\n",
+        "\n",
+        "#### Raster Layers\n",
+        "\n",
+        "Let's see all of the mapsets raster layers.\n",
+        "\n",
+        "```{mermaid}\n",
+        "flowchart LR\n",
+        "  A[\"/api/v3/locations/\"]\n",
+        "  A --- B(\"{location_id}\")\n",
+        "  B --- C[\"/mapsets/\"]\n",
+        "  C --- D(\"{mapset_id}\")\n",
+        "  D --- E[\"/raster_layers\"]\n",
+        "```"
+      ],
+      "id": "dea3acc2"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "mapset_id = 'PERMANENT'\n",
+        "location_id = 'nc_spm_08_grass7'\n",
+        "url = f\"{ACTINIA_URL}/locations/{location_id}/mapsets/{mapset_id}/raster_layers\"\n",
+        "\n",
+        "response = requests.get( url, auth=ACTINIA_AUTH)\n",
+        "\n",
+        "pprint(response.json().get('process_results'))"
+      ],
+      "id": "b6c7b203",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "#### Vector Layers\n",
+        "\n",
+        "```{mermaid}\n",
+        "flowchart LR\n",
+        "  A[\"/api/v3/locations/\"]\n",
+        "  A --- B(\"{location_id}\")\n",
+        "  B --- C[\"/mapsets/\"]\n",
+        "  C --- D(\"{mapset_id}\")\n",
+        "  D --- E[\"/vector_layers\"]\n",
+        "```"
+      ],
+      "id": "7ad52d10"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "mapset_id = 'PERMANENT'\n",
+        "location_id = 'nc_spm_08_grass7'\n",
+        "url = f\"{ACTINIA_URL}/locations/{location_id}/mapsets/{mapset_id}/vector_layers\"\n",
+        "\n",
+        "payload = {}\n",
+        "headers = {}\n",
+        "\n",
+        "response = requests.get( url, auth=ACTINIA_AUTH, headers=headers)\n",
+        "\n",
+        "pprint(response.json().get('process_results'))"
+      ],
+      "id": "5c2b7aa9",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Processing\n",
+        "\n",
+        "#### Syncronous Processing\n",
+        "\n",
+        "Emphemeral process\n",
+        "\n",
+        "```{mermaid}\n",
+        "flowchart LR\n",
+        "  A[\"/api/v3/locations/\"]\n",
+        "  A --- B(\"{location_id}\")\n",
+        "  B --- C[\"/mapsets/\"]\n",
+        "  C --- D(\"{mapset_id}\")\n",
+        "  D --- E[\"/processing\"]\n",
+        "```"
+      ],
+      "id": "52312adc"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "mapset_id = 'PERMANENT'\n",
+        "location_id = 'nc_spm_08_grass7'\n",
+        "url = f\"{ACTINIA_URL}/locations/{location_id}/mapsets/{mapset_id}/processing\"\n",
+        "\n",
+        "data = {}\n",
+        "\n",
+        "response = requests.post( url, auth=ACTINIA_AUTH, json=data)\n",
+        "\n",
+        "pprint(response.json().get('process_results'))"
+      ],
+      "id": "d9f4e5dd",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "#### Asyncronous Processing\n",
+        "\n",
+        "```{mermaid}\n",
+        "flowchart LR\n",
+        "  A[\"/api/v3/locations/\"]\n",
+        "  A --- B(\"{location_id}\")\n",
+        "  B --- C[\"/mapsets/\"]\n",
+        "  C --- D(\"{mapset_id}\")\n",
+        "  D --- E[\"/processing_async\"]\n",
+        "```"
+      ],
+      "id": "0fc8274a"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "mapset_id = 'PERMANENT'\n",
+        "location_id = 'nc_spm_08_grass7'\n",
+        "url = f\"{ACTINIA_URL}/locations/{location_id}/mapsets/{mapset_id}/processing_async\"\n",
+        "\n",
+        "data = {}\n",
+        "\n",
+        "response = requests.post( url, auth=ACTINIA_AUTH, json=data)\n",
+        "\n",
+        "pprint(response.json().get('process_results'))"
+      ],
+      "id": "171459fe",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Let's look at the complete API within `PostMan` or `Insomnia`.\n",
+        "\n",
+        "- [Postman](https://www.postman.com/)\n",
+        "- [Insomnia](https://insomnia.rest/download)\n",
+        "\n",
+        "```\n",
+        "https://localhost:8080/api/v3/swagger-ui/index.html\n",
+        "```\n",
+        "\n",
+        "### Process Chains\n",
+        "\n",
+        "Let move on to creating process chains in [Part 3](./process_chains.ipynb).\n"
+      ],
+      "id": "f353bd92"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "/home/coreywhite/.local/share/jupyter/kernels/python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}

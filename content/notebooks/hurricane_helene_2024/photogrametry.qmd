@@ -67,7 +67,7 @@ project = '`CAP - H-TS Helene 2024`' # Queried at API level
 mission = "'24-1-5849'"
 flight = "'A0046B'" # Swannanowa
 
-url = f"https://services.arcgis.com/XG15cJAlne2vxtgt/ArcGIS/rest/services/Image_Points_view/FeatureServer/3/query?where=project+%3D+%27CAP+-+H-TS+Helene+2024%27+and+mission+%3D+%2724-1-5849%27+and+flight+%3D+%27{flight}%27&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&relationParam=&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=3358&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnTrueCurves=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=geojson&token="
+url = f"https://services.arcgis.com/XG15cJAlne2vxtgt/ArcGIS/rest/services/Image_Points_view/FeatureServer/3/query?where=project+%3D+%27CAP+-+H-TS+Helene+2024%27+and+mission+%3D+%2724-1-5849%27+and+flight+%3D+%27{flight}%27&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&relationParam=&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=3358&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=geojson&token="
 
 ```
 
@@ -117,40 +117,45 @@ points_df.head()
 ## Download images for processing
 
 ```{python}
+# | eval: false
+
 import os
 import requests
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import requests
 
+
 def query_feature_service(flight_id):
     try:
-        rest_url = 'https://services.arcgis.com/XG15cJAlne2vxtgt/ArcGIS/rest/services/Image_Points_view/FeatureServer/3/query'
+        rest_url = "https://services.arcgis.com/XG15cJAlne2vxtgt/ArcGIS/rest/services/Image_Points_view/FeatureServer/3/query"
 
         query = f"project='CAP - H-TS Helene 2024' AND mission='24-1-5849' AND flight='{flight_id}'"
 
         params = {
-            'where': query,
-            'outFields': '*',
-            'f': 'json',
-            'returnGeometry': 'false'
+            "where": query,
+            "outFields": "*",
+            "f": "json",
+            "returnGeometry": "false",
         }
         response = requests.get(rest_url, params=params)
         json_data = response.json()
-        url_list = list(map(lambda feat: feat.get('url'), json_data['features']))
+        url_list = list(map(lambda feat: feat.get("url"), json_data["features"]))
         return url_list
     except requests.RequestException as e:
         print(f"Error fetching data from FeatureService: {e}")
+
 
 # Function to download an image from a URL
 def download_image(url, save_path, session):
     try:
         response = session.get(url)
         response.raise_for_status()  # Check for HTTP errors
-        with open(save_path, 'wb') as file:
+        with open(save_path, "wb") as file:
             file.write(response.content)
         print(f"Downloaded {url} to {save_path}")
     except requests.RequestException as e:
         print(f"Failed to download {url}: {e}")
+
 
 # Main function to set up the thread pool and download images
 def run(urls, save_dir, num_threads=4):

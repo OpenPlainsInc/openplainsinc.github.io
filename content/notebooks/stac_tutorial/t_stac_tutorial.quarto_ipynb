@@ -1,0 +1,1126 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \"STAC Tutorial\"\n",
+        "description: \"Learn how to use the GRASS addon t.stac to search and import STAC API data into a GRASS project.\"\n",
+        "image: images/stac-to-the-future.png\n",
+        "author: Corey T. White\n",
+        "date: '2025-03-01'\n",
+        "categories: [stac, grass-addon, tutorial]\n",
+        "date-modified: today\n",
+        "\n",
+        "page-layout: full\n",
+        "title-block-banner: true\n",
+        "draft: false\n",
+        "\n",
+        "format:\n",
+        "  html:\n",
+        "    toc: true\n",
+        "    toc-depth: 4\n",
+        "    tabsets: true\n",
+        "    code-copy: true\n",
+        "    code-fold: false\n",
+        "    code-tools: true\n",
+        "    mermaid: \n",
+        "      theme: forest\n",
+        "    other-links:\n",
+        "      - text: grass\n",
+        "        href: https://grass.osgeo.org\n",
+        "      - text: STAC\n",
+        "        href: https://stacspec.org/en\n",
+        "    lightbox: true\n",
+        "    canonical-url: true\n",
+        "    notebook-links: true\t\n",
+        "\n",
+        "engine: jupyter\n",
+        "jupyter: python3\n",
+        "\n",
+        "\n",
+        "execute:\n",
+        "  enabled: true\n",
+        "  keep-ipynb: true\n",
+        "  eval: false\n",
+        "  freeze: auto\n",
+        "  cache: true\n",
+        "\n",
+        "---\n",
+        "\n",
+        "In this tutorial we will learn about the [t.stac](https://grass.osgeo.org/grass-stable/manuals/addons/t.stac.html) suite of tools for [GRASS](https://grass.osgeo.org).\n",
+        "\n",
+        "* [t.stac.catalog](https://grass.osgeo.org/grass-stable/manuals/addons/t.stac.catalog.html) - is a tool for exploring SpatioTemporal Asset Catalogs metadata from a STAC API.\n",
+        "* [t.stac.collection](https://grass.osgeo.org/grass-stable/manuals/addons/t.stac.collection.html) - is a tool for exploring SpatioTemporal Asset Catalog (STAC) collection metadata.\n",
+        "* [t.stac.item](https://grass.osgeo.org/grass-stable/manuals/addons/t.stac.item.html) - is a tool for exploring and importing SpatioTemporal Asset Catalog item metadata and assets into GRASS.\n",
+        "\n",
+        "## Introduction\n",
+        "\n",
+        "SpatioTemporal Asset Catalog (STAC)...\n",
+        "\n",
+        "\n",
+        "The tutorial assumes you already have GRASS installed on your machine. If not please [download and install GRASS](https://grass.osgeo.org/download/) before continuing the tutorial.\n",
+        "\n",
+        "\n",
+        "## Getting Started\n",
+        "\n",
+        "### Start GRASS Session"
+      ],
+      "id": "463297ba"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: config-grass\n",
+        "#| eval: true\n",
+        "# Import standard python packages\n",
+        "import sys\n",
+        "import subprocess\n",
+        "from IPython.display import display, JSON, HTML\n",
+        "import json\n",
+        "import pandas as pd\n",
+        "from pathlib import Path\n",
+        "import seaborn as sns\n",
+        "# import polars as pl\n",
+        "\n",
+        "# Ask GRASS where its Python packages are and add them to the path\n",
+        "sys.path.append(\n",
+        "    subprocess.check_output([\"grass\", \"--config\", \"python_path\"], text=True).strip()\n",
+        ")\n",
+        "\n",
+        "# Import the GRASS python packages we need\n",
+        "import grass.script as gs\n",
+        "import grass.jupyter as gj"
+      ],
+      "id": "config-grass",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Create a GRASS project"
+      ],
+      "id": "f57eb065"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: create-project\n",
+        "gs.create_project(\"stac\", epsg=\"32119\", overwrite=True)"
+      ],
+      "id": "create-project",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "and start a GRASS session."
+      ],
+      "id": "a21a243b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: start-grass-session\n",
+        "#| eval: true\n",
+        "session = gj.init(\"stac\")"
+      ],
+      "id": "start-grass-session",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Install Addon\n",
+        "\n",
+        "The [t.stac](https://grass.osgeo.org/grass-stable/manuals/addons/t.stac.html) addons require the following Python packages.\n",
+        "\n",
+        "* [pystac (>=1.12)](https://pystac.readthedocs.io/en/latest/installation.html)\n",
+        "* [pystac_client (>=0.8)](https://pystac-client.readthedocs.io/en/stable/)\n",
+        "* [tqdm (>=4.67)](https://tqdm.github.io/)\n",
+        "\n",
+        "You can install them using pip or the Python package manager of your choice. \n",
+        "\n",
+        "```bash\n",
+        "pip install pystac pystac_client tqdm\n",
+        "```\n",
+        "\n",
+        "Now you can install the *t.stac* extensions."
+      ],
+      "id": "bdf96d9e"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: install-t-stac\n",
+        "gs.run_command(\"g.extension\", extension=\"t.stac\")"
+      ],
+      "id": "install-t-stac",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Define computational region"
+      ],
+      "id": "d55558a5"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: grass-set-region\n",
+        "#| echo: true\n",
+        "#| eval: true\n",
+        "#| include: true\n",
+        "#| output: true\n",
+        "gs.run_command(\n",
+        "    \"g.region\", n=236687, s=210391, e=616042, w=598921, nsres=10, ewres=10, flags=\"pa\"\n",
+        ")"
+      ],
+      "id": "grass-set-region",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## STAC API"
+      ],
+      "id": "995969da"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: set-stac-catalog-url\n",
+        "#| eval: true\n",
+        "stac_url = \"https://earth-search.aws.element84.com/v1/\""
+      ],
+      "id": "set-stac-catalog-url",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Searching STAC Catalogs\n",
+        "\n",
+        "::: {.panel-tabset group=\"language\"}\n",
+        "\n",
+        "## Python"
+      ],
+      "id": "632d2b4e"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: tbl-stac-catalog\n",
+        "#| echo: true\n",
+        "#| eval: true\n",
+        "#| include: true\n",
+        "#| output: true\n",
+        "\n",
+        "catalogs_json = gs.parse_command(\n",
+        "    \"t.stac.catalog\", url=stac_url, format=\"json\"\n",
+        ")\n",
+        "\n",
+        "df_catalogs = pd.json_normalize(catalogs_json)\n",
+        "df_catalogs.head()"
+      ],
+      "id": "tbl-stac-catalog",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Terminal"
+      ],
+      "id": "c24cea07"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: tbl-stac-catalog-shell\n",
+        "#| echo: true\n",
+        "#| eval: true\n",
+        "#| include: true\n",
+        "#| output: true\n",
+        "\n",
+        "!t.stac.catalog url={stac_url} format=plain -b"
+      ],
+      "id": "tbl-stac-catalog-shell",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::\n",
+        "\n",
+        "#### Collection Metadata\n",
+        "\n",
+        "::: {.panel-tabset group=\"language\"}\n",
+        "\n",
+        "## Python"
+      ],
+      "id": "5b11eff4"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: tbl-stac-items\n",
+        "#| echo: true\n",
+        "#| eval: true\n",
+        "#| include: true\n",
+        "#| output: true\n",
+        "\n",
+        "items_json = gs.parse_command(\n",
+        "    \"t.stac.item\",\n",
+        "    url=stac_url,\n",
+        "    collection_id=\"sentinel-2-l2a\",\n",
+        "    flags=\"m\",\n",
+        "    format=\"json\",\n",
+        ")\n",
+        "\n",
+        "df_items = pd.json_normalize(items_json, max_level=0)\n",
+        "display(df_items.T.head(5))"
+      ],
+      "id": "tbl-stac-items",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Terminal"
+      ],
+      "id": "358597fb"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: tbl-stac-items-m-shell\n",
+        "#| echo: true\n",
+        "#| eval: true\n",
+        "#| include: true\n",
+        "#| output: true\n",
+        "!t.stac.item url={stac_url} collection_id=\"sentinel-2-l2a\" format=plain -m"
+      ],
+      "id": "tbl-stac-items-m-shell",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::\n",
+        "\n",
+        "#### Query Items by datetime and display table\n",
+        "\n",
+        "::: {.panel-tabset group=\"language\"}\n",
+        "\n",
+        "## Python"
+      ],
+      "id": "2db4a119"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: tbl-items\n",
+        "#| tbl-cap: Sentinel 2 Items\n",
+        "#| echo: true\n",
+        "#| eval: true\n",
+        "#| include: true\n",
+        "#| output: true\n",
+        "\n",
+        "items_json = gs.parse_command(\n",
+        "    \"t.stac.item\",\n",
+        "    url=stac_url,\n",
+        "    collection_id=\"sentinel-2-l2a\",\n",
+        "    flags=\"i\",\n",
+        "    datetime=\"2024-04-01/2024-09-30\",\n",
+        "    format=\"json\",\n",
+        ")\n",
+        "num_items = len(df_items)\n",
+        "df_items = pd.json_normalize(items_json, max_level=0)\n",
+        "display(df_items.head(5))"
+      ],
+      "id": "tbl-items",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Terminal"
+      ],
+      "id": "b0bb6eb2"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: tbl-stac-items-i-shell\n",
+        "#| echo: true\n",
+        "#| eval: true\n",
+        "#| include: true\n",
+        "#| output: true\n",
+        "!t.stac.item url={stac_url} collection_id=\"sentinel-2-l2a\" datetime=\"2024-04-01/2024-09-30\" format=plain -i"
+      ],
+      "id": "tbl-stac-items-i-shell",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::"
+      ],
+      "id": "3f9f7dad"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# | echo: false\n",
+        "# | eval: true\n",
+        "# | include: true\n",
+        "# | output: true\n",
+        "\n",
+        "num_items = len(df_items)\n",
+        "# Can't use inline python with using Jupyter cache\n",
+        "print(f\"There are {num_items} Sentinel 2 items found in our computational region.\")"
+      ],
+      "id": "469bc5d3",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Let's look closer at the properties of item id `S2A_17SPV_20240919_0_L2A`."
+      ],
+      "id": "b3c4beaf"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# | echo: true\n",
+        "# | eval: true\n",
+        "# | include: true\n",
+        "# | output: true\n",
+        "\n",
+        "df_item = df_items.query(\"id == 'S2A_17SPV_20240919_0_L2A'\")\n",
+        "df_properties = df_item[\"properties\"].apply(pd.Series)\n",
+        "df_item = pd.concat([df_item, df_properties], axis=1)\n",
+        "df_item = df_item.drop(\"properties\", axis=1)\n",
+        "display(df_item.T)"
+      ],
+      "id": "c7507815",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Let's look at the items properties"
+      ],
+      "id": "98d6d14f"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# | echo: true\n",
+        "# | eval: true\n",
+        "# | include: true\n",
+        "# | output: true\n",
+        "df_item = df_items.query(\"id == 'S2A_17SPV_20240919_0_L2A'\")\n",
+        "df_properties = df_item[\"properties\"].apply(pd.Series)\n",
+        "display(df_properties.T)"
+      ],
+      "id": "a90aa065",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Now we let's look at the items assets."
+      ],
+      "id": "9d3b8872"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# | echo: true\n",
+        "# | eval: true\n",
+        "# | include: true\n",
+        "# | output: true\n",
+        "df_item = df_items.query(\"id == 'S2A_17SPV_20240919_0_L2A'\")\n",
+        "df_assets = df_item[\"assets\"].apply(pd.Series)\n",
+        "display(df_assets.T.reset_index())"
+      ],
+      "id": "58ddf0a5",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "#### Assets"
+      ],
+      "id": "ee3c5711"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: tbl-items-assets\n",
+        "#| tbl-cap: Sentinel 2 Items Assets Metadata\n",
+        "#| echo: true\n",
+        "#| eval: true\n",
+        "#| include: true\n",
+        "#| output: true\n",
+        "\n",
+        "stac_query = {\"eo:cloud_cover\": {\"lt\": 10}}\n",
+        "\n",
+        "assets_json = gs.parse_command(\n",
+        "    \"t.stac.item\",\n",
+        "    url=stac_url,\n",
+        "    collection_id=\"sentinel-2-l2a\",\n",
+        "    flags=\"a\",\n",
+        "    datetime=\"2024-04-01/2024-09-30\",\n",
+        "    asset_keys=\"red,nir\",\n",
+        "    query=json.dumps(stac_query),\n",
+        "    format=\"json\",\n",
+        ")\n",
+        "\n",
+        "df_items_assets = pd.json_normalize(assets_json, max_level=0)\n",
+        "display(df_items_assets.head(10))"
+      ],
+      "id": "tbl-items-assets",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "display(assets_json)"
+      ],
+      "id": "a17183db",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# | echo: false\n",
+        "# | eval: true\n",
+        "# | include: true\n",
+        "# | output: true\n",
+        "\n",
+        "num_assets = len(assets_json)\n",
+        "# Can't use inline python with using Jupyter cache\n",
+        "print(f\"There are {num_assets} Sentinel 2 assets found in our computational region.\")"
+      ],
+      "id": "4a3b2a56",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "#### EO Parameters\n",
+        "\n",
+        "### Create Metadata Vector"
+      ],
+      "id": "fba0dae1"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: assets-metadata-vector\n",
+        "#| tbl-cap: Sentinel 2 Items Assets Metadata\n",
+        "#| echo: true\n",
+        "#| eval: true\n",
+        "#| include: true\n",
+        "#| output: true\n",
+        "\n",
+        "stac_query = {\"eo:cloud_cover\": {\"lt\": 10}}\n",
+        "\n",
+        "assets_json = gs.parse_command(\n",
+        "    \"t.stac.item\",\n",
+        "    url=stac_url,\n",
+        "    collection_id=\"sentinel-2-l2a\",\n",
+        "    flags=\"a\",\n",
+        "    datetime=\"2024-04-01/2024-09-30\",\n",
+        "    asset_keys=\"red,nir\",\n",
+        "    query=json.dumps(stac_query),\n",
+        "    items_vector=\"sentinel_2_items\",\n",
+        "    format=\"json\",\n",
+        ")\n",
+        "\n",
+        "\n",
+        "df_items_assets = pd.json_normalize(assets_json, max_level=0)\n",
+        "display(df_items_assets.head(5))"
+      ],
+      "id": "assets-metadata-vector",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "#### View the items with iPyleaflet"
+      ],
+      "id": "bf8be7fc"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# | echo: true\n",
+        "# | eval: true\n",
+        "# | include: true\n",
+        "# | output: true\n",
+        "import random\n",
+        "\n",
+        "m = gj.InteractiveMap(use_region=False)\n",
+        "m.add_vector(\n",
+        "    \"sentinel_2_items\",\n",
+        "    style={\"opacity\": 1, \"dashArray\": \"9\", \"fillOpacity\": 0.1, \"weight\": 1},\n",
+        "    hover_style={\"color\": \"white\", \"dashArray\": \"0\", \"fillOpacity\": 0.5},\n",
+        "    style_callback=lambda f: {\n",
+        "        \"color\": \"black\",\n",
+        "        \"fillColor\": random.choice([\"red\", \"yellow\", \"green\", \"orange\"]),\n",
+        "    }\n",
+        ")\n",
+        "display(m.show())"
+      ],
+      "id": "189a5d8b",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Download and Import Rasters\n",
+        "\n",
+        "### Register STRDS\n",
+        "\n",
+        "::: {.panel-tabset}\n",
+        "\n",
+        "## Python"
+      ],
+      "id": "f0aaae01"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: tbl-collection-items-assets\n",
+        "#| tbl-cap: Sentinel 2 Items Assets Metadata\n",
+        "#| echo: true\n",
+        "#| eval: true\n",
+        "#| include: true\n",
+        "#| output: true\n",
+        "\n",
+        "import grass.script as gs\n",
+        "import grass.jupyter as gj\n",
+        "stac_query = {\"eo:cloud_cover\": {\"lt\": 10}}\n",
+        "\n",
+        "items_assets_json = gs.parse_command(\n",
+        "    \"t.stac.item\",\n",
+        "    url=stac_url,\n",
+        "    collection_id=\"sentinel-2-l2a\",\n",
+        "    datetime=\"2024-04-01/2024-09-30\",\n",
+        "    asset_keys=\"red,nir\",\n",
+        "    format=\"json\",\n",
+        "    query=json.dumps(stac_query)\n",
+        ")"
+      ],
+      "id": "tbl-collection-items-assets",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Terminal"
+      ],
+      "id": "392d01c1"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: tbl-collection-items-assets-terminal\n",
+        "#| tbl-cap: Sentinel 2 Items Assets Metadata\n",
+        "#| echo: true\n",
+        "#| eval: true\n",
+        "#| include: true\n",
+        "#| output: true\n",
+        "!t.stac.item url=\"https://earth-search.aws.element84.com/v1/\" collection_id=\"sentinel-2-l2a\" datetime=\"2024-04-01/2024-09-30\" asset_keys=\"red,nir\" format=\"json\" query='{\"eo:cloud_cover\": {\"lt\": 10}}'"
+      ],
+      "id": "tbl-collection-items-assets-terminal",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::"
+      ],
+      "id": "edb5f35f"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: download-estimate\n",
+        "#| echo: true\n",
+        "#| eval: true\n",
+        "#| include: true\n",
+        "#| output: true\n",
+        "\n",
+        "print(f\"\"\"\n",
+        "Download Estimate\n",
+        " \n",
+        "Files:  {items_assets_json[\"count\"]}\n",
+        "Total Download Size: {items_assets_json[\"bytes\"] / 1e9:.2f} GB\n",
+        "\"\"\")"
+      ],
+      "id": "download-estimate",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: tbl-collection-items-assets-strds\n",
+        "#| tbl-cap: Sentinel 2 Items Assets Metadata\n",
+        "#| echo: true\n",
+        "#| eval: false\n",
+        "#| include: true\n",
+        "#| output: true\n",
+        "stac_query = {\"eo:cloud_cover\": {\"lt\": 10}}\n",
+        "\n",
+        "collection_items_assets_json = gs.parse_command(\n",
+        "    \"t.stac.item\",\n",
+        "    url=stac_url,\n",
+        "    collection_id=\"sentinel-2-l2a\",\n",
+        "    datetime=\"2024-04-01/2024-09-30\",\n",
+        "    asset_keys=\"red,green,blue,nir\",\n",
+        "    query=json.dumps(stac_query),\n",
+        "    strds_output=\"outputs/s2_red_nir.txt\",\n",
+        "    format=\"json\",\n",
+        ")"
+      ],
+      "id": "tbl-collection-items-assets-strds",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "print(Path(\"outputs/s2_red.txt\").read_text())"
+      ],
+      "id": "6fb0400a",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "startdate = df_items_assets[\"datetime\"].min()\n",
+        "enddate = df_items_assets[\"datetime\"].max()\n",
+        "print(f\"Start Date: {startdate}\\nEnd Date: {enddate}\")"
+      ],
+      "id": "29cdd670",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Create STRDS"
+      ],
+      "id": "ac169437"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: create-strds\n",
+        "#| echo: true\n",
+        "#| eval: true\n",
+        "#| include: true\n",
+        "#| output: true\n",
+        "\n",
+        "# Create the space time dataset\n",
+        "gs.run_command(\n",
+        "    \"t.create\",\n",
+        "    output=\"sentinel_2\",\n",
+        "    type=\"strds\",\n",
+        "    temporaltype=\"absolute\",\n",
+        "    title=\"Sentinel 2 Red/NIR Bands\",\n",
+        "    description=\"Sentinel 2 Red/NIR Bands from 2024-04-01/2024-09-30\",\n",
+        "    overwrite=True,\n",
+        ")"
+      ],
+      "id": "create-strds",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Download the data"
+      ],
+      "id": "d042b021"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: download-assets\n",
+        "#| echo: true\n",
+        "#| eval: false\n",
+        "#| include: true\n",
+        "#| output: true\n",
+        "print(gs.run_command(\n",
+        "    \"t.stac.item\",\n",
+        "    url=stac_url,\n",
+        "    collection_id=\"sentinel-2-l2a\",\n",
+        "    datetime=\"2024-04-01/2024-09-30\",\n",
+        "    asset_keys=\"red,green,blue,nir\",\n",
+        "    query=json.dumps(stac_query),\n",
+        "    strds_output=\"outputs/s2_red_nir.txt\",\n",
+        "    format=\"json\",\n",
+        "    method=\"nearest\",\n",
+        "    resolution=\"value\",\n",
+        "    resolution_value=\"10\",\n",
+        "    extent=\"region\",\n",
+        "    nprocs=12,\n",
+        "    memory=1024 * 7,\n",
+        "    flags=\"d\",\n",
+        "))"
+      ],
+      "id": "download-assets",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Register the data"
+      ],
+      "id": "28f52b12"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: register-strds\n",
+        "#| echo: true\n",
+        "#| eval: false\n",
+        "#| include: true\n",
+        "#| output: true\n",
+        "\n",
+        "# Register the output maps into a space time dataset\n",
+        "gs.run_command(\n",
+        "    \"t.register\",\n",
+        "    input=\"sentinel_2\",\n",
+        "    file=\"outputs/s2_red_nir.txt\",\n",
+        "    type=\"raster\"\n",
+        ")"
+      ],
+      "id": "register-strds",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "gs.run_command(\"t.info\", type=\"strds\", input=\"sentinel_2\")"
+      ],
+      "id": "52366970",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: display-composite\n",
+        "#| echo: true\n",
+        "#| eval: true\n",
+        "#| include: true\n",
+        "#| output: true\n",
+        "\n",
+        "m = gj.Map(use_region=True)\n",
+        "m.d_rgb(\n",
+        "    red=\"sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.red\",\n",
+        "    blue=\"sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.blue\",\n",
+        "    green=\"sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.green\",\n",
+        ")\n",
+        "m.d_barscale()\n",
+        "m.show()"
+      ],
+      "id": "display-composite",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "#### Calculate NDVI"
+      ],
+      "id": "8ec4f42d"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "gs.run_command(\n",
+        "    \"t.rast.mapcalc\",\n",
+        "    inputs=[\"sentinel_2.nir\", \"sentinel_2.red\"],\n",
+        "    output=\"ndvi\",\n",
+        "    basename=\"ndvi\",\n",
+        "    method=\"follows\",\n",
+        "    expression=(\n",
+        "        \"float(if('sentinel_2.nir' >= 10000, 10000, 'sentinel_2.nir') - if('sentinel_2.red' >= 10000, 10000, 'sentinel_2.red')) / (if('sentinel_2.nir' >= 10000, 10000, 'sentinel_2.nir') + if('sentinel_2.red' >= 10000, 10000, 'sentinel_2.red'))\"\n",
+        "    ),\n",
+        "    overwrite=True,\n",
+        "    flags=\"n\",\n",
+        ")"
+      ],
+      "id": "f30989be",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "gs.run_command(\"t.list\", type=\"strds\")"
+      ],
+      "id": "6d7a5f61",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Plot the NDVI"
+      ],
+      "id": "ab538161"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "strds_df = pd.DataFrame(\n",
+        "    gs.parse_command(\n",
+        "        \"t.rast.list\",\n",
+        "        input=\"ndvi\",\n",
+        "        order=\"start_time\",\n",
+        "        columns=[\"name\", \"semantic_label\", \"start_time\", \"end_time\", \"min\", \"max\"],\n",
+        "        format=\"csv\",\n",
+        "    )\n",
+        ")\n",
+        "\n",
+        "# Convert start_time to datetime for better formatting\n",
+        "strds_df[\"start_time\"] = pd.to_datetime(strds_df[\"start_time\"])\n",
+        "\n",
+        "sns.lineplot(\n",
+        "    x=\"start_time\", y=\"max\", data=strds_df\n",
+        ")\n",
+        "\n",
+        "# Format x-axis labels for better readability\n",
+        "import matplotlib.dates as mdates\n",
+        "import matplotlib.pyplot as plt\n",
+        "\n",
+        "plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))\n",
+        "plt.gcf().autofmt_xdate()  # Auto-rotate date labels\n",
+        "plt.show()"
+      ],
+      "id": "ca7a1f39",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# | layout-ncol: 3\n",
+        "ndvi_list = gs.parse_command(\n",
+        "    \"t.rast.list\",\n",
+        "    input=\"ndvi\",\n",
+        "    order=\"start_time\",\n",
+        "    columns=[\"name\", \"semantic_label\", \"start_time\", \"end_time\", \"min\", \"max\"],\n",
+        "    format=\"csv\",\n",
+        ")\n",
+        "gs.run_command(\"t.rast.colors\", input=\"ndvi\", color=\"ndvi\")\n",
+        "\n",
+        "for ndvi in ndvi_list:\n",
+        "    map_name = ndvi.get(\"name\")\n",
+        "    m = gj.Map(use_region=True, width=500)\n",
+        "    m.d_rast(map=map_name)\n",
+        "    m.d_barscale()\n",
+        "    m.d_legend(raster=map_name, flags=\"b\")\n",
+        "    m.show()"
+      ],
+      "id": "4ae11ac0",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: display-time-series\n",
+        "#| echo: true\n",
+        "#| eval: true\n",
+        "#| include: true\n",
+        "#| output: true\n",
+        "\n",
+        "ndvi_rasters = [\n",
+        "    i.get(\"name\")\n",
+        "    for i in gs.parse_command(\n",
+        "        \"t.rast.list\",\n",
+        "        input=\"ndvi\",\n",
+        "        order=\"start_time\",\n",
+        "        columns=[\"name\"],\n",
+        "        format=\"csv\",\n",
+        "    )\n",
+        "]\n",
+        "\n",
+        "# Create Time Series Map\n",
+        "m = gj.SeriesMap(use_region=True)\n",
+        "m.add_rasters(\n",
+        "    rasters=ndvi_rasters\n",
+        ")\n",
+        "m.d_barscale()\n",
+        "m.render()\n",
+        "m.show()"
+      ],
+      "id": "display-time-series",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: display-ndvi-maps\n",
+        "#| echo: true\n",
+        "#| eval: true\n",
+        "#| include: true\n",
+        "#| output: true\n",
+        "#| layout-ncol: 3\n",
+        "#| fig-cap:\n",
+        "#|   - Day 1\n",
+        "#|   - Day 2\n",
+        "#|   - Day 3\n",
+        "#|   - Day 4\n",
+        "#|   - Day 5\n",
+        "#|   - Day 6\n",
+        "#|   - Day 7\n",
+        "\n",
+        "import matplotlib.pyplot as plt\n",
+        "import matplotlib.gridspec as gridspec\n",
+        "from PIL import Image\n",
+        "\n",
+        "\n",
+        "def generate_map(map_name):\n",
+        "    m = gj.Map(use_region=True)\n",
+        "    m.d_rast(map=map_name)\n",
+        "    m.d_legend(raster=map_name, flags=\"b\")\n",
+        "    m.d_barscale()\n",
+        "    return m\n",
+        "\n",
+        "\n",
+        "for raster in ndvi_rasters:\n",
+        "    ndvi_map = generate_map(raster)\n",
+        "    ndvi_map.show()"
+      ],
+      "id": "display-ndvi-maps",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## References\n",
+        "\n",
+        "- [pystac Documentation](https://pystac.readthedocs.io/)\n",
+        "- [pystac_client Documentation](https://pystac-client.readthedocs.io/)"
+      ],
+      "id": "73efe998"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "/home/coreywhite/.local/share/jupyter/kernels/python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}

@@ -1,0 +1,368 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: Helene Photogrametery\n",
+        "description: This tutorial demonstrates how download images from ArcGIS Server into GRASS GIS.\n",
+        "format: html\n",
+        "author: Corey T. White\n",
+        "date: '2024-10-9'\n",
+        "keep-ipynb: true\n",
+        "toc: true\n",
+        "toc-depth: 4\n",
+        "engine: jupyter\n",
+        "execute:\n",
+        "  eval: false\n",
+        "jupyter: python3\n",
+        "image: images/DSC_0067.JPG\n",
+        "categories: [geospatial, GRASS, jupyter, helene]\n",
+        "page-layout: full\n",
+        "title-block-banner: true\n",
+        "draft: true\n",
+        "---\n",
+        "\n",
+        "# Download Flight Data\n",
+        "\n",
+        "## Set up environment"
+      ],
+      "id": "81cc23dc"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import sys\n",
+        "import subprocess\n",
+        "from pathlib import Path\n",
+        "from IPython.display import display\n",
+        "\n",
+        "v = sys.version_info\n",
+        "print(f\"We are using Python {v.major}.{v.minor}.{v.micro}\")\n",
+        "\n",
+        "# Append GRASS to the python system path\n",
+        "sys.path.append(\n",
+        "    subprocess.check_output([\"grass\", \"--config\", \"python_path\"], text=True).strip()\n",
+        ")\n",
+        "\n",
+        "# Import GRASS libraries\n",
+        "import grass.script as gs\n",
+        "import grass.jupyter as gj\n",
+        "\n",
+        "# GRASS Variables\n",
+        "grassdata = \"grassdata\"\n",
+        "project_name = \"Swannanoa\"\n",
+        "mapset = \"flight\""
+      ],
+      "id": "cefc3315",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## GRASS\n",
+        "\n",
+        "### Create project"
+      ],
+      "id": "2cd00d9d"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| eval: false\n",
+        "gs.create_project(path=grassdata, name=project_name, epsg=\"3358\", overwrite=False)"
+      ],
+      "id": "259d1272",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Start GRASS session"
+      ],
+      "id": "01aac4df"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Start GRASS in the recently created project\n",
+        "session = gj.init(Path(grassdata, project_name))"
+      ],
+      "id": "3b87f5ee",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Define Query Parameters"
+      ],
+      "id": "43bb81be"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "project = '`CAP - H-TS Helene 2024`' # Queried at API level\n",
+        "mission = \"'24-1-5849'\"\n",
+        "flight = \"'A0046B'\" # Swannanowa\n",
+        "\n",
+        "url = f\"https://services.arcgis.com/XG15cJAlne2vxtgt/ArcGIS/rest/services/Image_Points_view/FeatureServer/3/query?where=project+%3D+%27CAP+-+H-TS+Helene+2024%27+and+mission+%3D+%2724-1-5849%27+and+flight+%3D+%27{flight}%27&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&relationParam=&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=3358&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=geojson&token=\""
+      ],
+      "id": "e150e7f7",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Import Data"
+      ],
+      "id": "cb58b1dd"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| eval: false\n",
+        "gs.run_command(\"v.import\", input=url, output=\"image_points\", overwrite=True)"
+      ],
+      "id": "58d74dec",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Get data info"
+      ],
+      "id": "7f42d8ba"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "gs.run_command(\"v.info\", map=\"image_points\", flags=\"c\" )"
+      ],
+      "id": "2a772547",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Set region"
+      ],
+      "id": "ba5eba21"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "gs.run_command(\"g.region\", vector=\"image_points\", res=10)"
+      ],
+      "id": "96e5aa2d",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### View Data"
+      ],
+      "id": "19d28e96"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "m = gj.Map(use_region=True)\n",
+        "m.d_vect(map=\"image_points\")\n",
+        "display(m.show())"
+      ],
+      "id": "8e3ff519",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Read data into pandas DataFrame"
+      ],
+      "id": "04d5cb1b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import pandas as pd\n",
+        "\n",
+        "points_json = gs.parse_command(\"v.db.select\",\n",
+        "    map=\"image_points\",\n",
+        "    format=\"json\",\n",
+        "    flags=\"\"\n",
+        ")\n",
+        "\n",
+        "points_df = pd.DataFrame(points_json[\"records\"])\n",
+        "points_df.head()"
+      ],
+      "id": "86eede10",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Download images for processing"
+      ],
+      "id": "c7cc2ef1"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# | eval: false\n",
+        "\n",
+        "import os\n",
+        "import requests\n",
+        "from concurrent.futures import ThreadPoolExecutor, as_completed\n",
+        "import requests\n",
+        "\n",
+        "\n",
+        "def query_feature_service(flight_id):\n",
+        "    try:\n",
+        "        rest_url = \"https://services.arcgis.com/XG15cJAlne2vxtgt/ArcGIS/rest/services/Image_Points_view/FeatureServer/3/query\"\n",
+        "\n",
+        "        query = f\"project='CAP - H-TS Helene 2024' AND mission='24-1-5849' AND flight='{flight_id}'\"\n",
+        "\n",
+        "        params = {\n",
+        "            \"where\": query,\n",
+        "            \"outFields\": \"*\",\n",
+        "            \"f\": \"json\",\n",
+        "            \"returnGeometry\": \"false\",\n",
+        "        }\n",
+        "        response = requests.get(rest_url, params=params)\n",
+        "        json_data = response.json()\n",
+        "        url_list = list(map(lambda feat: feat.get(\"url\"), json_data[\"features\"]))\n",
+        "        return url_list\n",
+        "    except requests.RequestException as e:\n",
+        "        print(f\"Error fetching data from FeatureService: {e}\")\n",
+        "\n",
+        "\n",
+        "# Function to download an image from a URL\n",
+        "def download_image(url, save_path, session):\n",
+        "    try:\n",
+        "        response = session.get(url)\n",
+        "        response.raise_for_status()  # Check for HTTP errors\n",
+        "        with open(save_path, \"wb\") as file:\n",
+        "            file.write(response.content)\n",
+        "        print(f\"Downloaded {url} to {save_path}\")\n",
+        "    except requests.RequestException as e:\n",
+        "        print(f\"Failed to download {url}: {e}\")\n",
+        "\n",
+        "\n",
+        "# Main function to set up the thread pool and download images\n",
+        "def run(urls, save_dir, num_threads=4):\n",
+        "    if not os.path.exists(save_dir):\n",
+        "        os.makedirs(save_dir)\n",
+        "\n",
+        "    with ThreadPoolExecutor(max_workers=num_threads) as executor:\n",
+        "        with requests.Session() as session:\n",
+        "            futures = []\n",
+        "            for url in urls:\n",
+        "                filename = os.path.basename(url)\n",
+        "                save_path = os.path.join(save_dir, filename)\n",
+        "                futures.append(executor.submit(download_image, url, save_path, session))\n",
+        "\n",
+        "            for future in as_completed(futures):\n",
+        "                future.result()  # This will raise "
+      ],
+      "id": "0ef22963",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Run the download command\n",
+        "\n",
+        "Make sure to set appropriate threads for your system."
+      ],
+      "id": "7f4c1d9f"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| eval: false\n",
+        "url_list = list(points_df.url.values)\n",
+        "\n",
+        "run(urls=url_list, save_dir=\"imagery_data/nadir/{flight}\", num_threads=32)"
+      ],
+      "id": "2d1f04ca",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Example output\n",
+        "\n",
+        "| | | |\n",
+        "|-|-|-\n",
+        "|![](images/CAP_2147.JPG)|![](images/CAP_2148.JPG)|![](images/CAP_2149.JPG)\n",
+        "|![](images/CAP_2150.JPG)|![](images/CAP_2151.JPG)|![](images/CAP_2152.JPG)\n",
+        "|![](images/CAP_2153.JPG)|![](images/CAP_2154.JPG)|![](images/CAP_2155.JPG)\n",
+        "\n",
+        "\n",
+        "<!-- ## WIP -->\n",
+        "\n",
+        "### Run data in your favorite photogrametry software\n",
+        "\n",
+        "- WebODM\n",
+        "- Agisoft Metashape"
+      ],
+      "id": "4735dff6"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| eval: false\n",
+        "\n",
+        "image_urls = query_feature_service(flight_id=\"A0046B\")"
+      ],
+      "id": "61d959df",
+      "execution_count": null,
+      "outputs": []
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "/home/coreywhite/.local/share/jupyter/kernels/python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}

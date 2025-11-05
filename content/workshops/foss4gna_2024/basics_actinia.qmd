@@ -1,0 +1,336 @@
+---
+title: Introduction to Actinia
+description: Learn how to use actinia to create a cloud-based processing environment for GRASS.
+format:
+  html:
+    toc: true
+    code-tools: true
+    code-copy: true
+    code-fold: false
+    other-links:
+      - text: actinia
+        href: https://github.com/actinia-org
+      - text: grass
+        href: https://grass.osgeo.org
+    code-links:
+      - text: Docker Container
+        icon: file-code
+        href: https://github.com/OpenPlainsInc/foss4gna-2024-workshop
+      - text: OpenPlainsInc/actinia_openapi_python_client
+        icon: file-code
+        href: https://github.com/OpenPlainsInc/actinia_openapi_python_client
+author:
+  - Corey T. White
+date: May 6, 2025
+keep-ipynb: true
+toc: true
+toc-depth: 4
+image: images/webinar_title.webp
+categories:
+  - geospatial
+  - actinia
+  - GRASS v8.5
+  - jupyter
+  - lidar
+  - STAC
+page-layout: full
+title-block-banner: true
+jupyter: python3
+filters:
+  - include-code-files
+---
+
+## A REST API for GRASS GIS
+
+<div>
+  <i class="fa-sharp-duotone fa-thin fa-glass"></i> <a href="https://grass.osgeo.org/">GRASS</a> is a Geospatial Processing Engine<br>
+  <i class="fa-sharp-duotone fa-light fa-code"></i> Open Source (GPL v2)<br>
+  <i class="fa-sharp-duotone fa-light fa-earth-americas"></i> Developed by International and Multi-institutional groups and individuals (GRASS Development Team)<br>
+  <i class="fa-sharp-duotone fa-light fa-scale-balanced"></i> Member of the Open Source Geospatial Foundation<br>
+  <i class="fa-sharp-duotone fa-light fa-shield-halved"></i> Received Open Source Security Foundation (OpenSSF) Best Practices Badge - 2024
+</div>
+
+```{mermaid}
+flowchart LR
+  A[Client] -->|Http Request| B[Actinia REST API]
+  B <--> D[GRASS Processing Node]
+  B -->|Http Response| A
+```
+
+## Import Python Libraries
+
+```{python}
+import os
+import subprocess
+from pprint import pprint
+import sys
+import json
+import time
+from IPython.display import JSON, display
+
+import requests
+from requests.auth import HTTPBasicAuth
+```
+
+## Setup Environment
+
+Deploy Docker container with Actinia
+
+Follow Instructions at : [https://github.com/OpenPlainsInc/foss4gna-2024-workshop](https://github.com/OpenPlainsInc/foss4gna-2024-workshop)
+
+### Setup Variables
+
+```{python}
+ACTINIA_USER = 'actinia-gdi'
+ACTINIA_PASSWORD = 'actinia-gdi'
+ACTINIA_VERSION = 'v3'
+ACTINIA_BASEURL = 'http://localhost:8089'
+ACTINIA_URL = ACTINIA_BASEURL + "/api/" + ACTINIA_VERSION
+ACTINIA_AUTH = HTTPBasicAuth(ACTINIA_USER, ACTINIA_PASSWORD)
+```
+
+```{python}
+#| echo: false
+def print_as_json(data):
+    json.dumps(data, indent=2)
+```
+
+## actinia REST API
+
+[actinia](https://github.com/actinia-org)
+[Docker Image](https://github.com/actinia-org/actinia-docker/tree/main)
+
+### Tools
+
+- [actinia OpenApi Python Client](https://github.com/OpenPlainsInc/actinia_openapi_python_client)
+- [actinia-python-client](https://github.com/actinia-org/actinia-python-client)
+
+
+## Acinia Basics
+
+```{python}
+# | label: actinia-version
+# | echo: false
+# | output: true
+
+url = f"{ACTINIA_URL}/version"
+response = requests.get(url)
+print_as_json(response.json())
+```
+
+## User Roles
+
+1. **Superadmin**
+    - Create, modify and delete users
+    - Read/write access to all databases
+    - Can access all API calls
+
+2. **Admin**
+    - All API Calls
+    - Create, modify and delete users with the maximum user-role user of the same user grou
+    - Access to persistent databases that were granted by a **superadmin**
+
+3. **User**
+    - Can run computational tasks in ephemeral and user specific databases
+    - Create, modify and delete locations in a user specific database
+    - Create, modify and delete mapsets in user specific databases
+    - Limited access to API calls
+    - Has limited access to persistent databases
+
+4. **Guest**
+    - Has very limited access to API calls
+    - Limited access to persistent databases
+
+:::aside
+https://actinia-org.github.io/actinia-core/actinia_concepts/
+:::
+
+### GRASS Projects
+
+Let's start by requesting a list of GRASS projects from actinia.
+
+```{mermaid}
+flowchart LR
+  A["/api/v3/locations"]
+```
+
+```{python}
+url = f"{ACTINIA_URL}/locations"
+response = requests.get(url, auth=ACTINIA_AUTH)
+print_as_json(response.json().get('locations'))
+```
+
+Now we will get extra information about a specific project.
+
+```{mermaid}
+
+flowchart LR
+  A["/api/v3/locations/"]
+  A --- C["{location_id}"]
+  C --- D["/info"]
+
+```
+
+```{python}
+location_id = 'nc_spm_08'
+url = f"{ACTINIA_URL}/locations/{location_id}/info"
+
+response = requests.get( url, auth=ACTINIA_AUTH)
+
+pprint(response.json().get('process_results'))
+```
+
+### Mapsets
+
+We will now get a list of mapsets for a specific project.
+
+```{mermaid}
+flowchart LR
+  A["/api/v3/locations/"]
+  A --- B("{location_id}")
+  B --- C["/mapsets"]
+```
+
+```{python}
+# mapset = 'nc_spm_08'
+location_id = 'nc_spm_08_grass7'
+url = f"{ACTINIA_URL}/locations/{location_id}/mapsets"
+
+response = requests.get( url, auth=ACTINIA_AUTH)
+
+pprint(response.json().get('process_results'))
+```
+
+Now let's get extra information about a specific mapset `PERMANENT`.
+
+```{mermaid}
+flowchart LR
+  A["/api/v3/locations/"]
+  A --- B("{location_id}")
+  B --- C["/mapsets/"]
+  C --- D("{mapset_id}")
+  D --- E["/info"]
+```
+
+```{python}
+mapset_id = 'PERMANENT'
+location_id = 'nc_spm_08_grass7'
+url = f"{ACTINIA_URL}/locations/{location_id}/mapsets/{mapset_id}/info"
+
+response = requests.get( url, auth=ACTINIA_AUTH)
+
+pprint(response.json().get('process_results'))
+```
+
+### Layers
+
+#### Raster Layers
+
+Let's see all of the mapsets raster layers.
+
+```{mermaid}
+flowchart LR
+  A["/api/v3/locations/"]
+  A --- B("{location_id}")
+  B --- C["/mapsets/"]
+  C --- D("{mapset_id}")
+  D --- E["/raster_layers"]
+```
+
+```{python}
+mapset_id = 'PERMANENT'
+location_id = 'nc_spm_08_grass7'
+url = f"{ACTINIA_URL}/locations/{location_id}/mapsets/{mapset_id}/raster_layers"
+
+response = requests.get( url, auth=ACTINIA_AUTH)
+
+print(response)
+```
+
+#### Vector Layers
+
+```{mermaid}
+flowchart LR
+  A["/api/v3/locations/"]
+  A --- B("{location_id}")
+  B --- C["/mapsets/"]
+  C --- D("{mapset_id}")
+  D --- E["/vector_layers"]
+```
+
+```{python}
+mapset_id = 'PERMANENT'
+location_id = 'nc_spm_08_grass7'
+url = f"{ACTINIA_URL}/locations/{location_id}/mapsets/{mapset_id}/vector_layers"
+
+payload = {}
+headers = {}
+
+response = requests.get( url, auth=ACTINIA_AUTH, headers=headers)
+
+print(response)
+```
+
+### Processing
+
+#### Syncronous Processing
+
+Emphemeral process
+
+```{mermaid}
+flowchart LR
+  A["/api/v3/locations/"]
+  A --- B("{location_id}")
+  B --- C["/mapsets/"]
+  C --- D("{mapset_id}")
+  D --- E["/processing"]
+```
+
+```{python}
+mapset_id = 'PERMANENT'
+location_id = 'nc_spm_08_grass7'
+url = f"{ACTINIA_URL}/locations/{location_id}/mapsets/{mapset_id}/processing"
+
+data = {}
+
+response = requests.post( url, auth=ACTINIA_AUTH, json=data)
+
+print(response)
+```
+
+#### Asyncronous Processing
+
+```{mermaid}
+flowchart LR
+  A["/api/v3/locations/"]
+  A --- B("{location_id}")
+  B --- C["/mapsets/"]
+  C --- D("{mapset_id}")
+  D --- E["/processing_async"]
+```
+
+```{python}
+mapset_id = 'PERMANENT'
+location_id = 'nc_spm_08_grass7'
+url = f"{ACTINIA_URL}/locations/{location_id}/mapsets/{mapset_id}/processing_async"
+
+data = {}
+
+response = requests.post( url, auth=ACTINIA_AUTH, json=data)
+
+pprint(response.json().get('process_results'))
+```
+
+## Let's look at the complete API within `PostMan` or `Insomnia`.
+
+- [Postman](https://www.postman.com/)
+- [Insomnia](https://insomnia.rest/download)
+
+```
+https://localhost:8080/api/v3/swagger-ui/index.html
+```
+
+### Process Chains
+
+Let move on to creating process chains in [Part 3](./process_chains.ipynb).
+
