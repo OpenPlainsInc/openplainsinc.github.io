@@ -303,6 +303,10 @@ display(df_assets.T.reset_index())
 
 #### Assets
 
+Each STAC Item may contain multiple asset types (e.g. red, nir, thumbnail). The snippet below
+enumerates assets across items, shows per-item asset rows, and prints simple summaries.
+
+
 ```{python}
 # | label: tbl-items-assets
 # | tbl-cap: Sentinel 2 Items Assets Metadata
@@ -345,6 +349,28 @@ print(f"There are {num_assets} Sentinel 2 assets found in our computational regi
 
 #### EO Parameters
 
+#### EO Parameters
+
+STAC item properties expose a number of Earth Observation (EO) parameters that are useful for filtering and selecting scenes. Common properties you will see in Sentinel-2 and other EO STAC records include:
+
+- `datetime` — acquisition time (ISO 8601)
+- `eo:cloud_cover` — percent cloud cover (0–100)
+- `eo:gsd` — ground sample distance / native resolution (meters)
+- `view:sun_azimuth`, `view:sun_elevation` — sun geometry
+- `proj:epsg` — EPSG code (when the projection extension is present)
+- collection / platform / instrument fields — identify sensor and mission
+
+How to use them:
+- Use the `datetime` argument on t.stac.item to constrain time ranges (e.g. `2024-04-01/2024-09-30`).
+- Use the `query` argument to pass a JSON object of property filters. Comparison operators follow the STAC filtering convention (e.g. `lt`, `lte`, `gt`, `gte`).
+
+Example query (Python):
+stac_query = {"eo:cloud_cover": {"lt": 10}, "eo:gsd": {"lte": 10}, "view:sun_elevation": {"gte": 30}}
+
+Pass this to t.stac.item (serialize with json.dumps) to fetch only low-cloud, high-sun-elevation, high-resolution items. Combine `asset_keys` to limit returned assets (e.g. `asset_keys="red,nir"`), and use flags (`-a`, `-m`, `-i`) to control output detail (assets, metadata, item list).
+
+Tip: Always inspect a few returned items (`format="json"` or flags="m" / flags="a"`) to see the exact property names used by the catalog you query — naming can vary between providers and extension support.
+
 ### Create Metadata Vector
 
 ```{python}
@@ -375,6 +401,8 @@ display(df_items_assets.head(5))
 ```
 
 #### View the items with iPyleaflet
+
+View STAC items with ipyleaflet (install with `pip install ipyleaflet` if needed) from ipyleaflet use `gj.Interactive` and add the sentinel_2_items bounding boxes.
 
 ```{python}
 # | echo: true
@@ -487,7 +515,7 @@ enddate = df_items_assets["datetime"].max()
 print(f"Start Date: {startdate}\nEnd Date: {enddate}")
 ```
 
-Create STRDS
+Create STRDS (spatio-temporal raster dataset) to manage the Sentiel data you want to analyze with GRASS.
 
 ```{python}
 # | label: create-strds
@@ -560,6 +588,8 @@ gs.run_command(
 gs.run_command("t.info", type="strds", input="sentinel_2")
 ```
 
+Now let's view a RGB composite of one of our tiles
+
 ```{python}
 # | label: display-composite
 # | echo: true
@@ -578,7 +608,9 @@ m.show()
 
 ```
 
-#### Calculate NDVI
+#### Temporal Map Calculations
+
+Run a temporal map calculation on your entire STRDS to generate an NDVI layer.
 
 ```{python}
 
@@ -596,11 +628,13 @@ gs.run_command(
 )
 ```
 
+Check to see it worked.
+
 ```{python}
 gs.run_command("t.list", type="strds")
 ```
 
-Plot the NDVI
+and plot the NDVI
 
 ```{python}
 strds_df = pd.DataFrame(
