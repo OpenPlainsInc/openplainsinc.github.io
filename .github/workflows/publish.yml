@@ -23,6 +23,8 @@ jobs:
 
       - name: Install the project
         run: uv sync --locked --all-extras --dev
+        env:
+          UV_SYSTEM_PYTHON: 1
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
