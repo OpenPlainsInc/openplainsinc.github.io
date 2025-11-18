@@ -63,7 +63,7 @@ The tutorial assumes you already have GRASS installed on your machine. If not pl
 
 ```{python}
 # | label: config-grass
-# | eval: true
+# | eval: false
 # Import standard python packages
 import sys
 import subprocess
@@ -96,7 +96,7 @@ and start a GRASS session.
 
 ```{python}
 # | label: start-grass-session
-# | eval: true
+# | eval: false
 session = gj.init("stac")
 ```
 
@@ -126,7 +126,7 @@ gs.run_command("g.extension", extension="t.stac")
 ```{python}
 # | label: grass-set-region
 # | echo: true
-# | eval: true
+# | eval: false
 # | include: true
 # | output: true
 gs.run_command(
@@ -138,7 +138,7 @@ gs.run_command(
 
 ```{python}
 # | label: set-stac-catalog-url
-# | eval: true
+# | eval: false
 stac_url = "https://earth-search.aws.element84.com/v1/"
 ```
 
@@ -151,7 +151,7 @@ stac_url = "https://earth-search.aws.element84.com/v1/"
 ```{python}
 # | label: tbl-stac-catalog
 # | echo: true
-# | eval: true
+# | eval: false
 # | include: true
 # | output: true
 
@@ -168,7 +168,7 @@ df_catalogs.head()
 ```{python}
 # | label: tbl-stac-catalog-shell
 # | echo: true
-# | eval: true
+# | eval: false
 # | include: true
 # | output: true
 
@@ -185,7 +185,7 @@ df_catalogs.head()
 ```{python}
 # | label: tbl-stac-items
 # | echo: true
-# | eval: true
+# | eval: false
 # | include: true
 # | output: true
 
@@ -205,7 +205,7 @@ display(df_items.T.head(5))
 ```{python}
 # | label: tbl-stac-items-m-shell
 # | echo: true
-# | eval: true
+# | eval: false
 # | include: true
 # | output: true
 !t.stac.item url={stac_url} collection_id="sentinel-2-l2a" format=plain -m
@@ -222,7 +222,7 @@ display(df_items.T.head(5))
 # | label: tbl-items
 # | tbl-cap: Sentinel 2 Items
 # | echo: true
-# | eval: true
+# | eval: false
 # | include: true
 # | output: true
 
@@ -243,7 +243,7 @@ display(df_items.head(5))
 ```{python}
 # | label: tbl-stac-items-i-shell
 # | echo: true
-# | eval: true
+# | eval: false
 # | include: true
 # | output: true
 !t.stac.item url={stac_url} collection_id="sentinel-2-l2a" datetime="2024-04-01/2024-09-30" format=plain -i
@@ -253,7 +253,7 @@ display(df_items.head(5))
 
 ```{python}
 # | echo: false
-# | eval: true
+# | eval: false
 # | include: true
 # | output: true
 
@@ -267,7 +267,7 @@ Let's look closer at the properties of item id `S2A_17SPV_20240919_0_L2A`.
 
 ```{python}
 # | echo: true
-# | eval: true
+# | eval: false
 # | include: true
 # | output: true
 
@@ -281,7 +281,7 @@ display(df_item.T)
 Let's look at the items properties
 ```{python}
 # | echo: true
-# | eval: true
+# | eval: false
 # | include: true
 # | output: true
 df_item = df_items.query("id == 'S2A_17SPV_20240919_0_L2A'")
@@ -293,7 +293,7 @@ Now we let's look at the items assets.
 
 ```{python}
 # | echo: true
-# | eval: true
+# | eval: false
 # | include: true
 # | output: true
 df_item = df_items.query("id == 'S2A_17SPV_20240919_0_L2A'")
@@ -311,7 +311,7 @@ enumerates assets across items, shows per-item asset rows, and prints simple sum
 # | label: tbl-items-assets
 # | tbl-cap: Sentinel 2 Items Assets Metadata
 # | echo: true
-# | eval: true
+# | eval: false
 # | include: true
 # | output: true
 
@@ -338,7 +338,7 @@ display(assets_json)
 
 ```{python}
 # | echo: false
-# | eval: true
+# | eval: false
 # | include: true
 # | output: true
 
@@ -377,7 +377,7 @@ Tip: Always inspect a few returned items (`format="json"` or flags="m" / flags="
 # | label: assets-metadata-vector
 # | tbl-cap: Sentinel 2 Items Assets Metadata
 # | echo: true
-# | eval: true
+# | eval: false
 # | include: true
 # | output: true
 
@@ -406,7 +406,7 @@ View STAC items with ipyleaflet (install with `pip install ipyleaflet` if needed
 
 ```{python}
 # | echo: true
-# | eval: true
+# | eval: false
 # | include: true
 # | output: true
 import random
@@ -436,7 +436,7 @@ display(m.show())
 # | label: tbl-collection-items-assets
 # | tbl-cap: Sentinel 2 Items Assets Metadata
 # | echo: true
-# | eval: true
+# | eval: false
 # | include: true
 # | output: true
 
@@ -460,7 +460,7 @@ items_assets_json = gs.parse_command(
 # | label: tbl-collection-items-assets-terminal
 # | tbl-cap: Sentinel 2 Items Assets Metadata
 # | echo: true
-# | eval: true
+# | eval: false
 # | include: true
 # | output: true
 !t.stac.item url="https://earth-search.aws.element84.com/v1/" collection_id="sentinel-2-l2a" datetime="2024-04-01/2024-09-30" asset_keys="red,nir" format="json" query='{"eo:cloud_cover": {"lt": 10}}'
@@ -471,7 +471,7 @@ items_assets_json = gs.parse_command(
 ```{python}
 # | label: download-estimate
 # | echo: true
-# | eval: true
+# | eval: false
 # | include: true
 # | output: true
 
@@ -520,7 +520,7 @@ Create STRDS (spatio-temporal raster dataset) to manage the Sentiel data you wan
 ```{python}
 # | label: create-strds
 # | echo: true
-# | eval: true
+# | eval: false
 # | include: true
 # | output: true
 
@@ -593,7 +593,7 @@ Now let's view a RGB composite of one of our tiles
 ```{python}
 # | label: display-composite
 # | echo: true
-# | eval: true
+# | eval: false
 # | include: true
 # | output: true
 
@@ -687,7 +687,7 @@ for ndvi in ndvi_list:
 ```{python}
 # | label: display-time-series
 # | echo: true
-# | eval: true
+# | eval: false
 # | include: true
 # | output: true
 
@@ -716,7 +716,7 @@ m.show()
 ```{python}
 # | label: display-ndvi-maps
 # | echo: true
-# | eval: true
+# | eval: false
 # | include: true
 # | output: true
 # | layout-ncol: 3
