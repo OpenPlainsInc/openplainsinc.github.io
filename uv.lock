@@ -2201,12 +2201,6 @@ dependencies = [
     { name = "folium" },
     { name = "geemap" },
     { name = "geopandas" },
-    { name = "ipykernel" },
-    { name = "ipyleaflet" },
-    { name = "ipywidgets" },
-    { name = "jupyter" },
-    { name = "jupyter-cache" },
-    { name = "jupyterlab-widgets" },
     { name = "laspy" },
     { name = "lonboard" },
     { name = "matplotlib" },
@@ -2232,7 +2226,12 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "ipykernel" },
+    { name = "ipyleaflet" },
+    { name = "ipywidgets" },
     { name = "jupyter" },
+    { name = "jupyter-cache" },
+    { name = "jupyterlab-widgets" },
 ]
 
 [package.metadata]
@@ -2241,12 +2240,6 @@ requires-dist = [
     { name = "folium", specifier = ">=0.15.1" },
     { name = "geemap", specifier = ">=0.34.1" },
     { name = "geopandas", specifier = ">=1.0.1" },
-    { name = "ipykernel", specifier = ">=6.7.0" },
-    { name = "ipyleaflet", specifier = ">=0.19.0" },
-    { name = "ipywidgets", specifier = ">=8.1.6" },
-    { name = "jupyter", specifier = ">=1.1.1" },
-    { name = "jupyter-cache", specifier = ">=1.0.1" },
-    { name = "jupyterlab-widgets", specifier = ">=3.0.15" },
     { name = "laspy", specifier = ">=2.0.3" },
     { name = "lonboard", specifier = ">=0.1.0" },
     { name = "matplotlib", specifier = ">=3.9" },
@@ -2271,7 +2264,14 @@ requires-dist = [
 ]
 
 [package.metadata.requires-dev]
-dev = [{ name = "jupyter", specifier = ">=1.1.1" }]
+dev = [
+    { name = "ipykernel", specifier = ">=6.7.0" },
+    { name = "ipyleaflet", specifier = ">=0.19.0" },
+    { name = "ipywidgets", specifier = ">=8.1.6" },
+    { name = "jupyter", specifier = ">=1.1.1" },
+    { name = "jupyter-cache", specifier = ">=1.0.1" },
+    { name = "jupyterlab-widgets", specifier = ">=3.0.15" },
+]
 
 [[package]]
 name = "overrides"
