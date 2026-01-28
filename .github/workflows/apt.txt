@@ -1,4 +1,3 @@
-geos
 pdal
 proj-bin
 grass
