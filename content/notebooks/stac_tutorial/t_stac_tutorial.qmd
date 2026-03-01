@@ -37,8 +37,8 @@ jupyter: python3
 execute:
   enabled: true
   keep-ipynb: true
-  eval: false
-  freeze: auto
+  eval: true
+  freeze: true
   cache: true
 
 ---
@@ -51,8 +51,15 @@ In this tutorial we will learn about the [t.stac](https://grass.osgeo.org/grass-
 
 ## Introduction
 
-SpatioTemporal Asset Catalog (STAC)...
+SpatioTemporal Asset Catalog (STAC) is an open specification that provides a common structure for describing and cataloging geospatial information. STAC organizes earth observation data into a hierarchy of **Catalogs** → **Collections** → **Items** → **Assets**, making large archives of cloud-hosted imagery discoverable and accessible through a standard API. Major providers such as AWS, Google Cloud, and Microsoft Planetary Computer publish their datasets as STAC-compliant APIs, giving you a unified way to search and retrieve data across platforms.
 
+The `t.stac` addon suite bridges these STAC APIs with GRASS's spatio-temporal data management framework. Instead of manually browsing catalogs and downloading files, `t.stac` lets you:
+
+- **Search** by spatial extent and time window
+- **Filter** by metadata properties such as cloud cover, sun elevation, and resolution
+- **Import** matched assets directly into a GRASS project as a Space Time Raster Dataset (STRDS)
+
+This tutorial walks through the full workflow: exploring a STAC catalog, querying Sentinel-2 imagery, downloading and importing it into GRASS, computing NDVI, and visualizing the time series.
 
 The tutorial assumes you already have GRASS installed on your machine. If not please [download and install GRASS](https://grass.osgeo.org/download/) before continuing the tutorial.
 
@@ -97,7 +104,6 @@ and start a GRASS session.
 
 ```{python}
 # | label: start-grass-session
-
 session = gj.init("stac")
 ```
 
@@ -129,8 +135,6 @@ gs.run_command("g.extension", extension="t.stac")
 # | label: grass-set-region
 # | echo: true
 
-# | include: true
-# | output: true
 gs.run_command(
     "g.region", n=236687, s=210391, e=616042, w=598921, nsres=10, ewres=10, flags="pa"
 )
@@ -154,9 +158,6 @@ stac_url = "https://earth-search.aws.element84.com/v1/"
 # | label: tbl-stac-catalog
 # | echo: true
 
-# | include: true
-# | output: true
-
 catalogs_json = gs.parse_command(
     "t.stac.catalog", url=stac_url, format="json"
 )
@@ -171,9 +172,6 @@ df_catalogs.head()
 # | label: tbl-stac-catalog-shell
 # | echo: true
 
-# | include: true
-# | output: true
-
 !t.stac.catalog url={stac_url} format=plain -b
 ```
 
@@ -187,9 +185,6 @@ df_catalogs.head()
 ```{python}
 # | label: tbl-stac-items
 # | echo: true
-
-# | include: true
-# | output: true
 
 items_json = gs.parse_command(
     "t.stac.item",
@@ -208,8 +203,6 @@ display(df_items.T.head(5))
 # | label: tbl-stac-items-m-shell
 # | echo: true
 
-# | include: true
-# | output: true
 !t.stac.item url={stac_url} collection_id="sentinel-2-l2a" format=plain -m
 ```
 
@@ -224,9 +217,6 @@ display(df_items.T.head(5))
 # | label: tbl-items
 # | tbl-cap: Sentinel 2 Items
 # | echo: true
-
-# | include: true
-# | output: true
 
 items_json = gs.parse_command(
     "t.stac.item",
@@ -246,18 +236,14 @@ display(df_items.head(5))
 # | label: tbl-stac-items-i-shell
 # | echo: true
 
-# | include: true
-# | output: true
 !t.stac.item url={stac_url} collection_id="sentinel-2-l2a" datetime="2024-04-01/2024-09-30" format=plain -i
 ```
 
 :::
 
 ```{python}
+# | label: count-items
 # | echo: false
-
-# | include: true
-# | output: true
 
 num_items = len(df_items)
 # Can't use inline python with using Jupyter cache
@@ -268,10 +254,8 @@ print(f"There are {num_items} Sentinel 2 items found in our computational region
 Let's look closer at the properties of item id `S2A_17SPV_20240919_0_L2A`.
 
 ```{python}
+# | label: item-properties
 # | echo: true
-
-# | include: true
-# | output: true
 
 df_item = df_items.query("id == 'S2A_17SPV_20240919_0_L2A'")
 df_properties = df_item["properties"].apply(pd.Series)
@@ -282,10 +266,9 @@ display(df_item.T)
 
 Let's look at the items properties
 ```{python}
+# | label: item-properties-properties
 # | echo: true
 
-# | include: true
-# | output: true
 df_item = df_items.query("id == 'S2A_17SPV_20240919_0_L2A'")
 df_properties = df_item["properties"].apply(pd.Series)
 display(df_properties.T)
@@ -294,10 +277,9 @@ display(df_properties.T)
 Now we let's look at the items assets.
 
 ```{python}
+# | label: item-properties-assets
 # | echo: true
 
-# | include: true
-# | output: true
 df_item = df_items.query("id == 'S2A_17SPV_20240919_0_L2A'")
 df_assets = df_item["assets"].apply(pd.Series)
 display(df_assets.T.reset_index())
@@ -309,6 +291,9 @@ Each STAC Item may contain multiple asset types (e.g. red, nir, thumbnail). The 
 enumerates assets across items, shows per-item asset rows, and prints simple summaries.
 
 ```{python}
+# | label: asset-query
+# | echo: true
+
 stac_query = {"eo:cloud_cover": {"lt": 10}}
 ```
 
@@ -317,9 +302,6 @@ stac_query = {"eo:cloud_cover": {"lt": 10}}
 # | label: tbl-items-assets
 # | tbl-cap: Sentinel 2 Items Assets Metadata
 # | echo: true
-
-# | include: true
-# | output: true
 
 assets_json = gs.parse_command(
     "t.stac.item",
@@ -337,21 +319,13 @@ display(df_items_assets.head(10))
 ```
 
 ```{python}
-display(assets_json)
-```
-
-```{python}
+# | label: count-assets
 # | echo: false
-
-# | include: true
-# | output: true
 
 num_assets = len(assets_json)
 # Can't use inline python with using Jupyter cache
 print(f"There are {num_assets} Sentinel 2 assets found in our computational region.")
 ```
-
-#### EO Parameters
 
 #### EO Parameters
 
@@ -368,8 +342,11 @@ How to use them:
 - Use the `datetime` argument on t.stac.item to constrain time ranges (e.g. `2024-04-01/2024-09-30`).
 - Use the `query` argument to pass a JSON object of property filters. Comparison operators follow the STAC filtering convention (e.g. `lt`, `lte`, `gt`, `gte`).
 
-Example query (Python):
+Example query:
+
+```python
 stac_query = {"eo:cloud_cover": {"lt": 10}, "eo:gsd": {"lte": 10}, "view:sun_elevation": {"gte": 30}}
+```
 
 Pass this to t.stac.item (serialize with json.dumps) to fetch only low-cloud, high-sun-elevation, high-resolution items. Combine `asset_keys` to limit returned assets (e.g. `asset_keys="red,nir"`), and use flags (`-a`, `-m`, `-i`) to control output detail (assets, metadata, item list).
 
@@ -382,8 +359,6 @@ Tip: Always inspect a few returned items (`format="json"` or flags="m" / flags="
 # | tbl-cap: Sentinel 2 Items Assets Metadata
 # | echo: true
 
-# | include: true
-# | output: true
 
 stac_query = {"eo:cloud_cover": {"lt": 10}}
 
@@ -409,10 +384,9 @@ display(df_items_assets.head(5))
 View STAC items with ipyleaflet (install with `pip install ipyleaflet` if needed) from ipyleaflet use `gj.Interactive` and add the sentinel_2_items bounding boxes.
 
 ```{python}
+# | label: view-items-map
 # | echo: true
 
-# | include: true
-# | output: true
 import random
 
 m = gj.InteractiveMap(use_region=False)
@@ -431,6 +405,15 @@ display(m.show())
 
 ### Download and Import Rasters
 
+With the STAC items identified and the STRDS structure defined, you can now download the raster assets directly into the GRASS project. The `t.stac.item` command with the `-d` (download) flag retrieves each Cloud-Optimized GeoTIFF (COG), reprojects and resamples it to match the current computational region, and writes the resulting map names and timestamps to a text file for STRDS registration.
+
+Control download behavior with:
+
+- `nprocs` — number of parallel download workers
+- `resolution` / `resolution_value` — output resolution strategy (`value` uses the number you specify in meters)
+- `method` — resampling method (`nearest` is fastest; use `bilinear` or `cubic` for continuous data)
+- `extent` — `region` clips each asset to the current computational region on import
+
 ### Register STRDS
 
 ::: {.panel-tabset}
@@ -440,9 +423,6 @@ display(m.show())
 # | label: tbl-collection-items-assets
 # | tbl-cap: Sentinel 2 Items Assets Metadata
 # | echo: true
-
-# | include: true
-# | output: true
 
 import grass.script as gs
 import grass.jupyter as gj
@@ -465,8 +445,6 @@ items_assets_json = gs.parse_command(
 # | tbl-cap: Sentinel 2 Items Assets Metadata
 # | echo: true
 
-# | include: true
-# | output: true
 !t.stac.item url="https://earth-search.aws.element84.com/v1/" collection_id="sentinel-2-l2a" datetime="2024-04-01/2024-09-30" asset_keys="red,nir" format="json" query='{"eo:cloud_cover": {"lt": 10}}'
 ```
 
@@ -475,9 +453,6 @@ items_assets_json = gs.parse_command(
 ```{python}
 # | label: download-estimate
 # | echo: true
-
-# | include: true
-# | output: true
 
 print(f"""
 Download Estimate
@@ -493,8 +468,6 @@ Total Download Size: {items_assets_json["bytes"] / 1e9:.2f} GB
 # | tbl-cap: Sentinel 2 Items Assets Metadata
 # | echo: true
 
-# | include: true
-# | output: true
 stac_query = {"eo:cloud_cover": {"lt": 10}}
 
 gs.run_command(
@@ -504,29 +477,34 @@ gs.run_command(
     datetime="2024-04-01/2024-09-30",
     asset_keys="red,green,blue,nir",
     query=json.dumps(stac_query),
-    strds_output="outputs/s2_red_nir.txt",
+    strds_output="outputs/s2_rgbn.txt",
     format="json"
 )
 ```
 
 ```{python}
-print(Path("outputs/s2_red.txt").read_text())
+# | echo: false
+print(Path("outputs/s2_rgbn.txt").read_text())
 ```
 
 ```{python}
+# | label: assets-metadata-strds-dates
+# | echo: true
+
 startdate = df_items_assets["datetime"].min()
 enddate = df_items_assets["datetime"].max()
 print(f"Start Date: {startdate}\nEnd Date: {enddate}")
 ```
 
-Create STRDS (spatio-temporal raster dataset) to manage the Sentiel data you want to analyze with GRASS.
+Create a Space Time Raster Dataset (STRDS) to manage the Sentinel-2 data you want to analyze with GRASS. An STRDS is a container that links individual raster maps to their acquisition timestamps, enabling temporal queries, gap analysis, and time series computations with GRASS temporal tools (`t.rast.*`).
+
+::: {.panel-tabset group="language"}
+
+## Python
 
 ```{python}
 # | label: create-strds
 # | echo: true
-
-# | include: true
-# | output: true
 
 # Create the space time dataset
 gs.run_command(
@@ -538,17 +516,33 @@ gs.run_command(
     description="Sentinel 2 Red/NIR Bands from 2024-04-01/2024-09-30",
     overwrite=True,
 )
-
 ```
 
+## Terminal
+
+```bash
+t.create \
+  output=sentinel_2 \
+  type=strds \
+  temporaltype=absolute \
+  title="Sentinel 2 Red/NIR Bands" \
+  description="Sentinel 2 Red/NIR Bands from 2024-04-01/2024-09-30" \
+  --overwrite
+```
+
+:::
+
+
 Download the data
+
+::: {.panel-tabset group="language"}
+
+## Python
 
 ```{python}
 # | label: download-assets
 # | echo: true
 # | eval: false
-# | include: true
-# | output: true
 
 gs.run_command(
     "t.stac.item",
@@ -563,109 +557,78 @@ gs.run_command(
     resolution="value",
     resolution_value="10",
     extent="region",
-    nprocs=1,
-    # memory=1024 * 7,
+    nprocs=16,
     flags="d",
 )
 ```
 
-```{python}
-# | label: download-assets-new
-# | echo: false
-# | eval: false
-# | include: false
-# | output: false
+## Terminal
 
-stacit_url = f"STACIT:\"{stac_url}\""
-gs.run_command(
-    "r.import",
-    url=stac_url,
-    collection_id="sentinel-2-l2a",
-    datetime="2024-04-01/2024-09-30",
-    asset_keys="red,green,blue,nir",
-    query=json.dumps(stac_query),
-    strds_output="outputs/s2_rgbn.txt",
-    format="json",
-    method="nearest",
-    resolution="value",
-    resolution_value="10",
-    extent="region",
-    nprocs=1,
-    # memory=1024 * 7,
-    flags="d",
-)
+```bash
+t.stac.item \
+  url="https://earth-search.aws.element84.com/v1/" \
+  collection_id="sentinel-2-l2a" \
+  datetime="2024-04-01/2024-09-30" \
+  asset_keys="red,green,blue,nir" \
+  query='{"eo:cloud_cover": {"lt": 10}}' \
+  strds_output="outputs/s2_rgbn.txt" \
+  format="json" \
+  method="nearest" \
+  resolution="value" \
+  resolution_value="10" \
+  extent="region" \
+  nprocs=1 \
+  -d
 ```
+
+:::
+
+
 
 Register the data
+
+Once all assets are downloaded, register them into the STRDS using the text file produced by `t.stac.item`. Each line in the file contains a raster map name and its acquisition timestamp, which `t.register` uses to populate the temporal database.
+
+::: {.panel-tabset group="language"}
+
+## Python
 
 ```{python}
 # | label: register-strds
 # | echo: true
 
-# | include: true
-# | output: true
-
 # Register the output maps into a space time dataset
 gs.run_command(
     "t.register", input="sentinel_2", file="outputs/s2_rgbn.txt", type="raster"
 )
-
 ```
 
+## Terminal
+
+```bash
+t.register input=sentinel_2 file=outputs/s2_rgbn.txt type=raster
+```
+
+:::
+
 ```{python}
+# | label: list-strds
+# | echo: true
+
 gs.run_command("t.info", type="strds", input="sentinel_2")
 ```
 
 Now let's view a RGB composite of one of our tiles
 
-```{python}
-s2_rgb_maps = [
-    "sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.red",
-    "sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.blue",
-    "sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.green",
-]
-
-s2_json = gs.parse_command(
-    "r.univar",
-    map=s2_rgb_maps,
-    format="json",
-)
-print(f"Max value: {s2_json['max']}")
-# gs.run_command("g.extension", extension="i.histo.match")
-gs.run_command(
-    "i.histo.match",
-    input=s2_rgb_maps,
-    suffix="255",
-    max=18000,  # s2_json["max"],
-    output="sentinel-2-l2a.S2A_17SPV_20240909_0_L2A",
-)
-gs.run_command(
-    "r.colors",
-    map=[
-        "sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.red.255",
-        "sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.blue.255",
-        "sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.green.255",
-    ],
-    color="grey",
-)
-
-gs.run_command(
-    "i.colors.enhance",
-    r="sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.red.255",
-    b="sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.blue.255",
-    g="sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.green.255"
-)
-
-
+```python
+# Install the i.histo.match extension for histogram matching
+gs.run_command("g.extension", extension="i.histo.match")
 ```
 
 ```{python}
 # | label: display-composite
 # | echo: true
 
-# | include: true
-# | output: true
-
 s2_rgb_maps = [
     "sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.red",
     "sentinel-2-l2a.S2A_17SPV_20240909_0_L2A.blue",
@@ -678,7 +641,7 @@ s2_json = gs.parse_command(
     format="json",
 )
 print(f"Max value: {s2_json['max']}")
-# gs.run_command("g.extension", extension="i.histo.match")
+
 gs.run_command(
     "i.histo.match",
     input=s2_rgb_maps,
@@ -711,7 +674,6 @@ m.d_rgb(
 )
 m.d_barscale()
 m.show()
-
 ```
 
 #### Temporal Map Calculations
@@ -719,6 +681,8 @@ m.show()
 Run a temporal map calculation on your entire STRDS to generate an NDVI layer.
 
 ```{python}
+# | label: temporal-mapcalc
+# | echo: true
 
 gs.run_command(
     "t.rast.mapcalc",
@@ -737,12 +701,17 @@ gs.run_command(
 Check to see it worked.
 
 ```{python}
+# | label: list-strds-ndvi
+# | echo: true
+
 gs.run_command("t.list", type="strds")
 ```
 
 and plot the NDVI
 
 ```{python}
+# | label: plot-ndvi
+# | echo: true
 strds_df = pd.DataFrame(
     gs.parse_command(
         "t.rast.list",
@@ -770,6 +739,8 @@ plt.show()
 ```
 
 ```{python}
+# | label: display-ndvi-maps-individual
+# | echo: true
 # | layout-ncol: 3
 ndvi_list = gs.parse_command(
     "t.rast.list",
@@ -789,13 +760,11 @@ for ndvi in ndvi_list:
     m.show()
 ```
 
+Use the series map to view the entire time series of NDVI maps in one interactive map or save as a GIF.
 
 ```{python}
 # | label: display-time-series
 # | echo: true
-
-# | include: true
-# | output: true
 
 ndvi_rasters = [
     i.get("name")
@@ -809,50 +778,14 @@ ndvi_rasters = [
 ]
 
 # Create Time Series Map
-m = gj.SeriesMap(use_region=True)
-m.add_rasters(
-    rasters=ndvi_rasters
-)
+m = gj.SeriesMap(use_region=True, width=500)
+m.add_rasters(rasters=ndvi_rasters)
 m.d_barscale()
 m.render()
-m.show()
-
+m.save("outputs/ndvi_time_series.gif")
 ```
 
-```{python}
-# | label: display-ndvi-maps
-# | echo: true
-
-# | include: true
-# | output: true
-# | layout-ncol: 3
-# | fig-cap:
-# |     - Day 1
-# |     - Day 2
-# |     - Day 3
-# |     - Day 4
-# |     - Day 5
-# |     - Day 6
-# |     - Day 7
-
-import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
-from PIL import Image
-
-
-def generate_map(map_name):
-    m = gj.Map(use_region=True)
-    m.d_rast(map=map_name)
-    m.d_legend(raster=map_name, flags="b")
-    m.d_barscale()
-    return m
-
-
-for raster in ndvi_rasters:
-    ndvi_map = generate_map(raster)
-    ndvi_map.show()
-
-```
+![NDVI Time Series](outputs/ndvi_time_series.gif)
 
 ## References
 

@@ -28,7 +28,7 @@
         "\n",
         "## Set up environment"
       ],
-      "id": "81cc23dc"
+      "id": "5c6f4e29"
     },
     {
       "cell_type": "code",
@@ -56,7 +56,7 @@
         "project_name = \"Swannanoa\"\n",
         "mapset = \"flight\""
       ],
-      "id": "cefc3315",
+      "id": "1e4408de",
       "execution_count": null,
       "outputs": []
     },
@@ -68,7 +68,7 @@
         "\n",
         "### Create project"
       ],
-      "id": "2cd00d9d"
+      "id": "e6e913ce"
     },
     {
       "cell_type": "code",
@@ -77,7 +77,7 @@
         "#| eval: false\n",
         "gs.create_project(path=grassdata, name=project_name, epsg=\"3358\", overwrite=False)"
       ],
-      "id": "259d1272",
+      "id": "ff8efa25",
       "execution_count": null,
       "outputs": []
     },
@@ -87,7 +87,7 @@
       "source": [
         "### Start GRASS session"
       ],
-      "id": "01aac4df"
+      "id": "cdccf699"
     },
     {
       "cell_type": "code",
@@ -96,7 +96,7 @@
         "# Start GRASS in the recently created project\n",
         "session = gj.init(Path(grassdata, project_name))"
       ],
-      "id": "3b87f5ee",
+      "id": "07a99ebe",
       "execution_count": null,
       "outputs": []
     },
@@ -106,7 +106,7 @@
       "source": [
         "### Define Query Parameters"
       ],
-      "id": "43bb81be"
+      "id": "3b9b66ea"
     },
     {
       "cell_type": "code",
@@ -118,7 +118,7 @@
         "\n",
         "url = f\"https://services.arcgis.com/XG15cJAlne2vxtgt/ArcGIS/rest/services/Image_Points_view/FeatureServer/3/query?where=project+%3D+%27CAP+-+H-TS+Helene+2024%27+and+mission+%3D+%2724-1-5849%27+and+flight+%3D+%27{flight}%27&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&relationParam=&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=3358&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=geojson&token=\""
       ],
-      "id": "e150e7f7",
+      "id": "8eed2791",
       "execution_count": null,
       "outputs": []
     },
@@ -128,7 +128,7 @@
       "source": [
         "### Import Data"
       ],
-      "id": "cb58b1dd"
+      "id": "0bd0eaa2"
     },
     {
       "cell_type": "code",
@@ -137,7 +137,7 @@
         "#| eval: false\n",
         "gs.run_command(\"v.import\", input=url, output=\"image_points\", overwrite=True)"
       ],
-      "id": "58d74dec",
+      "id": "c546c08c",
       "execution_count": null,
       "outputs": []
     },
@@ -147,7 +147,7 @@
       "source": [
         "### Get data info"
       ],
-      "id": "7f42d8ba"
+      "id": "c50c6b17"
     },
     {
       "cell_type": "code",
@@ -155,7 +155,7 @@
       "source": [
         "gs.run_command(\"v.info\", map=\"image_points\", flags=\"c\" )"
       ],
-      "id": "2a772547",
+      "id": "87f12ee0",
       "execution_count": null,
       "outputs": []
     },
@@ -165,7 +165,7 @@
       "source": [
         "### Set region"
       ],
-      "id": "ba5eba21"
+      "id": "5b72a221"
     },
     {
       "cell_type": "code",
@@ -173,7 +173,7 @@
       "source": [
         "gs.run_command(\"g.region\", vector=\"image_points\", res=10)"
       ],
-      "id": "96e5aa2d",
+      "id": "a56e3a8d",
       "execution_count": null,
       "outputs": []
     },
@@ -183,7 +183,7 @@
       "source": [
         "### View Data"
       ],
-      "id": "19d28e96"
+      "id": "87136fe4"
     },
     {
       "cell_type": "code",
@@ -193,7 +193,7 @@
         "m.d_vect(map=\"image_points\")\n",
         "display(m.show())"
       ],
-      "id": "8e3ff519",
+      "id": "b66e9b8b",
       "execution_count": null,
       "outputs": []
     },
@@ -203,7 +203,7 @@
       "source": [
         "### Read data into pandas DataFrame"
       ],
-      "id": "04d5cb1b"
+      "id": "5cc1e541"
     },
     {
       "cell_type": "code",
@@ -220,7 +220,7 @@
         "points_df = pd.DataFrame(points_json[\"records\"])\n",
         "points_df.head()"
       ],
-      "id": "86eede10",
+      "id": "2f5bd88e",
       "execution_count": null,
       "outputs": []
     },
@@ -230,7 +230,7 @@
       "source": [
         "## Download images for processing"
       ],
-      "id": "c7cc2ef1"
+      "id": "4c80f81e"
     },
     {
       "cell_type": "code",
@@ -292,7 +292,7 @@
         "            for future in as_completed(futures):\n",
         "                future.result()  # This will raise "
       ],
-      "id": "0ef22963",
+      "id": "9ce413b3",
       "execution_count": null,
       "outputs": []
     },
@@ -304,7 +304,7 @@
         "\n",
         "Make sure to set appropriate threads for your system."
       ],
-      "id": "7f4c1d9f"
+      "id": "2e57fc31"
     },
     {
       "cell_type": "code",
@@ -315,7 +315,7 @@
         "\n",
         "run(urls=url_list, save_dir=\"imagery_data/nadir/{flight}\", num_threads=32)"
       ],
-      "id": "2d1f04ca",
+      "id": "dc28f63c",
       "execution_count": null,
       "outputs": []
     },
@@ -339,7 +339,7 @@
         "- WebODM\n",
         "- Agisoft Metashape"
       ],
-      "id": "4735dff6"
+      "id": "480164a6"
     },
     {
       "cell_type": "code",
@@ -350,7 +350,7 @@
         "\n",
         "image_urls = query_feature_service(flight_id=\"A0046B\")"
       ],
-      "id": "61d959df",
+      "id": "00faccda",
       "execution_count": null,
       "outputs": []
     }
