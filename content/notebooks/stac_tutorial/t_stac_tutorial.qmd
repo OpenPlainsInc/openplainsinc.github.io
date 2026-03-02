@@ -148,6 +148,180 @@ gs.run_command(
 stac_url = "https://earth-search.aws.element84.com/v1/"
 ```
 
+```{ojs}
+//| label: ojs-helpers
+//| echo: false
+
+// renderValue is defined inside kvTable so OJS only sees one named cell,
+// avoiding a circular reactive dependency between the two mutually recursive functions.
+function kvTable(data) {
+  function renderValue(v, key = "") {
+    if (v === null)
+      return htl.html`<span style="color:#999;font-style:italic">null</span>`;
+
+    if (typeof v === "string") {
+      const isImageUrl = /\.(jpg|jpeg|png|webp|gif)(\?.*)?$/i.test(v);
+      const isCogUrl   = /\.tiff?(\?.*)?$/i.test(v);
+      if (isImageUrl) {
+        const img = htl.html`<img src="${v}" crossorigin="anonymous"
+          style="max-width:260px;max-height:180px;border-radius:6px;object-fit:cover;display:block;margin-bottom:4px">`;
+        img.onerror = () => img.style.display = "none";
+        return htl.html`<div>${img}<a href="${v}" target="_blank"
+          style="color:#1a73e8;font-size:11px;word-break:break-all">${v}</a></div>`;
+      }
+      if (isCogUrl)
+        return htl.html`<div>
+          <a href="${v}" target="_blank" style="color:#1a73e8;font-size:11px;word-break:break-all">${v}</a>
+          ${cogMap(v)}
+        </div>`;
+      if (v.startsWith("http"))
+        return htl.html`<a href="${v}" target="_blank"
+          style="color:#1a73e8;word-break:break-all">${v}</a>`;
+      return htl.html`<span style="color:#c41a16">${v}</span>`;
+    }
+
+    if (typeof v === "number")
+      return htl.html`<span style="color:#1c00cf">${v}</span>`;
+
+    if (typeof v === "boolean")
+      return htl.html`<span style="color:#aa0d91">${String(v)}</span>`;
+
+    if (Array.isArray(v)) {
+      if (v.length === 0)
+        return htl.html`<span style="color:#999">[ ]</span>`;
+      if (v.every(i => typeof i !== "object") && v.length <= 8)
+        return htl.html`<div style="display:flex;gap:4px;flex-wrap:wrap">
+          ${v.map(i => htl.html`<span style="background:#e8f0fe;color:#1a73e8;
+            font-size:11px;font-family:monospace;padding:2px 8px;border-radius:12px">${i}</span>`)}
+        </div>`;
+      return htl.html`<details>
+        <summary style="cursor:pointer;color:#555;font-size:12px">[ ${v.length} items ]</summary>
+        <ol style="margin:4px 0;padding-left:20px">
+          ${v.map(i => htl.html`<li style="margin:2px 0">${renderValue(i)}</li>`)}
+        </ol>
+      </details>`;
+    }
+
+    if (typeof v === "object")
+      return htl.html`<details>
+        <summary style="cursor:pointer;color:#555;font-size:12px">{ ${Object.keys(v).length} keys }</summary>
+        <div style="margin-top:4px">${kvTable(v)}</div>
+      </details>`;
+
+    return htl.html`<span>${String(v)}</span>`;
+  }
+
+  return htl.html`<table style="width:100%;border-collapse:collapse;font-size:13px">
+    <thead>
+      <tr>
+        <th style="text-align:left;padding:8px 12px;background:#f5f5f5;color:#555;font-weight:600;width:35%">Property</th>
+        <th style="text-align:left;padding:8px 12px;background:#f5f5f5;color:#555;font-weight:600">Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${Object.entries(data).map(([k, v]) => htl.html`<tr style="border-bottom:1px solid #f0f0f0;vertical-align:top">
+        <td style="padding:6px 12px;color:#881391;font-weight:600;font-family:monospace;font-size:12px">${k}</td>
+        <td style="padding:6px 12px;font-family:monospace;font-size:12px">${renderValue(v, k)}</td>
+      </tr>`)}
+    </tbody>
+  </table>`;
+}
+```
+
+```{ojs}
+//| label: ojs-cogmap
+//| echo: false
+
+// cogMap renders a COG directly in the browser using georaster-layer-for-leaflet,
+// which uses HTTP range requests to fetch only the needed overview tiles —
+// no external tile server required. Bounds are read from the COG metadata.
+function cogMap(url) {
+  if (!document.querySelector("#leaflet-css")) {
+    const link = document.createElement("link");
+    link.id = "leaflet-css";
+    link.rel = "stylesheet";
+    link.href = "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css";
+    document.head.appendChild(link);
+  }
+
+  // Inject a script once and poll until the global is available
+  function loadScript(src, globalName) {
+    return new Promise((resolve, reject) => {
+      if (window[globalName]) { resolve(); return; }
+      if (document.querySelector(`script[data-cogmap="${globalName}"]`)) {
+        const poll = setInterval(() => {
+          if (window[globalName]) { clearInterval(poll); resolve(); }
+        }, 50);
+        return;
+      }
+      const s = document.createElement("script");
+      s.setAttribute("data-cogmap", globalName);
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = () => reject(new Error(`Failed to load ${globalName}`));
+      document.head.appendChild(s);
+    });
+  }
+
+  const el = htl.html`<details style="margin-top:8px">
+    <summary style="cursor:pointer;color:#1a73e8;font-size:12px;padding:4px 0">🗺 View on map</summary>
+    <div style="position:relative;height:300px;margin-top:8px;border-radius:6px;overflow:hidden;border:1px solid #e0e0e0">
+      <div class="map-status" style="position:absolute;inset:0;display:flex;align-items:center;
+        justify-content:center;background:#f9f9f9;color:#666;font-size:12px;font-family:monospace;z-index:1000">
+        Loading...
+      </div>
+    </div>
+  </details>`;
+
+  let initialized = false;
+  el.addEventListener("toggle", async () => {
+    if (!el.open || initialized) return;
+    initialized = true;
+    const wrap   = el.querySelector("details > div");
+    const status = el.querySelector(".map-status");
+    try {
+      await loadScript(
+        "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet-src.js", "L");
+      await loadScript(
+        "https://cdn.jsdelivr.net/npm/georaster@1.6.2/dist/georaster.min.js", "parseGeoraster");
+      await loadScript(
+        "https://cdn.jsdelivr.net/npm/georaster-layer-for-leaflet@2.0.2/dist/georaster-layer-for-leaflet.min.js", "GeoRasterLayer");
+
+      const { L, parseGeoraster, GeoRasterLayer } = window;
+      const map = L.map(wrap, { scrollWheelZoom: false });
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "© OpenStreetMap contributors", maxZoom: 19
+      }).addTo(map);
+
+      status.textContent = "Fetching COG...";
+      const georaster = await parseGeoraster(url);
+
+      const layer = new GeoRasterLayer({
+        georaster,
+        opacity: 0.85,
+        resolution: 128,
+        pixelValuesToColorFn: values => {
+          const v = values[0];
+          if (!v || v === georaster.noDataValue) return null;
+          const t = Math.min(1, v / 3000);   // scale to 0-3000 (S2 L2A reflectance)
+          const c = Math.round(t * 255);
+          return `rgb(${c},${c},${c})`;
+        }
+      });
+      layer.addTo(map);
+      map.fitBounds(layer.getBounds());  // bounds come directly from COG metadata
+      map.invalidateSize();
+      status.remove();
+    } catch (e) {
+      status.textContent = `${e.message || "Failed to load COG"}`;
+      status.style.color = "#c00";
+    }
+  });
+
+  return el;
+}
+```
+
 ### Searching STAC Catalogs
 
 ::: {.panel-tabset group="language"}
@@ -195,7 +369,10 @@ items_json = gs.parse_command(
 )
 
 df_items = pd.json_normalize(items_json, max_level=0)
-display(df_items.T.head(5))
+ojs_define(catalog_meta=df_items.drop(
+    columns=["geometry", "links", "assets", "properties", "stac_extensions"],
+    errors="ignore"
+).to_dict(orient="records"))
 ```
 
 ## Terminal
@@ -208,6 +385,12 @@ display(df_items.T.head(5))
 
 :::
 
+```{ojs}
+//| label: ojs-catalog-meta
+//| echo: false
+Inputs.table(catalog_meta, {width: "100%"})
+```
+
 #### Query Items by datetime and display table
 
 ::: {.panel-tabset group="language"}
@@ -215,7 +398,6 @@ display(df_items.T.head(5))
 ## Python
 ```{python}
 # | label: tbl-items
-# | tbl-cap: Sentinel 2 Items
 # | echo: true
 
 items_json = gs.parse_command(
@@ -228,7 +410,10 @@ items_json = gs.parse_command(
 )
 num_items = len(df_items)
 df_items = pd.json_normalize(items_json, max_level=0)
-display(df_items.head(5))
+ojs_define(items_table=df_items.drop(
+    columns=["geometry", "links", "assets", "properties", "stac_extensions", "type"],
+    errors="ignore"
+).head(10).to_dict(orient="records"))
 ```
 
 ## Terminal
@@ -240,6 +425,12 @@ display(df_items.head(5))
 ```
 
 :::
+
+```{ojs}
+//| label: ojs-items-table
+//| echo: false
+Inputs.table(items_table, {width: "100%"})
+```
 
 ```{python}
 # | label: count-items
@@ -259,9 +450,15 @@ Let's look closer at the properties of item id `S2A_17SPV_20240919_0_L2A`.
 
 df_item = df_items.query("id == 'S2A_17SPV_20240919_0_L2A'")
 df_properties = df_item["properties"].apply(pd.Series)
-df_item = pd.concat([df_item, df_properties], axis=1)
-df_item = df_item.drop("properties", axis=1)
-display(df_item.T)
+df_item_flat = pd.concat([df_item.drop("properties", axis=1), df_properties], axis=1)
+ojs_define(item_props=df_item_flat.iloc[0].dropna().to_dict())
+
+```
+
+```{ojs}
+//| label: ojs-item-props
+//| echo: false
+kvTable(item_props)
 ```
 
 Let's look at the items properties
@@ -271,7 +468,13 @@ Let's look at the items properties
 
 df_item = df_items.query("id == 'S2A_17SPV_20240919_0_L2A'")
 df_properties = df_item["properties"].apply(pd.Series)
-display(df_properties.T)
+ojs_define(item_properties_kv=df_properties.iloc[0].dropna().to_dict())
+```
+
+```{ojs}
+//| label: ojs-item-props-kv
+//| echo: false
+kvTable(item_properties_kv)
 ```
 
 Now we let's look at the items assets.
@@ -281,8 +484,56 @@ Now we let's look at the items assets.
 # | echo: true
 
 df_item = df_items.query("id == 'S2A_17SPV_20240919_0_L2A'")
-df_assets = df_item["assets"].apply(pd.Series)
-display(df_assets.T.reset_index())
+assets_dict = df_item["assets"].iloc[0]
+ojs_define(item_assets=assets_dict)
+```
+
+
+```{ojs}
+// | label: item-properties-assets-html
+// | echo: false
+function rolesBadge(roles) {
+  if (!roles) return "";
+  return htl.html`<div style="display:flex;gap:4px;flex-wrap:wrap">
+    ${roles.map(r => htl.html`<span style="
+      background:#e8f0fe;color:#1a73e8;
+      font-size:11px;font-family:monospace;
+      padding:2px 8px;border-radius:12px;
+    ">${r}</span>`)}
+  </div>`;
+}
+
+function assetPropCard([name, asset]) {
+  return htl.html`<div style="
+    background:white;
+    border:1px solid #e0e0e0;
+    border-radius:8px;
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    box-shadow:0 1px 3px rgba(0,0,0,0.1);
+    min-width:250px;
+    flex:1 1 250px;
+  ">
+    <div style="font-weight:700;font-size:14px;color:#333;border-bottom:2px solid #4a90d9;padding-bottom:6px">
+      ${name}
+    </div>
+    ${asset.title ? htl.html`<div style="font-size:13px;color:#555">${asset.title}</div>` : ""}
+    ${asset.type ? htl.html`<div style="font-size:12px;font-family:monospace;color:#888">${asset.type}</div>` : ""}
+    ${rolesBadge(asset.roles)}
+    ${asset.type?.includes("tiff") || /\.tiff?$/i.test(asset.href ?? "")
+        ? cogMap(asset.href) : ""}
+    ${asset.href ? htl.html`<a href="${asset.href}" target="_blank" style="
+      font-size:11px;color:#1a73e8;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    " title="${asset.href}">&#128279; View Asset</a>` : ""}
+  </div>`;
+}
+
+htl.html`<div style="display:flex;flex-wrap:wrap;gap:16px;padding:8px">
+  ${Object.entries(item_assets).map(assetPropCard)}
+</div>`
 ```
 
 #### Assets
@@ -307,15 +558,60 @@ assets_json = gs.parse_command(
     "t.stac.item",
     url=stac_url,
     collection_id="sentinel-2-l2a",
-    flags="a",
+    flags="ap",
     datetime="2024-04-01/2024-09-30",
     asset_keys="red,nir",
     query=json.dumps(stac_query),
     format="json",
 )
 
-df_items_assets = pd.json_normalize(assets_json, max_level=0)
-display(df_items_assets.head(10))
+ojs_define(assets_data=assets_json)
+```
+
+```{ojs}
+// | label: item-assets-html
+// | echo: false
+
+function assetCard([name, asset]) {
+  return htl.html`<div style="
+    background:white;
+    border:1px solid #e0e0e0;
+    border-radius:8px;
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    box-shadow:0 1px 3px rgba(0,0,0,0.1);
+    min-width:250px;
+    flex:1 1 250px;
+  ">
+    <div style="font-weight:700;font-size:14px;color:#333;border-bottom:2px solid #4a90d9;padding-bottom:6px">
+      ${asset.title ? htl.html`<div style="font-size:13px;color:#555">${asset.title}</div>` : ""}
+    </div>
+    ${rolesBadge(asset.roles)}
+    ${asset.type ? htl.html`<div style="font-size:12px;font-family:monospace;color:#888">${asset.type}</div>` : ""}
+
+    ${asset.roles?.includes("thumbnail") || asset.type?.startsWith("image/")
+        ? htl.html`<img
+            src="${asset.href}"
+            alt="${asset.title ?? name}"
+            crossorigin="anonymous"
+            onerror="this.style.display='none';this.nextSibling.style.display='block'"
+            style="max-width:100%;border-radius:8px;">
+            <span style="display:none;font-size:11px;color:#c00">Image blocked (CORS)</span>`
+        : ""}
+    ${asset.type?.includes("tiff") || /\.tiff?$/i.test(asset.href ?? "")
+        ? cogMap(asset.href) : ""}
+    ${asset.href ? htl.html`<a href="${asset.href}" target="_blank" style="
+      font-size:11px;color:#1a73e8;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    " title="${asset.href}">&#128279; View Asset</a>` : ""}
+  </div>`;
+}
+
+htl.html`<div style="display:flex;flex-wrap:wrap;gap:16px;padding:8px">
+  ${Object.entries(assets_data).map(assetCard)}
+</div>`
 ```
 
 ```{python}
@@ -345,7 +641,17 @@ How to use them:
 Example query:
 
 ```python
-stac_query = {"eo:cloud_cover": {"lt": 10}, "eo:gsd": {"lte": 10}, "view:sun_elevation": {"gte": 30}}
+stac_query = {
+    "eo:cloud_cover": {
+        "lt": 10
+    }, 
+    "eo:gsd": {
+        "lte": 10
+    },
+    "view:sun_elevation": {
+        "gte": 30
+    }
+}
 ```
 
 Pass this to t.stac.item (serialize with json.dumps) to fetch only low-cloud, high-sun-elevation, high-resolution items. Combine `asset_keys` to limit returned assets (e.g. `asset_keys="red,nir"`), and use flags (`-a`, `-m`, `-i`) to control output detail (assets, metadata, item list).
@@ -376,7 +682,16 @@ assets_json = gs.parse_command(
 
 
 df_items_assets = pd.json_normalize(assets_json, max_level=0)
-display(df_items_assets.head(5))
+ojs_define(items_assets_table=df_items_assets.drop(
+    columns=["geometry", "links", "assets", "properties", "stac_extensions", "type"],
+    errors="ignore"
+).head(10).to_dict(orient="records"))
+```
+
+```{ojs}
+//| label: ojs-items-assets-table
+//| echo: false
+Inputs.table(items_assets_table, {width: "100%"})
 ```
 
 #### View the items with iPyleaflet
@@ -389,7 +704,7 @@ View STAC items with ipyleaflet (install with `pip install ipyleaflet` if needed
 
 import random
 
-m = gj.InteractiveMap(use_region=False)
+m = gj.InteractiveMap(use_region=True)
 m.add_vector(
     "sentinel_2_items",
     style={"opacity": 1, "dashArray": "9", "fillOpacity": 0.1, "weight": 1},
