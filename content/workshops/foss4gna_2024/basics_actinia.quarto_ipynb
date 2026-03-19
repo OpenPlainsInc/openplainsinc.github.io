@@ -65,7 +65,7 @@
         "\n",
         "## Import Python Libraries"
       ],
-      "id": "55f34b7c"
+      "id": "ad17fe6e"
     },
     {
       "cell_type": "code",
@@ -82,7 +82,7 @@
         "import requests\n",
         "from requests.auth import HTTPBasicAuth"
       ],
-      "id": "62a0f135",
+      "id": "d10c97dc",
       "execution_count": null,
       "outputs": []
     },
@@ -98,7 +98,7 @@
         "\n",
         "### Setup Variables"
       ],
-      "id": "02f5f2cb"
+      "id": "45bcc205"
     },
     {
       "cell_type": "code",
@@ -111,7 +111,7 @@
         "ACTINIA_URL = ACTINIA_BASEURL + \"/api/\" + ACTINIA_VERSION\n",
         "ACTINIA_AUTH = HTTPBasicAuth(ACTINIA_USER, ACTINIA_PASSWORD)"
       ],
-      "id": "d7ac1632",
+      "id": "047a5bc4",
       "execution_count": null,
       "outputs": []
     },
@@ -123,7 +123,7 @@
         "def print_as_json(data):\n",
         "    json.dumps(data, indent=2)"
       ],
-      "id": "8856efb7",
+      "id": "eb990615",
       "execution_count": null,
       "outputs": []
     },
@@ -144,7 +144,7 @@
         "\n",
         "## Acinia Basics"
       ],
-      "id": "9f42e4a7"
+      "id": "b6844b61"
     },
     {
       "cell_type": "code",
@@ -202,7 +202,7 @@
         "  A[\"/api/v3/locations\"]\n",
         "```"
       ],
-      "id": "3f15f525"
+      "id": "6f921ede"
     },
     {
       "cell_type": "code",
@@ -212,7 +212,7 @@
         "response = requests.get(url, auth=ACTINIA_AUTH)\n",
         "print_as_json(response.json().get('locations'))"
       ],
-      "id": "4392d55a",
+      "id": "12dc0c35",
       "execution_count": null,
       "outputs": []
     },
@@ -231,7 +231,7 @@
         "\n",
         "```"
       ],
-      "id": "9993fb4b"
+      "id": "3ae87de5"
     },
     {
       "cell_type": "code",
@@ -244,7 +244,7 @@
         "\n",
         "pprint(response.json().get('process_results'))"
       ],
-      "id": "d4bbc45b",
+      "id": "4a487459",
       "execution_count": null,
       "outputs": []
     },
@@ -263,7 +263,7 @@
         "  B --- C[\"/mapsets\"]\n",
         "```"
       ],
-      "id": "9ac354b3"
+      "id": "a58b7f26"
     },
     {
       "cell_type": "code",
@@ -277,7 +277,7 @@
         "\n",
         "pprint(response.json().get('process_results'))"
       ],
-      "id": "579790d6",
+      "id": "6ce266d2",
       "execution_count": null,
       "outputs": []
     },
@@ -296,7 +296,7 @@
         "  D --- E[\"/info\"]\n",
         "```"
       ],
-      "id": "eb2cc1f1"
+      "id": "10e178fa"
     },
     {
       "cell_type": "code",
@@ -310,7 +310,7 @@
         "\n",
         "pprint(response.json().get('process_results'))"
       ],
-      "id": "063d3c0d",
+      "id": "3b89cfc0",
       "execution_count": null,
       "outputs": []
     },
@@ -333,7 +333,7 @@
         "  D --- E[\"/raster_layers\"]\n",
         "```"
       ],
-      "id": "a3733fa4"
+      "id": "c4a4c671"
     },
     {
       "cell_type": "code",
@@ -347,7 +347,7 @@
         "\n",
         "print(response)"
       ],
-      "id": "2f85a770",
+      "id": "5275345a",
       "execution_count": null,
       "outputs": []
     },
@@ -366,7 +366,7 @@
         "  D --- E[\"/vector_layers\"]\n",
         "```"
       ],
-      "id": "64c97d8b"
+      "id": "754390b8"
     },
     {
       "cell_type": "code",
@@ -383,7 +383,7 @@
         "\n",
         "print(response)"
       ],
-      "id": "fc23dbff",
+      "id": "7602bc24",
       "execution_count": null,
       "outputs": []
     },
@@ -406,7 +406,7 @@
         "  D --- E[\"/processing\"]\n",
         "```"
       ],
-      "id": "95ed1aa0"
+      "id": "319a2ca5"
     },
     {
       "cell_type": "code",
@@ -422,7 +422,7 @@
         "\n",
         "print(response)"
       ],
-      "id": "7186d5b7",
+      "id": "98411b4f",
       "execution_count": null,
       "outputs": []
     },
@@ -441,7 +441,7 @@
         "  D --- E[\"/processing_async\"]\n",
         "```"
       ],
-      "id": "6495e8d8"
+      "id": "e7db07c3"
     },
     {
       "cell_type": "code",
@@ -457,7 +457,7 @@
         "\n",
         "pprint(response.json().get('process_results'))"
       ],
-      "id": "38cac100",
+      "id": "c57961d1",
       "execution_count": null,
       "outputs": []
     },
@@ -478,7 +478,7 @@
         "\n",
         "Let move on to creating process chains in [Part 3](./process_chains.ipynb).\n"
       ],
-      "id": "8079f7e1"
+      "id": "70873756"
     }
   ],
   "metadata": {
