@@ -43,17 +43,17 @@ execute:
 
 ---
 
-In this tutorial we will learn about the [t.stac](https://grass.osgeo.org/grass-stable/manuals/addons/t.stac.html) suite of tools for [GRASS](https://grass.osgeo.org).
+## Introduction
+
+In this tutorial we will learn how to intergrate SpatioTemporal Asset Catalog (STAC) data into your GRASS workflow using the [t.stac](https://grass.osgeo.org/grass-stable/manuals/addons/t.stac.html) suite of tools for [GRASS](https://grass.osgeo.org).
 
 * [t.stac.catalog](https://grass.osgeo.org/grass-stable/manuals/addons/t.stac.catalog.html) - is a tool for exploring SpatioTemporal Asset Catalogs metadata from a STAC API.
 * [t.stac.collection](https://grass.osgeo.org/grass-stable/manuals/addons/t.stac.collection.html) - is a tool for exploring SpatioTemporal Asset Catalog (STAC) collection metadata.
 * [t.stac.item](https://grass.osgeo.org/grass-stable/manuals/addons/t.stac.item.html) - is a tool for exploring and importing SpatioTemporal Asset Catalog item metadata and assets into GRASS.
 
-## Introduction
+STAC is an open specification that provides a common structure for describing and cataloging geospatial information. STAC organizes earth observation data into a hierarchy of **Catalogs** → **Collections** → **Items** → **Assets**, making large archives of cloud-hosted imagery discoverable and accessible through a standard API. Major providers such as AWS, Google Cloud, and Microsoft Planetary Computer publish their datasets as STAC-compliant APIs, giving you a unified way to search and retrieve data across platforms.
 
-SpatioTemporal Asset Catalog (STAC) is an open specification that provides a common structure for describing and cataloging geospatial information. STAC organizes earth observation data into a hierarchy of **Catalogs** → **Collections** → **Items** → **Assets**, making large archives of cloud-hosted imagery discoverable and accessible through a standard API. Major providers such as AWS, Google Cloud, and Microsoft Planetary Computer publish their datasets as STAC-compliant APIs, giving you a unified way to search and retrieve data across platforms.
-
-The `t.stac` addon suite bridges these STAC APIs with GRASS's spatio-temporal data management framework. Instead of manually browsing catalogs and downloading files, `t.stac` lets you:
+The `t.stac` addon suite bridges these STAC APIs with GRASSs' spatio-temporal data management framework. Instead of manually browsing catalogs and downloading files, `t.stac` lets you:
 
 - **Search** by spatial extent and time window
 - **Filter** by metadata properties such as cloud cover, sun elevation, and resolution
@@ -79,7 +79,6 @@ import json
 import pandas as pd
 from pathlib import Path
 import seaborn as sns
-# import polars as pl
 
 # Ask GRASS where its Python packages are and add them to the path
 sys.path.append(
@@ -704,7 +703,7 @@ View STAC items with ipyleaflet (install with `pip install ipyleaflet` if needed
 
 import random
 
-m = gj.InteractiveMap(use_region=True)
+m = gj.InteractiveMap()
 m.add_vector(
     "sentinel_2_items",
     style={"opacity": 1, "dashArray": "9", "fillOpacity": 0.1, "weight": 1},
@@ -714,13 +713,16 @@ m.add_vector(
         "fillColor": random.choice(["red", "yellow", "green", "orange"]),
     }
 )
+m.map.center = (35.787137, -79.018917)
+m.map.zoom = 8
+
 display(m.show())
 
 ```
 
 ### Download and Import Rasters
 
-With the STAC items identified and the STRDS structure defined, you can now download the raster assets directly into the GRASS project. The `t.stac.item` command with the `-d` (download) flag retrieves each Cloud-Optimized GeoTIFF (COG), reprojects and resamples it to match the current computational region, and writes the resulting map names and timestamps to a text file for STRDS registration.
+With the STAC items identified and the STRDS structure defined, you can now download the raster assets directly into the GRASS project. The `t.stac.item` command with the `-d` (download) flag retrieves each Cloud Optimized GeoTIFF (COG), reprojects and resamples it to match the current computational region, and writes the resulting map names and timestamps to a text file for STRDS registration.
 
 Control download behavior with:
 
