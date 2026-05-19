@@ -11,7 +11,7 @@ format:
     code-tools: true
 execute:
   enabled: true
-  keep-ipynb: true
+  keep-ipynb: false
   eval: false
   freeze: auto
   cache: true
