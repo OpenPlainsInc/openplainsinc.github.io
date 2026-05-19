@@ -1,14 +1,14 @@
 ---
+title: "OpenPlains Inc. A First-Year Retrospective"
+subtitle: "FOSS4G NA 2024, St. Louis Missouri"
+author: "Corey T. White"
+date: "2024-09-10"
+image: ../../images/logos/openplains-logo.svg
+categories: [foss4gna, presentation, openplains]
+draft: false
 format:
     revealjs:
         theme: [simple, ../../../theme.scss]
-author: Corey T. White
-title: "OpenPlains Inc. A First-Year Retrospective"
-subtitle: FOSS4G NA 2024, St. Louis Missouri
-date: September 10, 2024
-categories: [foss4gna, presentation, OpenPlains]
-image: ../../images/logos/openplains-logo.svg
-draft: false
 ---
 
 ## Part 1. From Academia to Startup

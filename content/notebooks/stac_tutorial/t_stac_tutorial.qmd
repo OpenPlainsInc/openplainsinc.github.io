@@ -2,10 +2,10 @@
 title: "STAC Tutorial"
 description: "Learn how to use the GRASS addon t.stac to search and import STAC API data into a GRASS project."
 image: images/stac-to-the-future.png
-author: Corey T. White
-date: '2025-03-01'
-categories: [stac, grass-addon, tutorial]
+author: "Corey T. White"
+date: "2025-03-01"
 date-modified: today
+categories: [stac, grass-addon, tutorial]
 
 page-layout: full
 title-block-banner: true
@@ -28,7 +28,7 @@ format:
         href: https://stacspec.org/en
     lightbox: true
     canonical-url: true
-    notebook-links: true	
+    notebook-links: true
 
 engine: jupyter
 jupyter: python3
@@ -42,6 +42,8 @@ execute:
   cache: true
 
 ---
+
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/OpenPlainsInc/openplainsinc.github.io/blob/main/content/notebooks/stac_tutorial/t_stac_tutorial.ipynb)
 
 ## Introduction
 

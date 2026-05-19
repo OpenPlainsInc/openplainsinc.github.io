@@ -167,7 +167,6 @@ venv/
 docs/
 
 grassdata/
-*.quarto_ipynb
-
+**/*.quarto_ipynb*
 
 **/*.quarto_ipynb

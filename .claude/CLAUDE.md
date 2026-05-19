@@ -40,9 +40,13 @@ The project is organized into several key directories and files:
 
 * `themes.scss`: Custom SCSS for styling our Quarto documents.
 
+## Content Authoring
+
+* Every new tutorial, blog post, or workshop `.qmd` should follow the frontmatter conventions defined in `content/templates/tutorial-frontmatter.qmd`. That file is the single source of truth for required fields (`title`, `description`, `author`, `date`, `image`, `categories`, `draft`), the canonical date format (`"YYYY-MM-DD"`), and the standard `format`/`execute` blocks. Copy the YAML block from that template into new files rather than copying from older tutorials, which may predate the standard.
+
 ## Google Colab Links
 
-* Tutorials should be accessible via Google Colab for users who prefer to work in that environment. We will provide links to Colab notebooks for each tutorial, allowing users to run the code and interact with the content directly in their browser without needing to set up a local environment.
+* Tutorials should be accessible via Google Colab for users who prefer to work in that environment. The Colab badge convention is documented in `content/templates/tutorial-frontmatter.qmd`. Note: the badge links to a `.ipynb` file at the same path as the `.qmd`; for it to resolve, either commit the rendered `.ipynb` (Quarto produces it when `execute.keep-ipynb: true`) or add a render-and-commit step to CI.
 
 ## CI/CD
 

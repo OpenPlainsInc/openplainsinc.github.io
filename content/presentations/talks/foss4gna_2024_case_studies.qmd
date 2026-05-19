@@ -30,7 +30,7 @@ author:
     email: "neteler@mundialis.de"
     affiliations:
       - ref: md
-date: "September 10, 2024"
+date: "2024-09-10"
 acknowledgements: |
     This talk was funded by the [US National Science Foundation (NSF)](https://www.nsf.gov/), award [2303651](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2303651).
 affiliations:

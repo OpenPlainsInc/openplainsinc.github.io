@@ -25,9 +25,9 @@
         "      - text: OpenPlainsInc/actinia_openapi_python_client\n",
         "        icon: file-code\n",
         "        href: https://github.com/OpenPlainsInc/actinia_openapi_python_client\n",
-        "author:\n",
-        "  - Corey T. White\n",
-        "date: May 6, 2025\n",
+        "author: \"Corey T. White\"\n",
+        "date: \"2025-05-06\"\n",
+        "date-modified: today\n",
         "keep-ipynb: true\n",
         "toc: true\n",
         "toc-depth: 4\n",
@@ -65,7 +65,7 @@
         "\n",
         "## Import Python Libraries"
       ],
-      "id": "ad17fe6e"
+      "id": "4b817591"
     },
     {
       "cell_type": "code",
@@ -82,7 +82,7 @@
         "import requests\n",
         "from requests.auth import HTTPBasicAuth"
       ],
-      "id": "d10c97dc",
+      "id": "f4d5405d",
       "execution_count": null,
       "outputs": []
     },
@@ -98,7 +98,7 @@
         "\n",
         "### Setup Variables"
       ],
-      "id": "45bcc205"
+      "id": "0e083b98"
     },
     {
       "cell_type": "code",
@@ -111,7 +111,7 @@
         "ACTINIA_URL = ACTINIA_BASEURL + \"/api/\" + ACTINIA_VERSION\n",
         "ACTINIA_AUTH = HTTPBasicAuth(ACTINIA_USER, ACTINIA_PASSWORD)"
       ],
-      "id": "047a5bc4",
+      "id": "c337b7be",
       "execution_count": null,
       "outputs": []
     },
@@ -123,7 +123,7 @@
         "def print_as_json(data):\n",
         "    json.dumps(data, indent=2)"
       ],
-      "id": "eb990615",
+      "id": "bf116128",
       "execution_count": null,
       "outputs": []
     },
@@ -144,7 +144,7 @@
         "\n",
         "## Acinia Basics"
       ],
-      "id": "b6844b61"
+      "id": "e87a1298"
     },
     {
       "cell_type": "code",
@@ -202,7 +202,7 @@
         "  A[\"/api/v3/locations\"]\n",
         "```"
       ],
-      "id": "6f921ede"
+      "id": "9722fd9b"
     },
     {
       "cell_type": "code",
@@ -212,7 +212,7 @@
         "response = requests.get(url, auth=ACTINIA_AUTH)\n",
         "print_as_json(response.json().get('locations'))"
       ],
-      "id": "12dc0c35",
+      "id": "40b95033",
       "execution_count": null,
       "outputs": []
     },
@@ -231,7 +231,7 @@
         "\n",
         "```"
       ],
-      "id": "3ae87de5"
+      "id": "43581eab"
     },
     {
       "cell_type": "code",
@@ -244,7 +244,7 @@
         "\n",
         "pprint(response.json().get('process_results'))"
       ],
-      "id": "4a487459",
+      "id": "a5f3ef3b",
       "execution_count": null,
       "outputs": []
     },
@@ -263,7 +263,7 @@
         "  B --- C[\"/mapsets\"]\n",
         "```"
       ],
-      "id": "a58b7f26"
+      "id": "20e6d1df"
     },
     {
       "cell_type": "code",
@@ -277,7 +277,7 @@
         "\n",
         "pprint(response.json().get('process_results'))"
       ],
-      "id": "6ce266d2",
+      "id": "9b92e3a9",
       "execution_count": null,
       "outputs": []
     },
@@ -296,7 +296,7 @@
         "  D --- E[\"/info\"]\n",
         "```"
       ],
-      "id": "10e178fa"
+      "id": "d830067d"
     },
     {
       "cell_type": "code",
@@ -310,7 +310,7 @@
         "\n",
         "pprint(response.json().get('process_results'))"
       ],
-      "id": "3b89cfc0",
+      "id": "d84a3afa",
       "execution_count": null,
       "outputs": []
     },
@@ -333,7 +333,7 @@
         "  D --- E[\"/raster_layers\"]\n",
         "```"
       ],
-      "id": "c4a4c671"
+      "id": "e17077cd"
     },
     {
       "cell_type": "code",
@@ -347,7 +347,7 @@
         "\n",
         "print(response)"
       ],
-      "id": "5275345a",
+      "id": "522fe028",
       "execution_count": null,
       "outputs": []
     },
@@ -366,7 +366,7 @@
         "  D --- E[\"/vector_layers\"]\n",
         "```"
       ],
-      "id": "754390b8"
+      "id": "587c4a51"
     },
     {
       "cell_type": "code",
@@ -383,7 +383,7 @@
         "\n",
         "print(response)"
       ],
-      "id": "7602bc24",
+      "id": "dff1f01f",
       "execution_count": null,
       "outputs": []
     },
@@ -406,7 +406,7 @@
         "  D --- E[\"/processing\"]\n",
         "```"
       ],
-      "id": "319a2ca5"
+      "id": "1e6d91ad"
     },
     {
       "cell_type": "code",
@@ -422,7 +422,7 @@
         "\n",
         "print(response)"
       ],
-      "id": "98411b4f",
+      "id": "daacd2cb",
       "execution_count": null,
       "outputs": []
     },
@@ -441,7 +441,7 @@
         "  D --- E[\"/processing_async\"]\n",
         "```"
       ],
-      "id": "e7db07c3"
+      "id": "74082f8e"
     },
     {
       "cell_type": "code",
@@ -457,7 +457,7 @@
         "\n",
         "pprint(response.json().get('process_results'))"
       ],
-      "id": "c57961d1",
+      "id": "739e6250",
       "execution_count": null,
       "outputs": []
     },
@@ -478,7 +478,7 @@
         "\n",
         "Let move on to creating process chains in [Part 3](./process_chains.ipynb).\n"
       ],
-      "id": "70873756"
+      "id": "807cfafb"
     }
   ],
   "metadata": {
