@@ -70,7 +70,7 @@ jobs:
         uses: quarto-dev/quarto-actions/render@v2
 
       - name: Upload static files as artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           path: docs/
 
@@ -87,4 +87,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
