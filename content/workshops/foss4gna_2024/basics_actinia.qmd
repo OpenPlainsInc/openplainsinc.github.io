@@ -19,9 +19,9 @@ format:
       - text: OpenPlainsInc/actinia_openapi_python_client
         icon: file-code
         href: https://github.com/OpenPlainsInc/actinia_openapi_python_client
-author:
-  - Corey T. White
-date: May 6, 2025
+author: "Corey T. White"
+date: "2025-05-06"
+date-modified: today
 keep-ipynb: true
 toc: true
 toc-depth: 4

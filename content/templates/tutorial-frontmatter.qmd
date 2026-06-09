@@ -1,0 +1,76 @@
+---
+title: "Tutorial Frontmatter Template"
+description: "Canonical YAML frontmatter and Colab badge convention for OpenPlains Learning tutorials. Copy the block below into new `.qmd` files."
+author: "OpenPlains"
+date: "2026-05-19"
+date-modified: today
+categories: [meta, template]
+draft: true
+---
+
+This file is the **single source of truth** for the frontmatter shape that
+notebook tutorials, blog posts, and workshop pages should use. It is marked
+`draft: true` so it never appears on the public site.
+
+## Copy this block into new tutorials
+
+```yaml
+---
+title: "Sentence-case tutorial title"
+description: "One-sentence summary used in listing cards and meta tags."
+author: "Corey T. White"
+date: "YYYY-MM-DD"                 # ISO 8601, zero-padded, quoted
+date-modified: today
+image: images/cover.png            # relative to this qmd file
+categories: [tag-one, tag-two]     # kebab-case, flow-sequence array
+draft: false                       # explicit; flip to true for WIP
+
+page-layout: full
+title-block-banner: true
+
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    code-copy: true
+    code-fold: false
+    code-tools: true
+    lightbox: true
+
+execute:
+  enabled: true
+  eval: true
+  freeze: auto                     # set to true only for slow / heavy notebooks
+  cache: true
+  keep-ipynb: true                 # required when a Colab badge is used
+
+jupyter: python3
+---
+```
+
+## Colab badge convention
+
+Immediately after the frontmatter, add a Colab badge pointing at the rendered
+`.ipynb` companion (Quarto emits it when `keep-ipynb: true` is set):
+
+```markdown
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/OpenPlainsInc/openplainsinc.github.io/blob/main/<PATH_TO_IPYNB>)
+```
+
+Replace `<PATH_TO_IPYNB>` with the repo-relative path to the generated notebook
+(e.g. `content/notebooks/stac_tutorial/t_stac_tutorial.ipynb`).
+
+## Field reference
+
+| Field | Required | Notes |
+|------|----------|-------|
+| `title` | yes | Quoted; sentence case. |
+| `description` | yes | One sentence; shows on listing cards. |
+| `author` | yes | String (not list) for single-author. Use a YAML list only for multi-author. |
+| `date` | yes | ISO 8601 (`"YYYY-MM-DD"`), zero-padded, quoted. |
+| `date-modified` | no | `today` is fine; auto-updates on render. |
+| `image` | yes | Cover image for listing cards; relative to the qmd. |
+| `categories` | yes | Flow-sequence array, kebab-case tags. |
+| `draft` | yes | Always explicit (`true` or `false`), never omitted. |
+| `execute.keep-ipynb` | conditional | `true` when a Colab badge points at the `.ipynb`. |
+| `execute.freeze` | no | `auto` by default; `true` only for expensive notebooks. |

@@ -9,18 +9,13 @@ dependencies = [
     "folium>=0.15.1",
     "geemap>=0.34.1",
     "geopandas>=1.0.1",
-    "ipykernel>=6.7.0",
-    "ipyleaflet>=0.19.0",
-    "ipywidgets>=8.1.6",
-    "jupyter>=1.1.1",
-    "jupyter-cache>=1.0.1",
-    "jupyterlab-widgets>=3.0.15",
     "laspy>=2.0.3",
     "lonboard>=0.1.0",
     "matplotlib>=3.9",
     "numpy>=1.26.4",
     "pandas>=2.2.2",
     "polars>=1.30.0",
+    "psutil>=7.0.0",
     "pyodm>=1.5.12",
     "pyogrio>=0.9.0",
     "pystac>=1.10.1",
@@ -36,4 +31,18 @@ dependencies = [
     "torchvision>=0.22.0",
     "tqdm>=4.66.3",
     "vtk>=9.2.6",
+]
+
+[tool.ruff]
+target-version = "py313"
+extend-exclude = ["docs", "_freeze", ".venv", ".quarto", "_extensions"]
+
+[dependency-groups]
+dev = [
+    "jupyter>=1.1.1",
+    "ipykernel>=6.7.0",
+    "ipyleaflet>=0.19.0",
+    "ipywidgets>=8.1.6",
+    "jupyter-cache>=1.0.1",
+    "jupyterlab-widgets>=3.0.15",
 ]

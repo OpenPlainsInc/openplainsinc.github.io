@@ -7,6 +7,8 @@ about:
     image-width: 220px
 listing:
     contents:
+        - content/notebooks/stac_tutorial/*.qmd
+        - content/notebooks/actinia/*.qmd
         - content/blog/*.qmd
         - content/workshops/foss4gna_2024/workshop.qmd
         - content/workshops/smackhack25/ncssm_workshop.ipynb

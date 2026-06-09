@@ -1,9 +1,10 @@
 ---
-title: Helene Photogrametery
-description: This tutorial demonstrates how download images from ArcGIS Server into GRASS GIS.
+title: "Helene Photogrammetry"
+description: "Download aerial images from an ArcGIS Server endpoint and process them into a photogrammetric DEM with GRASS GIS."
 format: html
-author: Corey T. White
-date: '2024-10-9'
+author: "Corey T. White"
+date: "2024-10-09"
+date-modified: today
 keep-ipynb: true
 toc: true
 toc-depth: 4
