@@ -65,7 +65,7 @@ jobs:
         run: uv sync --locked --all-extras --dev
 
       - name: Add venv to PATH
-        run: echo "$(pwd)/.venv/bin" >> $GITHUB_PATH
+        run: echo "$(pwd)/.venv/bin" >> "$GITHUB_PATH"
 
       - name: Set up Quarto (match publish)
         uses: quarto-dev/quarto-actions/setup@8a96df13519ee81fd526f2dfca5962811136661b # v2.2.0
