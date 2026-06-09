@@ -1,37 +1,42 @@
 ---
 title: "Why GRASS Should Be Your Geospatial Processing Engine in 2026"
-description: |
- In the rapidly evolving world of geospatial technology, choosing the right processing engine can make or break your spatial analysis workflow. While proprietary solutions dominate marketing budgets and flashy conferences, there's a battle-tested powerhouse that deserves your attention in 2026: GRASS
+description: "A practical case for adopting GRASS as your geospatial processing engine in 2026: maturity, reproducibility, parallel performance, and a modern Python API."
 image: ../images/logos/grass/grass-gradient.svg
-toc-depth: 4
+author: "Corey T. White"
+date: "2026-06-09"
+date-modified: last-modified
+categories: [grass, blog]
+page-layout: full
+title-block-banner: true
+draft: true
+
 format:
   html:
-    code-copy: false
+    toc: true
+    toc-depth: 4
+    code-copy: true
     code-fold: false
     code-tools: false
+
 execute:
   enabled: true
   keep-ipynb: false
   eval: false
   freeze: auto
   cache: true
+
 jupyter: python3
-author: Corey T. White, Ph.D.
-date: today
-date-modified: last-modified
-categories: [grass, blog]
-page-layout: full
-title-block-banner: true
-draft: true
 ---
 
 In the rapidly evolving world of geospatial technology, choosing the right processing engine can make or break your spatial analysis workflow. While proprietary solutions dominate marketing budgets, influencer feeds, and flashy conferences, there's a battle-tested powerhouse that deserves your attention in 2026: [GRASS](https://grass.osgeo.org/).
 
+![Elevation draped over shaded relief for the North Carolina sample dataset, rendered with `grass.jupyter` from a 10 m DEM.](images/grass_terrain.png){#fig-terrain fig-alt="Color shaded-relief elevation map of a terrain area in North Carolina"}
+
 ## The Veteran That Keeps Getting Better
 
-[GRASS](https://grass.osgeo.org/) isn't new—it's been around since 1982, making it one of the oldest GIS platforms still in active development. But don't let its age fool you. Like a fine wine, [GRASS](https://grass.osgeo.org/) has matured into something extraordinary. The difference is that while commercial alternatives pivot with market trends, [GRASS](https://grass.osgeo.org/) has spent four decades perfecting the fundamentals of geospatial analysis.
+[GRASS](https://grass.osgeo.org/) isn't new. It has been around since 1982, making it one of the oldest GIS platforms still in active development. That longevity matters: while commercial alternatives pivot with market trends, GRASS has spent four decades hardening the fundamentals of geospatial analysis. Maturity here means battle-tested algorithms, not stagnation.
 
-In 2026, [GRASS](https://grass.osgeo.org/) continues to receive active development, with a vibrant community contributing cutting-edge algorithms while maintaining the rock-solid stability that comes from decades of refinement.
+And the last few releases prove the point. GRASS 8.4 renamed the old "location" to the clearer **project**, the new [`grass.tools`](https://grass.osgeo.org/grass-stable/manuals/libpython/grass.tools.html) API made calling tools from Python feel native, [`grass.jupyter`](https://grass.osgeo.org/grass-stable/manuals/libpython/grass.jupyter.html) turned notebooks into a first-class interface, and GRASS became `pip`-installable on more platforms. More `r.*` and `i.*` tools gained OpenMP parallelization along the way. In 2026, GRASS is both the most mature option on the table and one of the most actively modernized.
 
 ## Unmatched Computational Power
 
@@ -39,21 +44,48 @@ When you need serious processing power, [GRASS](https://grass.osgeo.org/) delive
 
 **Raster Processing Excellence**: GRASS's raster engine is legendary. Whether you're analyzing satellite imagery, running hydrological models, or processing LiDAR data, [GRASS](https://grass.osgeo.org/) handles massive datasets with remarkable efficiency. The r.watershed module alone has powered countless watershed delineation projects worldwide, and tools like r.sun for solar radiation modeling are industry standards.
 
-**Topology-Based Vector Processing**: Unlike many GIS platforms that treat vector data as simple coordinate lists, [GRASS](https://grass.osgeo.org/) maintains true topological relationships. This means cleaner data, faster spatial queries, and more reliable network analysis. When you need to ensure your polygons don't have gaps or overlaps, GRASS's topology rules catch errors that other platforms miss.
+![Daily global solar irradiance for the summer solstice, computed with the OpenMP-parallelized `r.sun` (`nprocs=4`) and draped over shaded relief. The whole landscape receives high insolation on a clear solstice day, with relief driving the local differences.](images/grass_solar.png){#fig-solar fig-alt="Daily global solar irradiance map over shaded relief using a warm solar color ramp"}
+
+**Topology-Based Vector Processing**: Unlike many GIS platforms that treat vector data as simple coordinate lists, [GRASS](https://grass.osgeo.org/) maintains a true topological model: shared boundaries are stored once, and points, lines, and areas know their neighbors. This means cleaner data, faster spatial queries, and more reliable network analysis. When you need to ensure your polygons don't have gaps or overlaps, GRASS's topology rules catch errors that other platforms miss.
 
 **3D and Temporal Capabilities**: GRASS's voxel support and space-time datasets put it ahead of the curve for 3D analysis and temporal data processing. Climate scientists, environmental modelers, and urban planners working with time-series data find GRASS's temporal framework invaluable.
 
 ## Scriptability and Reproducibility
 
-In 2026, reproducible science isn't optional—it's essential. [GRASS](https://grass.osgeo.org/) excels here:
+In 2026, reproducible science isn't optional, it's essential. [GRASS](https://grass.osgeo.org/) excels here. Every GRASS operation can be scripted in [Python](https://grass.osgeo.org/grass-stable/manuals/python_intro.html), [Shell](https://grass.osgeo.org/grass-stable/manuals/command_line_intro.html), or [R](https://osgeo.github.io/rgrass/). Your entire analysis workflow becomes code, making it reproducible, shareable, and auditable. This is critical for scientific research, regulatory compliance, and collaborative projects where transparency matters.
 
-Every GRASS operation can be scripted in Python, Bash, or R. Your entire analysis workflow becomes code, making it reproducible, shareable, and auditable. This is critical for scientific research, regulatory compliance, and collaborative projects where transparency matters.
+The newer [`grass.tools`](https://grass.osgeo.org/grass-stable/manuals/libpython/grass.tools.html) API makes that concrete. A complete watershed delineation is a few lines, and every parameter is captured in the script rather than buried in a dialog box:
 
-The [GRASS](https://grass.osgeo.org/) Python API is elegant and well-documented, allowing you to build sophisticated spatial analysis pipelines that integrate seamlessly with modern data science tools like pandas, NumPy, and machine learning frameworks.
+```python
+from grass.tools import Tools
+
+# Connect to an existing project/mapset session
+tools = Tools()
+
+# Match the computational region to the input DEM
+tools.g_region(raster="elevation")
+
+# Delineate streams and watershed basins
+tools.r_watershed(
+    elevation="elevation",
+    threshold=10000,
+    accumulation="flow_accum",
+    stream="streams",
+    basin="basins",
+)
+
+# Pull results straight into Python for downstream analysis
+stats = tools.r_univar(map="flow_accum", format="json").json
+print(stats)
+```
+
+![Log-scaled flow accumulation from the `r.watershed` call above, with a histogram-equalized color table. The full dendritic channel network emerges directly from the DEM, with no manual digitizing.](images/grass_watershed.png){#fig-watershed fig-alt="Dendritic stream network from histogram-equalized log flow accumulation"}
+
+Because the region, parameters, and tool versions are all explicit, a colleague can rerun this and get identical output. The [GRASS Python API](https://grass.osgeo.org/grass-stable/manuals/libpython/index.html) is well-documented and integrates cleanly with the rest of the scientific Python stack (pandas, NumPy, and the machine learning frameworks you already use), and [`grass.jupyter`](https://grass.osgeo.org/grass-stable/manuals/libpython/grass.jupyter.html) drops the same workflow into a notebook with interactive maps.
 
 ## Open Source Means True Freedom
 
-Let's talk about the elephant in the room: licensing costs. In 2026, as organizations face tighter budgets and increasing data volumes, proprietary GIS licenses become harder to justify. [GRASS](https://grass.osgeo.org/) is completely free and open source under the GNU GPL.
+Licensing costs are the obvious starting point. In 2026, as organizations face tighter budgets and increasing data volumes, proprietary GIS licenses become harder to justify. [GRASS](https://grass.osgeo.org/) is completely free and open source under the GNU GPL.
 
 But the value goes beyond cost savings:
 
@@ -67,16 +99,17 @@ But the value goes beyond cost savings:
 [GRASS](https://grass.osgeo.org/) doesn't exist in isolation. In 2026, it plays well with the entire geospatial ecosystem:
 
 - **QGIS Integration**: [GRASS](https://grass.osgeo.org/) tools are fully accessible through QGIS's processing framework, giving you a user-friendly interface when you need it
-- **R Integration**: The rgrass package enables seamless integration with R's statistical capabilities
+- **R Integration**: The [rgrass](https://osgeo.github.io/rgrass/) package enables seamless integration with R's statistical capabilities
+- **Faster Raster**: The [fasterRaster](https://adamlilith.github.io/fasterRaster/reference/index.html) package allows you to leverage GRASS's raster engine directly from R for high-performance processing
 - **Python Ecosystem**: [GRASS](https://grass.osgeo.org/) fits naturally into Python-based spatial analysis workflows alongside GeoPandas, Rasterio, and GDAL
 - **Cloud Computing**: [GRASS](https://grass.osgeo.org/) runs efficiently on Linux servers, making it ideal for cloud-based processing pipelines and containerized workflows
 - **Jupyter Notebooks**: Combine [GRASS](https://grass.osgeo.org/) analysis with interactive documentation and visualization
 
-And of course [**OpenPlains!**](https://openplains.com)
+- **OpenPlains**: [OpenPlains](https://openplains.com) exposes GRASS as a cloud-native REST and web platform, so the same processing engine that runs on your laptop can power web applications and shared, server-side analysis without rewriting your workflows
 
 ## Real-World Performance
 
-[GRASS](https://grass.osgeo.org/) routinely outperforms commercial alternatives in computational benchmarks, especially for large-scale raster analysis. Its efficient memory management and ability to process data in chunks means you can work with datasets that would choke other systems.
+[GRASS](https://grass.osgeo.org/) is built to stay performant on large-scale raster analysis. It processes rasters region by region and row by row rather than holding everything in memory at once, so the working set scales with your computational region instead of the full extent of the data. Many `r.*` and `i.*` tools are now OpenMP-parallelized and accept an `nprocs` argument, letting you put multiple cores to work on a single operation. Together, the low memory footprint and parallel execution let GRASS handle datasets that would exhaust systems that load everything up front.
 
 For organizations processing terabytes of satellite imagery, running continental-scale analysis, or building operational monitoring systems, GRASS's performance advantages translate directly to reduced infrastructure costs and faster results.
 
@@ -92,7 +125,7 @@ For organizations processing terabytes of satellite imagery, running continental
 
 ## The Learning Curve Is Worth It
 
-Yes, [GRASS](https://grass.osgeo.org/) has a steeper learning curve than point-and-click alternatives. Its command-line heritage and location/mapset structure require some adjustment. But this initial investment pays enormous dividends.
+Yes, [GRASS](https://grass.osgeo.org/) has a steeper learning curve than point-and-click alternatives. Its command-line heritage and project/mapset structure require some adjustment. But this initial investment pays enormous dividends.
 
 Once you understand GRASS's paradigm, you gain access to a processing engine that's more powerful, more flexible, and more reliable than most alternatives. The strong conceptual foundation means you're learning principles that transfer across platforms, not just memorizing button clicks.
 
@@ -100,11 +133,11 @@ In 2026, with excellent documentation, active community forums, and numerous tut
 
 ## The Bottom Line
 
-In an era of expensive software subscriptions, black-box algorithms, and vendor lock-in, [GRASS](https://grass.osgeo.org/) offers something increasingly rare: a powerful, transparent, and free geospatial processing engine that puts control back in your hands.
+In an era of expensive software subscriptions, black-box algorithms, and vendor lock-in, [GRASS](https://grass.osgeo.org/) offers something increasingly rare: a powerful, transparent, and free geospatial processing engine you fully control.
 
 For 2026 and beyond, whether you're a researcher demanding reproducibility, an organization seeking cost-effective solutions, or a practitioner who values computational power and flexibility, [GRASS](https://grass.osgeo.org/) deserves serious consideration.
 
-The geospatial community has long known what [GRASS](https://grass.osgeo.org/) can do. Perhaps 2026 is the year you discover it too.
+The geospatial community has long known what [GRASS](https://grass.osgeo.org/) can do. With a modern Python API, parallel performance, and a notebook-first workflow, 2026 is a good year to put it at the center of yours.
 
 ---
 
