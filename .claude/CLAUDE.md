@@ -10,7 +10,7 @@
 
 ## Project Environment
 
-* Quarto (v1.8.26) is used for documentation and content creation. We use Quarto to create interactive documents, tutorials, and course materials that can be easily shared and accessed by our users.
+* Quarto (v1.9.35) is used for documentation and content creation. We use Quarto to create interactive documents, tutorials, and course materials that can be easily shared and accessed by our users.
 
 * We use [uv](https://docs.astral.sh/uv/) to manage our Python environments. The project is structured with a `pyproject.toml` file that defines our dependencies and project metadata. We also use `uv.lock` to lock our dependencies for reproducibility.
 
@@ -52,7 +52,9 @@ The project is organized into several key directories and files:
 
 * We use GitHub Actions for our CI/CD pipeline. Our workflow includes steps for linting, testing, and deploying our Quarto documents to our website. Whenever changes are pushed to the main branch, the workflow will automatically run these checks and deploy the updated content if everything passes successfully.
 
-* pre-commit hooks are set up to ensure code quality and consistency. We use tools like `black` for code formatting and `flake8` for linting to maintain a clean and readable codebase.
+* pre-commit hooks are set up to ensure code quality and consistency (see `.pre-commit-config.yaml`). We use `ruff` for Python linting and formatting (replacing `black`/`flake8`), `actionlint` for GitHub Actions workflows, and `gitleaks` for secret scanning. Install with `uvx pre-commit install` and run all hooks with `uvx pre-commit run --all-files`.
+
+* GitHub Actions are pinned to commit SHAs (with a version comment) for supply-chain safety. Renovate keeps the digests current under a 7-day `minimumReleaseAge` cooldown; let it raise the update PRs rather than bumping pins by hand.
 
 ## Additional Resources
 

@@ -33,6 +33,10 @@ dependencies = [
     "vtk>=9.2.6",
 ]
 
+[tool.ruff]
+target-version = "py313"
+extend-exclude = ["docs", "_freeze", ".venv", ".quarto", "_extensions"]
+
 [dependency-groups]
 dev = [
     "jupyter>=1.1.1",
