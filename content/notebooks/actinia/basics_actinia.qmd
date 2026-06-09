@@ -4,9 +4,13 @@ description: Learn how to use actinia to create a cloud-based processing environ
 format:
   html:
     toc: true
-    code-tools: true
+    toc-depth: 4
+    tabsets: true
     code-copy: true
     code-fold: false
+    code-tools: true
+    mermaid: 
+      theme: forest
     other-links:
       - text: actinia
         href: https://github.com/actinia-org
@@ -38,15 +42,15 @@ title-block-banner: true
 jupyter: python3
 filters:
   - include-code-files
-draft: true
+draft: false
+execute:
+  enabled: true
+  keep-ipynb: false
+  eval: false
+  freeze: true
 ---
 
 [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/OpenPlainsInc/openplainsinc.github.io/blob/main/content/notebooks/actinia/basics_actinia.ipynb)
-
-```{python}
-#| echo: false
-!figlet "actinia 101"
-```
 
 ## A REST API for GRASS GIS
 
@@ -98,9 +102,12 @@ ACTINIA_AUTH = HTTPBasicAuth(ACTINIA_USER, ACTINIA_PASSWORD)
 ```
 
 ```{python}
-#| echo: false
+# | echo: false
+
+
 def print_as_json(data):
-    json.dumps(data, indent=2)
+    print(json.dumps(data, indent=2))
+
 ```
 
 ## actinia REST API
@@ -165,7 +172,7 @@ flowchart LR
 ```{python}
 url = f"{ACTINIA_URL}/locations"
 response = requests.get(url, auth=ACTINIA_AUTH)
-print_as_json(response.json().get('locations'))
+print_as_json(response.json().get('projects'))
 ```
 
 Now we will get extra information about a specific project.
@@ -181,7 +188,7 @@ flowchart LR
 location_id = 'nc_spm_08'
 url = f"{ACTINIA_URL}/locations/{location_id}/info"
 
-response = requests.get( url, auth=ACTINIA_AUTH)
+response = requests.get(url, auth=ACTINIA_AUTH)
 
 pprint(response.json().get('process_results'))
 ```
@@ -199,12 +206,12 @@ flowchart LR
 
 ```{python}
 # mapset = 'nc_spm_08'
-location_id = 'nc_spm_08_grass7'
+location_id = 'nc_spm_08'
 url = f"{ACTINIA_URL}/locations/{location_id}/mapsets"
 
-response = requests.get( url, auth=ACTINIA_AUTH)
+response = requests.get(url, auth=ACTINIA_AUTH)
 
-pprint(response.json().get('process_results'))
+pprint(response.json())
 ```
 
 Now let's get extra information about a specific mapset `PERMANENT`.
@@ -220,10 +227,10 @@ flowchart LR
 
 ```{python}
 mapset_id = 'PERMANENT'
-location_id = 'nc_spm_08_grass7'
+location_id = 'nc_spm_08'
 url = f"{ACTINIA_URL}/locations/{location_id}/mapsets/{mapset_id}/info"
 
-response = requests.get( url, auth=ACTINIA_AUTH)
+response = requests.get(url, auth=ACTINIA_AUTH)
 
 pprint(response.json().get('process_results'))
 ```
@@ -244,13 +251,13 @@ flowchart LR
 ```
 
 ```{python}
-mapset_id = 'PERMANENT'
-location_id = 'nc_spm_08_grass7'
+mapset_id = "PERMANENT"
+location_id = "nc_spm_08"
 url = f"{ACTINIA_URL}/locations/{location_id}/mapsets/{mapset_id}/raster_layers"
 
-response = requests.get( url, auth=ACTINIA_AUTH)
+response = requests.get(url, auth=ACTINIA_AUTH)
 
-pprint(response.json().get('process_results'))
+pprint(response)
 ```
 
 #### Vector Layers
@@ -266,13 +273,13 @@ flowchart LR
 
 ```{python}
 mapset_id = 'PERMANENT'
-location_id = 'nc_spm_08_grass7'
+location_id = 'nc_spm_08'
 url = f"{ACTINIA_URL}/locations/{location_id}/mapsets/{mapset_id}/vector_layers"
 
 payload = {}
 headers = {}
 
-response = requests.get( url, auth=ACTINIA_AUTH, headers=headers)
+response = requests.get(url, auth=ACTINIA_AUTH, headers=headers)
 
 pprint(response.json().get('process_results'))
 ```
@@ -294,12 +301,12 @@ flowchart LR
 
 ```{python}
 mapset_id = 'PERMANENT'
-location_id = 'nc_spm_08_grass7'
+location_id = 'nc_spm_08'
 url = f"{ACTINIA_URL}/locations/{location_id}/mapsets/{mapset_id}/processing"
 
 data = {}
 
-response = requests.post( url, auth=ACTINIA_AUTH, json=data)
+response = requests.post(url, auth=ACTINIA_AUTH, json=data)
 
 pprint(response.json().get('process_results'))
 ```
@@ -317,12 +324,12 @@ flowchart LR
 
 ```{python}
 mapset_id = 'PERMANENT'
-location_id = 'nc_spm_08_grass7'
+location_id = 'nc_spm_08'
 url = f"{ACTINIA_URL}/locations/{location_id}/mapsets/{mapset_id}/processing_async"
 
 data = {}
 
-response = requests.post( url, auth=ACTINIA_AUTH, json=data)
+response = requests.post(url, auth=ACTINIA_AUTH, json=data)
 
 pprint(response.json().get('process_results'))
 ```
