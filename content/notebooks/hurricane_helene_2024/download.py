@@ -9,7 +9,7 @@ def download_image(url, save_path):
     try:
         response = requests.get(url)
         response.raise_for_status()  # Check for HTTP errors
-        with open(save_path, 'wb') as file:
+        with open(save_path, "wb") as file:
             file.write(response.content)
         print(f"Downloaded {url} to {save_path}")
     except requests.RequestException as e:

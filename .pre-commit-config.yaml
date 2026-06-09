@@ -1,0 +1,53 @@
+# See https://pre-commit.com for usage. Install with:
+#   uvx pre-commit install
+# Run on all files with:
+#   uvx pre-commit run --all-files
+#
+# This is a Quarto content repo: most files are generated (docs/, _freeze/,
+# *_files/libs/, .jupyter_cache/) or authored teaching notebooks. Hooks are
+# scoped to hand-written source so they do not churn generated assets.
+exclude: |
+  (?x)^(
+    docs/|
+    _freeze/|
+    \.venv/|
+    \.quarto/|
+    _extensions/|
+    content/.*_files/|
+    content/.*\.jupyter_cache/|
+    .*\.min\.(js|css)$
+  )
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      # Modifying hooks: restrict to Python source to avoid churning content.
+      - id: trailing-whitespace
+        files: \.py$
+      - id: end-of-file-fixer
+        files: \.py$
+      # Non-modifying checks: safe to run broadly.
+      - id: check-yaml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.16
+    hooks:
+      # Lint and format .py source only (not .ipynb teaching notebooks).
+      - id: ruff
+        types_or: [python]
+        args: [--fix]
+      - id: ruff-format
+        types_or: [python]
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.12
+    hooks:
+      - id: actionlint
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
