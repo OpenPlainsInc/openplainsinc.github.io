@@ -878,6 +878,7 @@ gs.run_command(
     extent="region",
     nprocs=16,
     flags="d",
+    overwrite=True,
 )
 ```
 
@@ -897,7 +898,8 @@ t.stac.item \
   resolution_value="10" \
   extent="region" \
   nprocs=1 \
-  -d
+  -d \
+  --overwrite
 ```
 
 :::
