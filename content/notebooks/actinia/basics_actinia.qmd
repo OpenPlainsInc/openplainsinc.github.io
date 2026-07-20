@@ -26,7 +26,6 @@ format:
 author: "Corey T. White"
 date: "2025-05-06"
 date-modified: today
-keep-ipynb: true
 toc: true
 toc-depth: 4
 image: ../../images/logos/actinia/actinia_logo.svg
@@ -345,5 +344,5 @@ https://localhost:8080/api/v3/swagger-ui/index.html
 
 ### Process Chains
 
-Let move on to creating process chains in [Part 3](./process_chains.ipynb).
+Let move on to creating process chains in [Part 3](../../workshops/foss4gna_2024/process_chains.ipynb).
 
