@@ -33,10 +33,10 @@ image: ../../images/logos/actinia/actinia_logo.svg
 categories:
   - geospatial
   - actinia
-  - GRASS v8.5
+  - grass
   - jupyter
   - lidar
-  - STAC
+  - stac
 page-layout: full
 title-block-banner: true
 jupyter: python3

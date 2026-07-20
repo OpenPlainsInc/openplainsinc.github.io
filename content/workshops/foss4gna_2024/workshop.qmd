@@ -3,9 +3,10 @@ format: html
 author: 
     - Corey T. White
     - Vaclav Petras
-title: Developing web-application with GRASS GIS 
+title: Developing web-application with GRASS GIS
 subtitle: FOSS4G NA 2024, St. Louis Missouri
-date: September 8, 2024
+description: Learn how to create geospatial web applications using GRASS, actinia, and OpenPlains in this FOSS4G NA 2024 workshop.
+date: "2024-09-08"
 categories: [workshop, foss4gna, webdev, grass]
 page-layout: full
 image:  images/webinar_title.webp
