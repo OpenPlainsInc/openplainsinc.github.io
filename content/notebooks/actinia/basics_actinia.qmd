@@ -49,7 +49,7 @@ execute:
   freeze: true
 ---
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/OpenPlainsInc/openplainsinc.github.io/blob/main/content/notebooks/actinia/basics_actinia.ipynb)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/OpenPlainsInc/openplainsinc.github.io/blob/main/content/notebooks/actinia/_basics_actinia.ipynb)
 
 ## A REST API for GRASS GIS
 

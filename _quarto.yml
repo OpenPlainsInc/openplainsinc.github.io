@@ -37,6 +37,8 @@ website:
         href: content/notebooks/index.qmd
       - text: "Workshops"
         href: content/workshops/index.qmd
+      - text: "Blog"
+        href: content/blog/index.qmd
       - text: "Talks"
         href: content/presentations/index.qmd
 

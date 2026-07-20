@@ -58,15 +58,16 @@ companion of the tutorial:
 ```
 
 Replace `<PATH_TO_IPYNB>` with the repo-relative path to the notebook
-(e.g. `content/notebooks/stac_tutorial/t_stac_tutorial.ipynb`).
+(e.g. `content/notebooks/stac_tutorial/_t_stac_tutorial.ipynb`).
 
 The badge only resolves if the notebook is **committed to the repo** — Colab
 fetches it from GitHub, not from the rendered site. Generate it from the qmd
-and commit it alongside:
+and commit it alongside, using an underscore-prefixed filename so Quarto does
+not render it as a duplicate page or include it in listings:
 
 ```bash
-quarto convert content/notebooks/<dir>/<name>.qmd   # writes <name>.ipynb
-git add content/notebooks/<dir>/<name>.ipynb
+quarto convert content/notebooks/<dir>/<name>.qmd --output content/notebooks/<dir>/_<name>.ipynb
+git add content/notebooks/<dir>/_<name>.ipynb
 ```
 
 Re-run the conversion and re-commit whenever the tutorial's code cells change.
