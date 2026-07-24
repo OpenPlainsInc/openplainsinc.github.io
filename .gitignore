@@ -170,3 +170,6 @@ grassdata/
 **/*.quarto_ipynb*
 
 **/*.quarto_ipynb
+
+# private Claude context
+CLAUDE.local.md
