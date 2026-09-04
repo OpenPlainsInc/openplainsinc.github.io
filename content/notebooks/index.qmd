@@ -6,6 +6,7 @@ listing:
         - hurricane_helene_2024/
         - us_doi/
         - stac_tutorial/
+        - watershed_analysis/
     sort: "date desc"
     type: default
     categories: true

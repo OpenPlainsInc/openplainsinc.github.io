@@ -1,0 +1,985 @@
+---
+title: "Watershed analysis with r.watershed"
+description: "A long-form guide to flow routing, accumulation, thresholds, and basin delineation in GRASS, including the parameters that quietly change the science and the questions r.watershed cannot answer."
+author: "Corey T. White"
+date: "2026-09-03"
+date-modified: today
+image: images/cover.png
+categories: [grass, hydrology, terrain, watershed, tutorial]
+draft: false
+
+page-layout: full
+title-block-banner: true
+
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    code-copy: true
+    code-fold: false
+    code-tools: true
+    lightbox: true
+    other-links:
+      - text: r.watershed manual
+        href: https://grass.osgeo.org/grass-stable/manuals/r.watershed.html
+      - text: GRASS sample data
+        href: https://grass.osgeo.org/download/data/
+
+engine: jupyter
+jupyter: python3
+
+execute:
+  enabled: true
+  eval: true
+  freeze: true
+  cache: false
+  keep-ipynb: false
+---
+
+## Why this guide exists
+
+Terrain-based watershed delineation is one of the first things people run in a GIS
+and one of the last things they read the documentation for. The workflow is short
+enough to copy from a blog post: hand a digital elevation model to a flow routing
+tool, pick a threshold, get streams and basins. It runs in seconds, it returns a
+map that looks authoritative, and almost nothing about the result announces which
+of your choices produced it.
+
+This guide walks the whole workflow in GRASS using
+[`r.watershed`](https://grass.osgeo.org/grass-stable/manuals/r.watershed.html),
+and spends most of its length on the parts that change the answer:
+
+- the computational region, which is a model parameter here and not a display setting,
+- the difference between a NULL gap and a depression, which must be handled in
+  opposite ways,
+- `threshold`, which is counted in cells and therefore depends on resolution,
+- the flow routing method, multiple flow direction by default and single flow with a flag,
+- the sign of the accumulation raster, which is a warning and not a rendering nuisance.
+
+Everything below runs on your own machine with a package-manager install of GRASS
+and the free North Carolina sample dataset. Nothing here needs an account, a
+cloud service, or a network connection past the one download.
+
+::: {.callout-note}
+## Who this is for
+
+You know what a watershed is and you have run a flow accumulation tool before,
+possibly in another package. You have not necessarily used GRASS. If you have
+never opened GRASS at all, the
+[first-time users page](https://grass.osgeo.org/learn/newcomers/) is a better
+starting point, then come back.
+:::
+
+## Data and tools
+
+### Dataset
+
+| Item | Value |
+|------|-------|
+| Name | North Carolina sample dataset, `nc_spm_08_grass7` |
+| Map used | `elevation`, a 10 m bare-earth DEM covering part of Wake County, North Carolina, USA |
+| CRS | NC State Plane Meters, NAD83 (EPSG:3358) |
+| Source | Published by the GRASS project as an OSGeo sample dataset for research, development and education. The dataset's `CREDITS.txt` credits the North Carolina Center for Geographic Information and Analysis, Wake County GIS, the NC State Climate Office, NC Department of Transportation, USGS, and NASA, and names Helena Mitasova and Markus Neteler as the compilers (August 2007). |
+| Terms | No separate licence file ships with the archive and the download page states no licence text. Treat it as public agency data redistributed for research, development, and education, and credit the compilers and the agencies above when you publish from it. |
+| Download | <https://grass.osgeo.org/sampledata/north_carolina/nc_spm_08_grass7.zip> (about 148 MB) |
+| Accessed | 2026-09-03 |
+
+### Tools
+
+Every non-obvious module used below, with the authorship recorded in the module's
+own manual page. Citing the people who wrote the algorithm is cheap and it is the
+norm in this community.
+
+| Module | What it does here | Authors (from the module manual) |
+|--------|-------------------|----------------------------------|
+| [`r.watershed`](https://grass.osgeo.org/grass-stable/manuals/r.watershed.html) | Flow direction, flow accumulation, streams, basins | Original version: Charles Ehlschlaeger, U.S. Army Construction Engineering Research Laboratory. Faster sorting algorithm and MFD support: Markus Metz. Retention for flow distribution: Andreas Gericke, IGB Berlin |
+| [`r.fillnulls`](https://grass.osgeo.org/grass-stable/manuals/r.fillnulls.html) | Interpolates across NULL gaps in the DEM | Markus Neteler, University of Hannover and Fondazione Edmund Mach; improvement by Hamish Bowman |
+| [`r.water.outlet`](https://grass.osgeo.org/grass-stable/manuals/r.water.outlet.html) | Delineates the basin draining to one point | Charles Ehlschlaeger, U.S. Army Construction Engineering Research Laboratory |
+| [`r.thin`](https://grass.osgeo.org/grass-stable/manuals/r.thin.html) | Thins the raster stream network before vectorizing | Olga Waupotitsch, USACERL; bounding box and I/O code by Mike Baba (DBA Systems) and Jean Ezell (USACERL) |
+| [`r.to.vect`](https://grass.osgeo.org/grass-stable/manuals/r.to.vect.html) | Converts rasters to vector lines and areas | Point support: Bill Brown. Line support: Mike Baba, DBA Systems. Area support after `r.poly` by Jean Ezell and Andrew Heekin (USACERL), smoothed lines by David Satnik, updated by Andrea Aime, merged and updated by Radim Blazek |
+| [`r.relief`](https://grass.osgeo.org/grass-stable/manuals/r.relief.html) | Shaded relief for the figures | Jim Westervelt, USACERL; fast C version by Markus Metz |
+| [`r.mapcalc`](https://grass.osgeo.org/grass-stable/manuals/r.mapcalc.html) | Raster algebra | Michael Shapiro, USACERL; Glynn Clements |
+| [`g.region`](https://grass.osgeo.org/grass-stable/manuals/g.region.html) | Sets the computational region | Michael Shapiro, USACERL |
+
+### Versions
+
+The exact software this page was rendered against is printed by the code below, so
+the numbers in the output are attributable to a specific build rather than to
+"GRASS" in the abstract.
+
+```{python}
+# | label: versions
+import subprocess
+import sys
+from pathlib import Path
+
+# Ask GRASS where its Python package lives and put it on the path.
+sys.path.append(
+    subprocess.check_output(["grass", "--config", "python_path"], text=True).strip()
+)
+
+import grass.script as gs  # noqa: E402
+import grass.jupyter as gj  # noqa: E402
+
+print(subprocess.check_output(["grass", "--version"], text=True).splitlines()[0])
+print("Python", sys.version.split()[0])
+```
+
+## Get the sample dataset
+
+The cell below downloads and unpacks the North Carolina dataset if it is not
+already on disk. It is idempotent: if you already have `nc_spm_08_grass7` under
+`~/grassdata`, nothing is downloaded.
+
+```{python}
+# | label: sample-data
+import zipfile
+import urllib.request
+
+GRASSDATA = Path.home() / "grassdata"
+PROJECT = GRASSDATA / "nc_spm_08_grass7"
+URL = "https://grass.osgeo.org/sampledata/north_carolina/nc_spm_08_grass7.zip"
+
+if not PROJECT.exists():
+    GRASSDATA.mkdir(parents=True, exist_ok=True)
+    archive = GRASSDATA / "nc_spm_08_grass7.zip"
+    print(f"Downloading {URL} (about 148 MB)")
+    urllib.request.urlretrieve(URL, archive)
+    with zipfile.ZipFile(archive) as zf:
+        zf.extractall(GRASSDATA)
+    archive.unlink()
+
+print("Project:", Path("~") / PROJECT.relative_to(Path.home()))
+print("PERMANENT mapset present:", (PROJECT / "PERMANENT").is_dir())
+```
+
+Start a session in the project and switch to a dedicated mapset. Writing results
+into their own mapset keeps `PERMANENT` clean, which matters more than it sounds:
+`PERMANENT` holds the project definition and the reference data, and a tutorial
+that scribbles on it is a tutorial you cannot rerun from a known state.
+
+```{python}
+# | label: session
+session = gj.init(PROJECT / "PERMANENT")
+
+existing = gs.read_command("g.mapsets", flags="l").split()
+if "watershed" in existing:
+    gs.run_command("g.mapset", mapset="watershed")
+else:
+    gs.run_command("g.mapset", mapset="watershed", flags="c")
+
+print(gs.read_command("g.mapset", flags="p").strip())
+```
+
+## The computational region is a model parameter
+
+In GRASS, raster operations run over the computational region: an extent plus a
+cell size, held separately from any particular map. Set it once and every raster
+module reads and writes at that resolution.
+
+That is the piece people coming from other tools miss. Here the region is not a
+zoom level or a display preference. It is the grid the model runs on, and
+`r.watershed` counts cells, so the region resolution enters the science directly.
+
+```{python}
+# | label: region
+gs.run_command("g.region", raster="elevation@PERMANENT")
+region = gs.region()
+
+print(f"resolution: {region['nsres']:.0f} m")
+print(f"grid:       {region['rows']} rows x {region['cols']} cols")
+print(f"cells:      {int(region['cells']):,}")
+print(f"extent:     {(region['e'] - region['w']) / 1000:.1f} km east-west, "
+      f"{(region['n'] - region['s']) / 1000:.1f} km north-south")
+
+cell_area_m2 = region["nsres"] * region["ewres"]
+print(f"cell area:  {cell_area_m2:.0f} m2")
+```
+
+Hold on to that cell area. Every cell count that comes out of `r.watershed`,
+accumulation values and the `threshold` you supply alike, converts to ground area
+by multiplying by it, and by nothing else.
+
+## Two kinds of hole, handled in opposite ways
+
+This is the single most common mistake in terrain hydrology, and it is a mistake
+of conflation rather than of technique. A DEM can have two very different kinds of
+problem area, and the correct treatment of one is the wrong treatment of the other.
+
+### NULL gaps must be filled
+
+A NULL cell is missing data: a void in a lidar-derived surface, a hole left by a
+cloud mask, a region clipped away by a data provider. `r.watershed` treats NULL
+cells as if they were outside the region. Water flows into a gap and never comes
+out, so a gap inside your area of interest truncates every flow path that reaches
+it and drags the accumulation values downstream to nonsense.
+
+The manual is direct about this: gaps in the elevation map located within the area
+of interest must be filled beforehand, for example with `r.fillnulls`.
+
+Punch a 250 m hole in a copy of the DEM, on the main channel, and read the
+accumulation at a point downstream of it. The reading point is a cell on the trunk
+stream near the southern edge of the region; the section on outlets below shows
+how it was found.
+
+```{python}
+# | label: null-gap
+CHECKPOINT = (640515, 215215)  # a cell on the trunk stream, downstream of the hole
+
+
+def accumulation_at(raster, coordinates):
+    """Read one accumulation value, in cells, at a coordinate pair."""
+    line = gs.read_command(
+        "r.what", map=raster, coordinates=coordinates, separator=",", quiet=True
+    ).strip()
+    return float(line.split(",")[-1])
+
+
+# The reference run: the elevation map exactly as it ships.
+gs.run_command(
+    "r.watershed",
+    elevation="elevation@PERMANENT",
+    threshold=10000,
+    accumulation="accum_clean",
+    overwrite=True,
+    quiet=True,
+)
+
+# The same map with a circular void punched into the channel.
+gs.mapcalc(
+    "elev_gap = if("
+    "  sqrt((x() - 638700)^2 + (y() - 218200)^2) < 250,"
+    "  null(),"
+    "  elevation@PERMANENT)",
+    overwrite=True,
+)
+gs.run_command(
+    "r.watershed",
+    elevation="elev_gap",
+    threshold=10000,
+    accumulation="accum_gap",
+    overwrite=True,
+    quiet=True,
+)
+
+voids = int(gs.parse_command("r.univar", map="elev_gap", flags="g")["null_cells"])
+print(f"NULL cells punched into the DEM: {voids:,}")
+print(f"accumulation downstream, clean DEM:  {accumulation_at('accum_clean', CHECKPOINT):>12,.0f}")
+print(f"accumulation downstream, gapped DEM: {accumulation_at('accum_gap', CHECKPOINT):>12,.0f}")
+```
+
+Two thousand missing cells, a tenth of a percent of the region, and the
+contributing area three and a half kilometres downstream is no longer a third of
+a million cells. It is negative, which is the module's way of saying the number is
+an undercount of unknown size. Water flowed into the void and never came out.
+
+Repair the surface with `r.fillnulls` and rerun. `r.fillnulls` interpolates across
+the void with a spline fitted to the surrounding cells. That is an estimate and
+should be treated as one, but an estimated surface routes water and a void does
+not.
+
+```{python}
+# | label: fillnulls
+gs.run_command(
+    "r.fillnulls",
+    input="elev_gap",
+    output="elev_filled",
+    method="bilinear",
+    overwrite=True,
+    quiet=True,
+)
+gs.run_command(
+    "r.watershed",
+    elevation="elev_filled",
+    threshold=10000,
+    accumulation="accum_filled",
+    overwrite=True,
+    quiet=True,
+)
+
+filled = int(gs.parse_command("r.univar", map="elev_filled", flags="g")["null_cells"])
+print(f"NULL cells after r.fillnulls: {filled:,}")
+print(f"accumulation downstream, repaired DEM: {accumulation_at('accum_filled', CHECKPOINT):,.0f}")
+```
+
+The downstream value is back where it started. That is the whole argument for
+filling gaps: not that the interpolated elevations are right, but that a routed
+surface with an estimate in it is worth more than a routed surface with a hole in
+it.
+
+### Depressions must not be filled
+
+A depression is different. It is a closed low point in the surface: sometimes a
+real one, a sinkhole, a playa, a quarry, a stormwater basin, and very often an
+artifact of measurement noise on ground whose true relief is smaller than the
+vertical error of the sensor.
+
+The reflex imported from other software is to fill depressions before routing:
+raise every pit until water spills over its lowest rim, repeat until nothing is
+trapped. Two things happen when you do that. You have edited your measurements to
+satisfy an assumption of the algorithm, and you have manufactured flat areas,
+sometimes very large ones across a floodplain. Flat means no steepest descent, so
+the software falls back on a tie-breaking rule, and the suspiciously straight
+parallel channels you have seen in filled-DEM output are that rule showing
+through.
+
+`r.watershed` does not need any of it. It uses an A^T least-cost search after
+Ehlschlaeger (1989): cells are processed in elevation order, so by the time the
+algorithm reaches a cell it already knows the cheapest route out of everything
+below it, and it routes flow through the depression by cost rather than filling
+it. The manual states the consequence in one sentence: the elevation map need not
+be sink-filled because the module uses a least-cost algorithm.
+
+::: {.callout-important}
+## Fill the gaps, not the sinks
+
+`r.fillnulls` for NULL gaps: yes, always, before routing.
+
+Sink filling, including `r.fill.dir`, before `r.watershed`: no. It destroys real
+topography, invents flat surfaces, and buys you nothing the least-cost search does
+not already handle. `r.fill.dir` exists for workflows built around tools that do
+require a depressionless surface, which `r.watershed` is not.
+:::
+
+The routing does have a limit worth stating plainly. It removes the artifacts that
+filling introduces, but it cannot tell a real closed depression from a measurement
+error, and it routes through both. If genuine depressions matter to your problem,
+supply them explicitly with the `depression=` option, where every non-NULL,
+non-zero cell is treated as a real depression that water enters and does not
+leave. Nothing in the module will find them for you.
+
+Clean up the demonstration maps so the rest of the guide runs on the real surface.
+
+```{python}
+# | label: cleanup-gap
+gs.run_command(
+    "g.remove",
+    type="raster",
+    name="elev_gap,accum_gap,elev_filled,accum_filled,accum_clean",
+    flags="f",
+    quiet=True,
+)
+```
+
+## The main run
+
+With the region set and the surface understood, the analysis itself is one call.
+
+```{python}
+# | label: watershed-run
+import time
+
+THRESHOLD = 10000
+
+start = time.perf_counter()
+gs.run_command(
+    "r.watershed",
+    elevation="elevation@PERMANENT",
+    threshold=THRESHOLD,
+    accumulation="accum",
+    drainage="drainage",
+    stream="streams",
+    basin="basins",
+    convergence=5,
+    overwrite=True,
+)
+elapsed = time.perf_counter() - start
+
+print(f"threshold: {THRESHOLD:,} cells "
+      f"= {THRESHOLD * cell_area_m2 / 1e6:.2f} km2 at this resolution")
+print(f"runtime:   {elapsed:.1f} s for {int(region['cells']):,} cells")
+```
+
+Four rasters come back and they are all views of the same routing:
+
+- `drainage`, the direction each cell sends its water, numbered 1 to 8
+  counter-clockwise from north-east,
+- `accum`, the number of cells draining through each cell,
+- `streams`, the cells whose accumulation crossed the threshold,
+- `basins`, the set of cells sharing an exit.
+
+Basins and streams are numbered consistently, so basin 42 drains through stream
+segment 42 and you can join the two without a spatial operation.
+
+```{python}
+# | label: map-overview
+gs.run_command("r.relief", input="elevation@PERMANENT", output="relief",
+               overwrite=True, quiet=True)
+gs.run_command("r.colors", map="basins", color="bgyr", quiet=True)
+
+overview = gj.Map(width=760, use_region=True)
+overview.d_shade(shade="relief", color="basins", brighten=40)
+overview.d_rast(map="streams", values="1-100000")
+overview.d_barscale(at=(4, 6))
+overview.show()
+```
+
+```{python}
+# | label: cover
+# | echo: false
+# | output: false
+# Listing thumbnail for this page.
+Path("images").mkdir(exist_ok=True)
+cover = gj.Map(width=520, filename="images/cover.png", use_region=True)
+cover.d_shade(shade="relief", color="basins", brighten=40)
+cover.d_rast(map="streams", values="1-100000")
+```
+
+### Multiple flow direction is the default
+
+`r.watershed` distributes each cell's flow among all its downslope neighbours,
+weighted by slope, and includes the least-cost path in that distribution. That is
+multiple flow direction, MFD, and it is on by default. The `convergence`
+parameter, 1 to 10, controls how tightly the split pulls back together: lower
+values spread flow across hillslopes, higher values drive it toward a single path.
+The module's default and its documented recommendation are both 5, after Holmgren
+(1994).
+
+Single flow direction, the familiar D8, is available with the `-s` flag.
+
+```{python}
+# | label: sfd
+gs.run_command(
+    "r.watershed",
+    elevation="elevation@PERMANENT",
+    threshold=THRESHOLD,
+    accumulation="accum_sfd",
+    stream="streams_sfd",
+    flags="s",
+    overwrite=True,
+    quiet=True,
+)
+
+mfd_stats = gs.parse_command("r.univar", map="accum", flags="g")
+sfd_stats = gs.parse_command("r.univar", map="accum_sfd", flags="g")
+
+print(f"{'':22s}{'MFD':>16s}{'SFD (-s)':>16s}")
+for label, key in [("max accumulation", "max"), ("mean of |accumulation|", "mean_of_abs")]:
+    print(f"{label:22s}{float(mfd_stats[key]):>16,.0f}{float(sfd_stats[key]):>16,.0f}")
+```
+
+Which one you want depends on what the output feeds. Single flow gives clean,
+one-cell-wide channels, which is what you need if the network is going to be
+thinned and vectorized. Multiple flow gives more defensible upslope area on
+divergent terrain, alluvial fans and broad convex hillslopes, and is what you want
+when accumulation is an input to a wetness, erosion, or stream power index. The
+`tci` and `spi` outputs of `r.watershed` are computed from that same routing.
+
+## Read the accumulation raster correctly
+
+Here is the detail that most tutorials skip and most downstream analyses get
+wrong. The accumulation raster is signed.
+
+```{python}
+# | label: accum-sign
+stats = gs.parse_command("r.univar", map="accum", flags="g")
+print(f"min:  {float(stats['min']):>14,.0f}")
+print(f"max:  {float(stats['max']):>14,.0f}")
+print(f"mean of absolute values: {float(stats['mean_of_abs']):,.1f}")
+
+gs.mapcalc("underestimated = if(accum < 0, 1, null())", overwrite=True)
+neg = gs.parse_command("r.univar", map="underestimated", flags="g")
+share = int(neg["n"]) / int(region["cells"]) * 100
+print(f"\ncells with negative accumulation: {int(neg['n']):,} ({share:.1f}% of the region)")
+```
+
+A negative value means the cell may receive flow from outside the current
+computational region. The magnitude is what the module could see. The sign is the
+module telling you the total is a floor, not a measurement.
+
+This has three practical consequences.
+
+**Take the absolute value before you scale or symbolize.** A colour ramp stretched
+over the raw range is dominated by the largest negative values and shows you
+almost nothing about the positive ones. Use `abs()` in `r.mapcalc`, or the `-a`
+flag on `r.watershed`, which forces positive accumulation even for likely
+underestimates. Both are fine for display. Neither makes the underlying number
+correct.
+
+**Do not read negative magnitudes as contributing area.** They are undercounts of
+an unknown amount. Turning them positive to make a map render and then quoting the
+value as a drainage area is the most common way to get a confidently wrong number
+out of this tool.
+
+**Use the sign as a diagnostic.** The manual suggests exactly this: intersect the
+negative cells with the basin map to see which basins are compromised.
+
+```{python}
+# | label: problem-basins
+gs.mapcalc("problem_basins = if(accum < 0, basins, null())", overwrite=True)
+
+all_basins = gs.parse_command("r.info", map="basins", flags="r")
+affected = gs.read_command("r.stats", input="problem_basins", flags="n", quiet=True)
+affected_ids = {line.split()[0] for line in affected.strip().splitlines() if line.strip()}
+
+print(f"basin values present: 2 to {all_basins['max']}")
+print(f"basins touched by flow from outside the region: {len(affected_ids)}")
+```
+
+If those basins are the ones you care about, the fix is not a parameter. Enlarge
+the computational region until the whole contributing area is inside it, rerun,
+and clip afterwards. For a headwater catchment the analysis extent and the area of
+interest are the same box. For anything on a mainstem they are not, and the buffer
+you need can be far larger than the site.
+
+```{python}
+# | label: map-accumulation
+gs.mapcalc("accum_abs = abs(accum)", overwrite=True)
+gs.run_command("r.colors", map="accum_abs", color="water", flags="g", quiet=True)
+
+acc_map = gj.Map(width=760, use_region=True)
+acc_map.d_shade(shade="relief", color="accum_abs", brighten=30)
+acc_map.d_barscale(at=(4, 6))
+acc_map.show()
+```
+
+## The threshold is a decision, not a discovery
+
+Nothing in an elevation raster says where a stream begins. `threshold` is you
+saying it: the minimum size of an exterior basin, counted in cells when no `flow`
+map is supplied, and with it the level of detail in the stream network.
+
+Run the same DEM at two thresholds and measure the difference.
+
+```{python}
+# | label: threshold-sweep
+import math
+
+def network_summary(threshold, suffix):
+    """Run r.watershed at one threshold and summarize the network it produces."""
+    gs.run_command(
+        "r.watershed",
+        elevation="elevation@PERMANENT",
+        threshold=threshold,
+        stream=f"streams_{suffix}",
+        basin=f"basins_{suffix}",
+        overwrite=True,
+        quiet=True,
+    )
+    stream_cells = int(gs.parse_command("r.univar", map=f"streams_{suffix}", flags="g")["n"])
+    basin_max = int(gs.parse_command("r.info", map=f"basins_{suffix}", flags="r")["max"])
+    # r.watershed labels basins with even integers, so the count is half the maximum.
+    basin_count = basin_max // 2
+    area_km2 = int(region["cells"]) * cell_area_m2 / 1e6
+    # Approximate channel length: cell count times cell size, ignoring diagonal steps.
+    length_km = stream_cells * region["nsres"] / 1000
+    return {
+        "threshold": threshold,
+        "min basin km2": threshold * cell_area_m2 / 1e6,
+        "basins": basin_count,
+        "stream cells": stream_cells,
+        "drainage density km/km2": length_km / area_km2,
+    }
+
+rows = [network_summary(10000, "10k"), network_summary(500, "500")]
+
+header = list(rows[0])
+print("".join(f"{h:>24s}" for h in header))
+for row in rows:
+    print("".join(
+        f"{row[h]:>24,.2f}" if isinstance(row[h], float) else f"{row[h]:>24,}"
+        for h in header
+    ))
+```
+
+Both runs completed without error, took about the same time, and produced maps
+that look equally authoritative. The basin count differs by a factor of nearly
+twenty and the drainage density by more than four, and so does every per-basin
+statistic you would compute afterward. Neither run is wrong. They answer different
+questions, and only you know which question you asked.
+
+```{python}
+# | label: map-threshold
+gs.run_command("r.colors", map="basins_10k", color="bgyr", quiet=True)
+gs.run_command("r.colors", map="basins_500", color="bgyr", quiet=True)
+
+coarse = gj.Map(width=400, use_region=True)
+coarse.d_shade(shade="relief", color="basins_10k", brighten=40)
+coarse.d_text(text="threshold = 10000", at=(4, 94), size=5, color="black")
+coarse.show()
+
+fine = gj.Map(width=400, use_region=True)
+fine.d_shade(shade="relief", color="basins_500", brighten=40)
+fine.d_text(text="threshold = 500", at=(4, 94), size=5, color="black")
+fine.show()
+```
+
+There is no correct threshold in general. There are defensible ones for a purpose:
+matched to the drainage density of a mapped reference network in the same
+physiographic region, matched to field-verified channel heads, or matched to
+whatever the downstream analysis assumes about basin size. If the number came from
+a tutorial, including this one, say so in your methods.
+
+::: {.callout-tip}
+## The first question about any terrain-derived stream network
+
+It is not whether the network is accurate. It is what threshold produced it. Two
+networks over the same DEM can look nothing alike and both be correct.
+:::
+
+### Exterior and interior basins are not the same thing
+
+`threshold` sets the minimum size of an *exterior* basin: a basin whose stream has
+at least that many cells flowing into it, which in practice means a headwater
+basin. Interior basins are the strips between two junctions, and their size is set
+by how far apart those junctions happen to fall, which you did not choose. Expect
+a basin map with tidy headwater polygons and a few long awkward ones lower down,
+and do not read anything into the contrast.
+
+The `half_basin` output splits each basin along its stream into left-bank and
+right-bank halves, with right-hand cells taking even values matching `basin` and
+left-hand cells taking the odd value one below. It is more useful than it sounds
+when aspect matters, because the two banks of a creek can face opposite directions
+and behave like different hillslopes.
+
+## Resolution changes the science, silently
+
+`threshold` is counted in cells. The region resolution converts cells to ground
+area. Change the resolution and keep the threshold and you have changed the model
+without touching the parameter you thought controlled it.
+
+```{python}
+# | label: resolution
+def run_at_resolution(res, suffix):
+    gs.run_command("g.region", raster="elevation@PERMANENT", res=res, flags="a")
+    reg = gs.region()
+    gs.run_command(
+        "r.watershed",
+        elevation="elevation@PERMANENT",
+        threshold=10000,
+        stream=f"streams_res{suffix}",
+        basin=f"basins_res{suffix}",
+        overwrite=True,
+        quiet=True,
+    )
+    basin_max = int(gs.parse_command("r.info", map=f"basins_res{suffix}", flags="r")["max"])
+    stream_cells = int(
+        gs.parse_command("r.univar", map=f"streams_res{suffix}", flags="g")["n"]
+    )
+    return {
+        "resolution m": int(reg["nsres"]),
+        "cells in region": int(reg["cells"]),
+        "10000 cells = km2": 10000 * reg["nsres"] * reg["ewres"] / 1e6,
+        "basins": basin_max // 2,
+        "stream cells": stream_cells,
+    }
+
+res_rows = [run_at_resolution(10, "10"), run_at_resolution(30, "30")]
+
+# Put the region back where it was.
+gs.run_command("g.region", raster="elevation@PERMANENT")
+
+header = list(res_rows[0])
+print("".join(f"{h:>22s}" for h in header))
+for row in res_rows:
+    print("".join(
+        f"{row[h]:>22,.2f}" if isinstance(row[h], float) else f"{row[h]:>22,}"
+        for h in header
+    ))
+```
+
+Same DEM, same `threshold=10000`, two different minimum basin sizes and two
+different networks. Nothing in the call changed. This is the strongest argument
+for writing the region settings into your methods section next to the parameters,
+and for setting the region explicitly at the top of every script rather than
+inheriting whatever the last command left behind.
+
+Resolution also decides what can exist at all. At 30 m a 4 m incised swale is not
+rendered coarsely, it is absent, and so is the flow path through it. At 1 m you
+resolve the channel, and also the curb, the berm, the parked vehicle, and the
+bridge deck, which is not unambiguously good news: fine lidar produces far more
+spurious depressions, far more compute, and it turns structures water passes under
+into barriers the model cannot pass. Channel length in particular is a function of
+cell size and is not comparable across grids.
+
+## From rasters to vectors
+
+The stream raster vectorizes cleanly after thinning. `r.to.vect -v` preserves the
+basin identifier as the vector category, which is what makes the streams and
+basins joinable.
+
+```{python}
+# | label: vectorize
+gs.run_command("r.thin", input="streams", output="streams_thin",
+               overwrite=True, quiet=True)
+gs.run_command("r.to.vect", input="streams_thin", output="streams_vect",
+               type="line", flags="v", overwrite=True, quiet=True)
+gs.run_command("r.to.vect", input="basins", output="basins_vect",
+               type="area", flags="s", overwrite=True, quiet=True)
+
+print(gs.read_command("v.info", map="streams_vect", flags="t").strip())
+print()
+print(gs.read_command("v.info", map="basins_vect", flags="t").strip())
+```
+
+### One basin above one point
+
+When you need the catchment draining to a specific location rather than the whole
+tessellation, `r.water.outlet` walks the drainage raster upstream from a
+coordinate. The outlet must sit on a stream cell, so pick it from the network you
+just computed rather than from a map click.
+
+```{python}
+# | label: outlet
+# Find the cell with the largest fully-contained contributing area.
+gs.mapcalc("accum_pos = if(accum > 0, accum, null())", overwrite=True)
+cells = gs.read_command("r.stats", input="accum_pos", flags="gn", quiet=True)
+east, north, value = max(
+    (line.split() for line in cells.strip().splitlines()),
+    key=lambda parts: float(parts[2]),
+)
+
+print(f"outlet: {east} E, {north} N")
+print(f"contributing area: {float(value):,.0f} cells "
+      f"= {float(value) * cell_area_m2 / 1e6:.1f} km2")
+
+gs.run_command(
+    "r.water.outlet",
+    input="drainage",
+    output="outlet_basin",
+    coordinates=(east, north),
+    overwrite=True,
+    quiet=True,
+)
+
+basin_cells = int(gs.parse_command("r.univar", map="outlet_basin", flags="g")["n"])
+disagreement = abs(basin_cells - float(value)) / float(value) * 100
+print(f"r.water.outlet basin: {basin_cells:,} cells "
+      f"= {basin_cells * cell_area_m2 / 1e6:.1f} km2")
+print(f"disagreement with the accumulation value: {disagreement:.2f}%")
+```
+
+The two areas are close but not identical, and the reason is instructive.
+`r.water.outlet` walks the single-direction `drainage` raster upstream and counts
+whole cells, while the accumulation value at that cell is the MFD total, which
+includes fractional contributions split across neighbours. Exact agreement is not
+expected. A disagreement of a fraction of a percent, as here, says the outlet sits
+on the channel. A disagreement of tens of percent says it does not, and the
+usual cause is an outlet coordinate picked from a basemap rather than from the
+computed stream network.
+
+```{python}
+# | label: map-outlet
+gs.run_command("r.colors", map="outlet_basin", color="grey", quiet=True)
+
+outlet_map = gj.Map(width=760, use_region=True)
+outlet_map.d_shade(shade="relief", color="outlet_basin", brighten=50)
+outlet_map.d_vect(map="streams_vect", color="30:100:180", width=1)
+outlet_map.d_barscale(at=(4, 6))
+outlet_map.show()
+```
+
+## Scaling up
+
+`r.watershed` ships as two implementations of the same algorithm. The default runs
+in memory and is fast. The `-m` flag switches to the segmented, disk-swapping
+version, which uses only as much RAM as `memory=` allows and pages the rest
+through disk files.
+
+That flag is the reason this module handles DEMs that do not fit in RAM. The
+in-memory version tops out at about 2 billion cells; the segmented version at
+9.2 billion billion. The trade is speed, and the manual is blunt that the
+segmented mode is slow.
+
+```{python}
+# | label: disk-swap
+start = time.perf_counter()
+gs.run_command(
+    "r.watershed",
+    elevation="elevation@PERMANENT",
+    threshold=THRESHOLD,
+    accumulation="accum_seg",
+    memory=500,
+    flags="m",
+    overwrite=True,
+    quiet=True,
+)
+seg_elapsed = time.perf_counter() - start
+
+print(f"in-memory: {elapsed:.1f} s")
+print(f"disk swap: {seg_elapsed:.1f} s (memory=500 MB)")
+```
+
+On two million cells the swap version is pure overhead. On a national DEM it is
+the difference between a result and an out-of-memory error. Two other levers help
+before you reach for it: mask out the area you do not need, since NULL cells are
+skipped entirely, and consider running at a coarser resolution built from
+`r.resamp.stats` minimum values rather than a plain resample, so the coarse cells
+still carry the valley floors.
+
+## Bring your own data
+
+The workflow does not change when the DEM does. What changes is that you now own
+the vertical accuracy, the surface definition, and the extent, which is where the
+real failure modes live.
+
+The cell below is not executed as part of this page, because it downloads from an
+external service that would make the page's build depend on a third party. Run it
+yourself against any GeoTIFF you have.
+
+```{python}
+# | label: byo-data
+# | eval: false
+# Import a DEM tile into a new project, then run the same analysis.
+# 1) Create a project whose CRS is read from the tile itself.
+project = Path.home() / "grassdata" / "my_watershed"
+gs.create_project(project, filename="dem.tif")
+
+# 2) Start a session and import, reprojecting if needed.
+session = gj.init(project / "PERMANENT")
+gs.run_command("r.import", input="dem.tif", output="dem", resample="bilinear")
+
+# 3) Set the region from the imported map. This fixes the model grid.
+gs.run_command("g.region", raster="dem")
+
+# 4) Fill NULL gaps, and only NULL gaps.
+gs.run_command("r.fillnulls", input="dem", output="dem_nogaps", method="bilinear")
+
+# 5) Route. Choose the threshold from the cell size, not from this page.
+gs.run_command(
+    "r.watershed",
+    elevation="dem_nogaps",
+    threshold=10000,
+    accumulation="accum",
+    drainage="drainage",
+    stream="streams",
+    basin="basins",
+)
+```
+
+Three checks before you trust the output of that run.
+
+**Was the DEM ground-classified?** A bare-earth model and a first-return surface
+model look similar in a hillshade and behave nothing alike here. On a surface
+model a wooded riparian corridor is a ridge, so the computed channel climbs out of
+the valley and runs down the hillside beside it. USGS 3DEP is bare earth. Many
+photogrammetric and radar products are not.
+
+**Is the extent bigger than the question?** Check the negative accumulation cells
+first, before anything else. If they reach into the basins you care about, the
+analysis extent is too small and no parameter will fix it.
+
+**Is the terrain steep enough to have an opinion?** Direction comes from the
+elevation difference between adjacent cells. A coastal-plain floodplain at a 0.02
+percent gradient falls about 2 mm across a 10 m cell, while the published vertical
+accuracy of national 10 m elevation data is on the order of a metre. The noise is
+two orders of magnitude larger than the fall, and whatever direction those cells
+receive did not come from the terrain. The symptoms are recognizable: channels
+that wander or braid across a floodplain, or basin boundaries that move hundreds
+of metres when you change nothing but the elevation source. What fixes it is
+different data, not a different flag.
+
+## Honest limits
+
+The rasters look more authoritative than they are. This section is the one to read
+twice.
+
+**There is no water in any of it.** No rainfall, no infiltration, no soil, no
+evaporation, no time. An accumulation of 20,000 is 20,000 upslope cells. It is not
+litres per second, it does not become litres per second without a rainfall-runoff
+model on top of it, and the size of the number does not make it a discharge. The
+`flow=` option lets you weight the accumulation by a per-cell quantity, a runoff
+coefficient or an effective rainfall depth, and that is as close as this module
+gets. It is not close: there is still no time axis, no routing velocity, and no
+storage.
+
+**It knows nothing about what was buried or built.** A DEM contains the road
+embankment and not the culvert under it, the bridge deck and not the opening
+beneath it, the parking lot and not the storm drain, the field and not the tile.
+Flow piles up against the embankment and exits somewhere no water goes. In urban
+and agricultural settings this is the single largest source of wrong answers, and
+nothing in the output flags it.
+
+**It is not a floodplain map.** No depth, no extent, no velocity, no return
+period, no hydraulics of any kind. A delineated basin tells you what area drains
+to a point. It says nothing about what happens when it rains on that area.
+
+**It carries no regulatory standing.** A terrain-derived boundary will not match
+the published hydrography, the National Hydrography Dataset and Watershed Boundary
+Dataset in the United States or your national equivalent, unless you deliberately
+make it match. A reviewer who expects the published delineation will not accept a
+different one because the terrain says so.
+
+**It cannot tell you it was wrong.** The module produces a complete,
+plausible-looking result from a bad DEM with exactly the confidence it produces
+one from a good DEM. There is no internal check on the input. The negative
+accumulation convention is the only warning it issues about anything.
+
+**Water that moves against the terrain is invisible.** Interbasin transfers,
+canals, pumped systems, reservoir releases, and diversions all move water across
+divides the surface says are closed.
+
+### Where r.watershed is the wrong tool
+
+Reaching for a different tool is not a failure of this one. The cases are specific.
+
+| If you need | Use instead |
+|-------------|-------------|
+| A stream network with explicit topology, node and link identifiers, and Strahler or Horton ordering | [`r.stream.extract`](https://grass.osgeo.org/grass-stable/manuals/r.stream.extract.html) and the `r.stream.*` addon suite. `r.watershed` gives you segments numbered to match basins, not an ordered network. |
+| Overland flow with a time axis, depth, or a rainfall event | [`r.sim.water`](https://grass.osgeo.org/grass-stable/manuals/r.sim.water.html), a path-sampling shallow-water solver, or a hydrodynamic model outside GRASS. Accumulation is not a hydrograph. |
+| Flow paths through culverts, storm drains, or tile | A hydraulic or pipe-network model, or a DEM you have burned the structures into by hand. No terrain-only method can recover them. |
+| A wetness index from a filled, depressionless surface because a downstream model requires one | [`r.fill.dir`](https://grass.osgeo.org/grass-stable/manuals/r.fill.dir.html), knowing exactly what it costs you, or [`r.topidx`](https://grass.osgeo.org/grass-stable/manuals/r.topidx.html) if the topographic index is the actual goal. |
+| A basin boundary that matches a published one | The published dataset. Terrain analysis is how you understand the boundary, not how you replace it. |
+| Massive DEMs where throughput matters more than accuracy on low slopes | [`r.terraflow`](https://grass.osgeo.org/grass-stable/manuals/r.terraflow.html), with the caveat from the `r.watershed` manual that it performs worse on flat terrain and on canopy-contaminated surfaces. |
+
+## Reproducing this page
+
+The whole guide runs from a package-manager install of GRASS and one public
+dataset. Nothing above is cached from an earlier state: the outputs shown were
+produced by executing this document, against the software versions printed at the
+top.
+
+To repeat it end to end, install GRASS, run the cells in order, and expect the
+numbers to match exactly. `r.watershed` is deterministic: the same DEM, region,
+and parameters give the same rasters every time. That is a low bar, and a great
+deal of published terrain analysis does not clear it, usually because the region
+settings were never written down.
+
+```{python}
+# | label: cleanup
+gs.run_command(
+    "g.remove",
+    type="raster",
+    name=(
+        "streams_res10,basins_res10,streams_res30,basins_res30,"
+        "accum_pos,accum_seg,underestimated,problem_basins"
+    ),
+    flags="f",
+    quiet=True,
+)
+```
+
+## References
+
+Ehlschlaeger, C. (1989). Using the A^T search algorithm to develop hydrologic
+models from digital elevation data. *Proceedings of the International Geographic
+Information Systems (IGIS) Symposium '89*, 275-281. Baltimore, MD, 18-19 March
+1989. <http://chuck.ehlschlaeger.info/older/IGIS/paper.html>
+
+Holmgren, P. (1994). Multiple flow direction algorithms for runoff modelling in
+grid based elevation models: an empirical evaluation. *Hydrological Processes*,
+8(4), 327-334. <https://doi.org/10.1002/hyp.3360080405>
+
+Kinner, D., Mitasova, H., Harmon, R., Toma, L., & Stallard, R. (2005). GIS-based
+stream network analysis for the Chagres River basin, Republic of Panama. In R.
+Harmon (Ed.), *The Rio Chagres: A Multidisciplinary Profile of a Tropical
+Watershed* (pp. 83-95). Springer.
+
+Metz, M., Mitasova, H., & Harmon, R. S. (2011). Efficient extraction of drainage
+networks from massive, radar-based elevation models with least cost path search.
+*Hydrology and Earth System Sciences*, 15, 667-678.
+<https://doi.org/10.5194/hess-15-667-2011>
+
+Quinn, P., Beven, K., Chevallier, P., & Planchon, O. (1991). The prediction of
+hillslope flow paths for distributed hydrological modelling using digital
+elevation models. *Hydrological Processes*, 5(1), 59-79.
+<https://doi.org/10.1002/hyp.3360050106>
+
+GRASS Development Team. (2026). *Geographic Resources Analysis Support System
+(GRASS) Software*. Open Source Geospatial Foundation.
+<https://grass.osgeo.org>
+
+Cite the method as well as the software. `r.watershed` is Ehlschlaeger's A^T
+least-cost search with Metz's sorting and MFD implementation, and a methods
+section that names only "GRASS" has left out the part a reader needs in order to
+reproduce or to disagree with you.
