@@ -57,8 +57,8 @@ and spends most of its length on the parts that change the answer:
 - the sign of the accumulation raster, which is a warning and not a rendering nuisance.
 
 Everything below runs on your own machine with a package-manager install of GRASS
-and the free North Carolina sample dataset. Nothing here needs an account, a
-cloud service, or a network connection past the one download.
+and the free Flagstaff sample dataset. Nothing here needs an account, a cloud
+service, or a network connection past the one download.
 
 ::: {.callout-note}
 ## Who this is for
@@ -76,13 +76,28 @@ starting point, then come back.
 
 | Item | Value |
 |------|-------|
-| Name | North Carolina sample dataset, `nc_spm_08_grass7` |
-| Map used | `elevation`, a 10 m bare-earth DEM covering part of Wake County, North Carolina, USA |
-| CRS | NC State Plane Meters, NAD83 (EPSG:3358) |
-| Source | Published by the GRASS project as an OSGeo sample dataset for research, development and education. The dataset's `CREDITS.txt` credits the North Carolina Center for Geographic Information and Analysis, Wake County GIS, the NC State Climate Office, NC Department of Transportation, USGS, and NASA, and names Helena Mitasova and Markus Neteler as the compilers (August 2007). |
-| Terms | No separate licence file ships with the archive and the download page states no licence text. Treat it as public agency data redistributed for research, development, and education, and credit the compilers and the agencies above when you publish from it. |
-| Download | <https://grass.osgeo.org/sampledata/north_carolina/nc_spm_08_grass7.zip> (about 148 MB) |
-| Accessed | 2026-09-03 |
+| Name | Flagstaff, Arizona sample dataset, `flagstaff_az_usa_epsg6341` |
+| Map used | `elevation`, a 30 m DEM covering the watersheds around Flagstaff, Coconino County, Arizona, USA |
+| CRS | NAD83(2011) / UTM zone 12N (EPSG:6341), metres |
+| Elevation source | USGS, patched from the `n35_w112_1arc` and `n34_w112_1arc` tiles, reprojected to EPSG:6341 at 30 m and clipped to the region |
+| Compiled by | Michael Barton and Eunice Villasenor, Arizona State University |
+| Funding | NSF POSE Phase II, "Growing GRASS OSE for Worldwide Access to Multidisciplinary Geospatial Analytics", grant FAIN-2303651, lead PI Helena Mitasova, NC State University |
+| Terms | Published by the GRASS project as a sample dataset for research, development and education, assembled from public agency sources (USGS, NRCS, Data.gov, Coconino County, City of Flagstaff GIS, Arizona state GIS). Credit the compilers and the originating agencies when you publish from it. |
+| Download | <https://grass.osgeo.org/sampledata/flagstaff_az_usa_epsg6341.zip> (about 89 MB) |
+| Accessed | 2026-09-04 |
+
+Two properties of this dataset matter for what follows, and both are unusual in a
+teaching DEM.
+
+The region is not a rectangle drawn for convenience. Its boundaries follow the
+watersheds surrounding the city, so the area very nearly contains its own
+drainage rather than slicing through the middle of somebody else's. That makes
+the edge effects discussed later small and legible instead of overwhelming.
+
+The dataset also ships a `watersheds` vector taken from the City of Flagstaff's
+own GIS. That gives us a published delineation to compare against, which turns
+the usual hand-waving about "your basins will not match the official ones" into
+something we can actually put on a map.
 
 ### Tools
 
@@ -125,10 +140,17 @@ print(subprocess.check_output(["grass", "--version"], text=True).splitlines()[0]
 print("Python", sys.version.split()[0])
 ```
 
+The analysis below is written against `grass.tools`, the object API added in
+GRASS 8.4. Tools are methods, so `r.watershed` is `tools.r_watershed(...)`,
+keyword arguments are the module's own options, and `format="json"` gives back
+something you can subscript instead of a string you have to parse. The older
+`grass.script.run_command` still works and appears here only where `grass.tools`
+has no equivalent, such as switching mapsets.
+
 ## Get the sample dataset
 
-The cell below downloads and unpacks the North Carolina dataset if it is not
-already on disk. It is idempotent: if you already have `nc_spm_08_grass7` under
+The cell below downloads and unpacks the Flagstaff dataset if it is not already
+on disk. It is idempotent: if you already have `flagstaff_az_usa_epsg6341` under
 `~/grassdata`, nothing is downloaded.
 
 ```{python}
@@ -137,13 +159,13 @@ import zipfile
 import urllib.request
 
 GRASSDATA = Path.home() / "grassdata"
-PROJECT = GRASSDATA / "nc_spm_08_grass7"
-URL = "https://grass.osgeo.org/sampledata/north_carolina/nc_spm_08_grass7.zip"
+PROJECT = GRASSDATA / "flagstaff_az_usa_epsg6341"
+URL = "https://grass.osgeo.org/sampledata/flagstaff_az_usa_epsg6341.zip"
 
 if not PROJECT.exists():
     GRASSDATA.mkdir(parents=True, exist_ok=True)
-    archive = GRASSDATA / "nc_spm_08_grass7.zip"
-    print(f"Downloading {URL} (about 148 MB)")
+    archive = GRASSDATA / "flagstaff_az_usa_epsg6341.zip"
+    print(f"Downloading {URL} (about 89 MB)")
     urllib.request.urlretrieve(URL, archive)
     with zipfile.ZipFile(archive) as zf:
         zf.extractall(GRASSDATA)
@@ -162,12 +184,16 @@ that scribbles on it is a tutorial you cannot rerun from a known state.
 # | label: session
 session = gj.init(PROJECT / "PERMANENT")
 
-existing = gs.read_command("g.mapsets", flags="l").split()
-if "watershed" in existing:
-    gs.run_command("g.mapset", mapset="watershed")
-else:
-    gs.run_command("g.mapset", mapset="watershed", flags="c")
+from grass.tools import Tools  # noqa: E402
 
+# Switching mapsets is still a grass.script call: g.mapset changes the session
+# the Tools object is bound to, so it has to happen before Tools() is built.
+existing = gs.read_command("g.mapsets", flags="l").split()
+gs.run_command(
+    "g.mapset", mapset="watershed", flags="" if "watershed" in existing else "c"
+)
+
+tools = Tools()
 print(gs.read_command("g.mapset", flags="p").strip())
 ```
 
@@ -183,14 +209,15 @@ zoom level or a display preference. It is the grid the model runs on, and
 
 ```{python}
 # | label: region
-gs.run_command("g.region", raster="elevation@PERMANENT")
-region = gs.region()
+tools.g_region(raster="elevation@PERMANENT")
+region = tools.g_region(flags="p", format="json")
+n_cells = region["rows"] * region["cols"]
 
 print(f"resolution: {region['nsres']:.0f} m")
 print(f"grid:       {region['rows']} rows x {region['cols']} cols")
-print(f"cells:      {int(region['cells']):,}")
-print(f"extent:     {(region['e'] - region['w']) / 1000:.1f} km east-west, "
-      f"{(region['n'] - region['s']) / 1000:.1f} km north-south")
+print(f"cells:      {n_cells:,}")
+print(f"extent:     {(region['east'] - region['west']) / 1000:.1f} km east-west, "
+      f"{(region['north'] - region['south']) / 1000:.1f} km north-south")
 
 cell_area_m2 = region["nsres"] * region["ewres"]
 print(f"cell area:  {cell_area_m2:.0f} m2")
@@ -224,46 +251,48 @@ how it was found.
 
 ```{python}
 # | label: null-gap
-CHECKPOINT = (640515, 215215)  # a cell on the trunk stream, downstream of the hole
+# The cell carrying the most water in the region: the outlet of the largest
+# basin. Both coordinates were derived from the accumulation surface itself
+# rather than picked by eye, and the hole sits inside this outlet's own basin,
+# 15 km upstream, so the void is genuinely on the path to the checkpoint.
+CHECKPOINT = (461595.0, 3900015.0)
+HOLE = (446505.0, 3896535.0)
 
 
 def accumulation_at(raster, coordinates):
     """Read one accumulation value, in cells, at a coordinate pair."""
-    line = gs.read_command(
-        "r.what", map=raster, coordinates=coordinates, separator=",", quiet=True
-    ).strip()
-    return float(line.split(",")[-1])
+    result = tools.r_what(map=raster, coordinates=coordinates, format="json")
+    return float(result[0][raster]["value"])
 
 
 # The reference run: the elevation map exactly as it ships.
-gs.run_command(
-    "r.watershed",
+tools.r_watershed(
     elevation="elevation@PERMANENT",
     threshold=10000,
     accumulation="accum_clean",
     overwrite=True,
-    quiet=True,
 )
 
 # The same map with a circular void punched into the channel.
-gs.mapcalc(
-    "elev_gap = if("
-    "  sqrt((x() - 638700)^2 + (y() - 218200)^2) < 250,"
-    "  null(),"
-    "  elevation@PERMANENT)",
+tools.r_mapcalc(
+    expression=(
+        f"elev_gap = if("
+        f"  sqrt((x() - {HOLE[0]})^2 + (y() - {HOLE[1]})^2) < 500,"
+        f"  null(),"
+        f"  elevation@PERMANENT)"
+    ),
     overwrite=True,
 )
-gs.run_command(
-    "r.watershed",
+tools.r_watershed(
     elevation="elev_gap",
     threshold=10000,
     accumulation="accum_gap",
     overwrite=True,
-    quiet=True,
 )
 
-voids = int(gs.parse_command("r.univar", map="elev_gap", flags="g")["null_cells"])
-print(f"NULL cells punched into the DEM: {voids:,}")
+voids = int(tools.r_univar(map="elev_gap", format="json")["null_cells"])
+print(f"NULL cells punched into the DEM: {voids:,} "
+      f"({100 * voids / n_cells:.3f}% of the region)")
 print(f"accumulation downstream, clean DEM:  {accumulation_at('accum_clean', CHECKPOINT):>12,.0f}")
 print(f"accumulation downstream, gapped DEM: {accumulation_at('accum_gap', CHECKPOINT):>12,.0f}")
 ```
@@ -280,24 +309,20 @@ not.
 
 ```{python}
 # | label: fillnulls
-gs.run_command(
-    "r.fillnulls",
+tools.r_fillnulls(
     input="elev_gap",
     output="elev_filled",
     method="bilinear",
     overwrite=True,
-    quiet=True,
 )
-gs.run_command(
-    "r.watershed",
+tools.r_watershed(
     elevation="elev_filled",
     threshold=10000,
     accumulation="accum_filled",
     overwrite=True,
-    quiet=True,
 )
 
-filled = int(gs.parse_command("r.univar", map="elev_filled", flags="g")["null_cells"])
+filled = int(tools.r_univar(map="elev_filled", format="json")["null_cells"])
 print(f"NULL cells after r.fillnulls: {filled:,}")
 print(f"accumulation downstream, repaired DEM: {accumulation_at('accum_filled', CHECKPOINT):,.0f}")
 ```
@@ -352,12 +377,10 @@ Clean up the demonstration maps so the rest of the guide runs on the real surfac
 
 ```{python}
 # | label: cleanup-gap
-gs.run_command(
-    "g.remove",
+tools.g_remove(
     type="raster",
     name="elev_gap,accum_gap,elev_filled,accum_filled,accum_clean",
     flags="f",
-    quiet=True,
 )
 ```
 
@@ -372,8 +395,7 @@ import time
 THRESHOLD = 10000
 
 start = time.perf_counter()
-gs.run_command(
-    "r.watershed",
+tools.r_watershed(
     elevation="elevation@PERMANENT",
     threshold=THRESHOLD,
     accumulation="accum",
@@ -387,7 +409,7 @@ elapsed = time.perf_counter() - start
 
 print(f"threshold: {THRESHOLD:,} cells "
       f"= {THRESHOLD * cell_area_m2 / 1e6:.2f} km2 at this resolution")
-print(f"runtime:   {elapsed:.1f} s for {int(region['cells']):,} cells")
+print(f"runtime:   {elapsed:.1f} s for {n_cells:,} cells")
 ```
 
 Four rasters come back and they are all views of the same routing:
@@ -401,15 +423,45 @@ Four rasters come back and they are all views of the same routing:
 Basins and streams are numbered consistently, so basin 42 drains through stream
 segment 42 and you can join the two without a spatial operation.
 
+### Vectorize the network before you map it
+
+The `streams` output is a raster, and a raster stream drawn at 30 m is a
+staircase of square cells. Thin it to one cell wide with `r.thin`, then convert
+with `r.to.vect`, and you get a real line: it draws cleanly at any scale, it
+carries the basin identifier as its category, and it is the form every other
+tool expects. Doing this immediately after the run rather than at the end is
+also just the honest workflow, because every map below wants the vector.
+
+`r.to.vect -v` preserves the raster value as the vector category, which is what
+makes streams and basins joinable without a spatial operation.
+
+```{python}
+# | label: vectorize
+tools.r_thin(input="streams", output="streams_thin", overwrite=True)
+tools.r_to_vect(
+    input="streams_thin", output="streams_vect", type="line", flags="v", overwrite=True
+)
+tools.r_to_vect(
+    input="basins", output="basins_vect", type="area", flags="s", overwrite=True
+)
+
+print(tools.v_info(map="streams_vect", flags="t").text.strip())
+print()
+print(tools.v_info(map="basins_vect", flags="t").text.strip())
+```
+
 ```{python}
 # | label: map-overview
-gs.run_command("r.relief", input="elevation@PERMANENT", output="relief",
-               overwrite=True, quiet=True)
-gs.run_command("r.colors", map="basins", color="bgyr", quiet=True)
+tools.r_relief(input="elevation@PERMANENT", output="relief", zscale=2, overwrite=True)
 
+# Basin divides as lines, not fills. Basin ids are nominal categories: a
+# sequential colour ramp over them implies that basin 900 is somehow more than
+# basin 30, and a random one turns the map into confetti. The divide is the
+# information; the terrain underneath is what the reader needs to see.
 overview = gj.Map(width=760, use_region=True)
-overview.d_shade(shade="relief", color="basins", brighten=40)
-overview.d_rast(map="streams", values="1-100000")
+overview.d_rast(map="relief")
+overview.d_vect(map="basins_vect", fill_color="none", color="110:110:110", width=1)
+overview.d_vect(map="streams_vect", color="40:110:190", width=2)
 overview.d_barscale(at=(4, 6))
 overview.show()
 ```
@@ -421,8 +473,9 @@ overview.show()
 # Listing thumbnail for this page.
 Path("images").mkdir(exist_ok=True)
 cover = gj.Map(width=520, filename="images/cover.png", use_region=True)
-cover.d_shade(shade="relief", color="basins", brighten=40)
-cover.d_rast(map="streams", values="1-100000")
+cover.d_rast(map="relief")
+cover.d_vect(map="basins_vect", fill_color="none", color="110:110:110", width=1)
+cover.d_vect(map="streams_vect", color="40:110:190", width=2)
 ```
 
 ### Multiple flow direction is the default
@@ -439,23 +492,21 @@ Single flow direction, the familiar D8, is available with the `-s` flag.
 
 ```{python}
 # | label: sfd
-gs.run_command(
-    "r.watershed",
+tools.r_watershed(
     elevation="elevation@PERMANENT",
     threshold=THRESHOLD,
     accumulation="accum_sfd",
     stream="streams_sfd",
     flags="s",
     overwrite=True,
-    quiet=True,
 )
 
-mfd_stats = gs.parse_command("r.univar", map="accum", flags="g")
-sfd_stats = gs.parse_command("r.univar", map="accum_sfd", flags="g")
+mfd_stats = tools.r_univar(map="accum", format="json")
+sfd_stats = tools.r_univar(map="accum_sfd", format="json")
 
 print(f"{'':22s}{'MFD':>16s}{'SFD (-s)':>16s}")
 for label, key in [("max accumulation", "max"), ("mean of |accumulation|", "mean_of_abs")]:
-    print(f"{label:22s}{float(mfd_stats[key]):>16,.0f}{float(sfd_stats[key]):>16,.0f}")
+    print(f"{label:22s}{mfd_stats[key]:>16,.0f}{sfd_stats[key]:>16,.0f}")
 ```
 
 Which one you want depends on what the output feeds. Single flow gives clean,
@@ -472,14 +523,14 @@ wrong. The accumulation raster is signed.
 
 ```{python}
 # | label: accum-sign
-stats = gs.parse_command("r.univar", map="accum", flags="g")
-print(f"min:  {float(stats['min']):>14,.0f}")
-print(f"max:  {float(stats['max']):>14,.0f}")
-print(f"mean of absolute values: {float(stats['mean_of_abs']):,.1f}")
+stats = tools.r_univar(map="accum", format="json")
+print(f"min:  {stats['min']:>14,.0f}")
+print(f"max:  {stats['max']:>14,.0f}")
+print(f"mean of absolute values: {stats['mean_of_abs']:,.1f}")
 
-gs.mapcalc("underestimated = if(accum < 0, 1, null())", overwrite=True)
-neg = gs.parse_command("r.univar", map="underestimated", flags="g")
-share = int(neg["n"]) / int(region["cells"]) * 100
+tools.r_mapcalc(expression="underestimated = if(accum < 0, 1, null())", overwrite=True)
+neg = tools.r_univar(map="underestimated", format="json")
+share = int(neg["n"]) / n_cells * 100
 print(f"\ncells with negative accumulation: {int(neg['n']):,} ({share:.1f}% of the region)")
 ```
 
@@ -496,6 +547,36 @@ flag on `r.watershed`, which forces positive accumulation even for likely
 underestimates. Both are fine for display. Neither makes the underlying number
 correct.
 
+**Scale the colour table logarithmically, or the map is useless.** This is a
+display problem rather than a hydrology one, but it defeats more accumulation
+maps than anything else. The distribution is extremely heavy tailed: the median
+cell in this region has single digits of contributing area while the trunk
+carries hundreds of thousands, six orders of magnitude apart. A linear ramp
+spends its entire range on a handful of channel cells and paints everything else
+the bottom colour, so the map shows two or three bright threads on a flat field
+and hides the network that is the actual result.
+
+`r.colors` has this built in and it is worth knowing rather than rebuilding.
+The `-a` flag applies logarithmic-absolute scaling, which handles the absolute
+value and the logarithm in one step and works directly on the signed raster, so
+there is no intermediate map to create. Adding `-e` equalizes against the
+histogram, putting the colour breaks where the cells actually are instead of at
+even intervals. Reaching for `r.mapcalc` to build a `log(abs(accum) + 1.0)`
+raster works, but it is three commands and two throwaway maps to reproduce two
+flags.
+
+Note what `-a` does not do. It changes how the raster is drawn and nothing else.
+The values underneath are still signed, and a negative one still means the
+number is a floor rather than a measurement.
+
+**And show it at a scale that can hold it.** The map below is a detail window,
+not the whole region, and that is deliberate. Accumulation is a texture rather
+than a set of shapes: the whole 62 by 73 km area rendered to the width of this
+page works out at roughly 80 m per pixel, so the first-order drainage is finer
+than a single pixel and turns into speckle. Basin and stream maps survive the
+regional view because they are structural. This one does not, and no colour
+ramp rescues a map asked to draw detail below its own resolution.
+
 **Do not read negative magnitudes as contributing area.** They are undercounts of
 an unknown amount. Turning them positive to make a map render and then quoting the
 value as a drainage area is the most common way to get a confidently wrong number
@@ -506,13 +587,15 @@ negative cells with the basin map to see which basins are compromised.
 
 ```{python}
 # | label: problem-basins
-gs.mapcalc("problem_basins = if(accum < 0, basins, null())", overwrite=True)
+tools.r_mapcalc(
+    expression="problem_basins = if(accum < 0, basins, null())", overwrite=True
+)
 
-all_basins = gs.parse_command("r.info", map="basins", flags="r")
-affected = gs.read_command("r.stats", input="problem_basins", flags="n", quiet=True)
+all_basins = tools.r_info(map="basins", format="json")
+affected = tools.r_stats(input="problem_basins", flags="n").text
 affected_ids = {line.split()[0] for line in affected.strip().splitlines() if line.strip()}
 
-print(f"basin values present: 2 to {all_basins['max']}")
+print(f"basin values present: 2 to {int(all_basins['max'])}")
 print(f"basins touched by flow from outside the region: {len(affected_ids)}")
 ```
 
@@ -524,13 +607,28 @@ you need can be far larger than the site.
 
 ```{python}
 # | label: map-accumulation
-gs.mapcalc("accum_abs = abs(accum)", overwrite=True)
-gs.run_command("r.colors", map="accum_abs", color="water", flags="g", quiet=True)
+# -a is logarithmic-absolute scaling: it takes the absolute value and the
+# logarithm together, straight onto the raw accumulation raster, so there is no
+# intermediate map to build, name or clean up.
+#
+# Not -e. Histogram equalization spreads the CELLS evenly across the ramp, so
+# half the map lands in the dark half. That is right for imagery and wrong
+# here: most cells are hillslope and should stay pale, with the ramp saved for
+# the channels.
+tools.r_colors(map="accum", color="blues", flags="a")
+
+# A detail window around the San Francisco Peaks. At the full 62 by 73 km the
+# drainage texture is finer than one screen pixel and renders as noise, which
+# is a property of the display scale rather than of the data.
+tools.g_region(n=3910000, s=3888000, w=433000, e=458000, align="elevation@PERMANENT")
 
 acc_map = gj.Map(width=760, use_region=True)
-acc_map.d_shade(shade="relief", color="accum_abs", brighten=30)
+acc_map.d_shade(shade="relief", color="accum", brighten=-10)
 acc_map.d_barscale(at=(4, 6))
 acc_map.show()
+
+# Back to the whole region for everything that follows.
+tools.g_region(raster="elevation@PERMANENT")
 ```
 
 ## The threshold is a decision, not a discovery
@@ -547,20 +645,18 @@ import math
 
 def network_summary(threshold, suffix):
     """Run r.watershed at one threshold and summarize the network it produces."""
-    gs.run_command(
-        "r.watershed",
+    tools.r_watershed(
         elevation="elevation@PERMANENT",
         threshold=threshold,
         stream=f"streams_{suffix}",
         basin=f"basins_{suffix}",
         overwrite=True,
-        quiet=True,
     )
-    stream_cells = int(gs.parse_command("r.univar", map=f"streams_{suffix}", flags="g")["n"])
-    basin_max = int(gs.parse_command("r.info", map=f"basins_{suffix}", flags="r")["max"])
+    stream_cells = int(tools.r_univar(map=f"streams_{suffix}", format="json")["n"])
+    basin_max = int(tools.r_info(map=f"basins_{suffix}", format="json")["max"])
     # r.watershed labels basins with even integers, so the count is half the maximum.
     basin_count = basin_max // 2
-    area_km2 = int(region["cells"]) * cell_area_m2 / 1e6
+    area_km2 = n_cells * cell_area_m2 / 1e6
     # Approximate channel length: cell count times cell size, ignoring diagonal steps.
     length_km = stream_cells * region["nsres"] / 1000
     return {
@@ -590,16 +686,28 @@ questions, and only you know which question you asked.
 
 ```{python}
 # | label: map-threshold
-gs.run_command("r.colors", map="basins_10k", color="bgyr", quiet=True)
-gs.run_command("r.colors", map="basins_500", color="bgyr", quiet=True)
+# What differs between the two runs is drainage density, so draw the networks
+# rather than the basins. Both vectorized the same way, so the comparison is
+# between the two thresholds and not between two rendering styles.
+for suffix in ("10k", "500"):
+    tools.r_thin(input=f"streams_{suffix}", output=f"thin_{suffix}", overwrite=True)
+    tools.r_to_vect(
+        input=f"thin_{suffix}",
+        output=f"vect_{suffix}",
+        type="line",
+        flags="v",
+        overwrite=True,
+    )
 
 coarse = gj.Map(width=400, use_region=True)
-coarse.d_shade(shade="relief", color="basins_10k", brighten=40)
+coarse.d_rast(map="relief")
+coarse.d_vect(map="vect_10k", color="40:110:190", width=2)
 coarse.d_text(text="threshold = 10000", at=(4, 94), size=5, color="black")
 coarse.show()
 
 fine = gj.Map(width=400, use_region=True)
-fine.d_shade(shade="relief", color="basins_500", brighten=40)
+fine.d_rast(map="relief")
+fine.d_vect(map="vect_500", color="40:110:190", width=2)
 fine.d_text(text="threshold = 500", at=(4, 94), size=5, color="black")
 fine.show()
 ```
@@ -641,33 +749,35 @@ without touching the parameter you thought controlled it.
 ```{python}
 # | label: resolution
 def run_at_resolution(res, suffix):
-    gs.run_command("g.region", raster="elevation@PERMANENT", res=res, flags="a")
-    reg = gs.region()
-    gs.run_command(
-        "r.watershed",
+    tools.g_region(raster="elevation@PERMANENT", res=res, flags="a")
+    reg = tools.g_region(flags="p", format="json")
+    cells = reg["rows"] * reg["cols"]
+    tools.r_watershed(
         elevation="elevation@PERMANENT",
         threshold=10000,
         stream=f"streams_res{suffix}",
         basin=f"basins_res{suffix}",
         overwrite=True,
-        quiet=True,
     )
-    basin_max = int(gs.parse_command("r.info", map=f"basins_res{suffix}", flags="r")["max"])
+    basin_max = int(tools.r_info(map=f"basins_res{suffix}", format="json")["max"])
     stream_cells = int(
-        gs.parse_command("r.univar", map=f"streams_res{suffix}", flags="g")["n"]
+        tools.r_univar(map=f"streams_res{suffix}", format="json")["n"]
     )
     return {
         "resolution m": int(reg["nsres"]),
-        "cells in region": int(reg["cells"]),
+        "cells in region": cells,
         "10000 cells = km2": 10000 * reg["nsres"] * reg["ewres"] / 1e6,
         "basins": basin_max // 2,
         "stream cells": stream_cells,
     }
 
-res_rows = [run_at_resolution(10, "10"), run_at_resolution(30, "30")]
+
+# 30 m is the native resolution of this DEM. Going finer would interpolate
+# detail the data does not contain, so the comparison is native against coarser.
+res_rows = [run_at_resolution(30, "30"), run_at_resolution(90, "90")]
 
 # Put the region back where it was.
-gs.run_command("g.region", raster="elevation@PERMANENT")
+tools.g_region(raster="elevation@PERMANENT")
 
 header = list(res_rows[0])
 print("".join(f"{h:>22s}" for h in header))
@@ -692,25 +802,11 @@ spurious depressions, far more compute, and it turns structures water passes und
 into barriers the model cannot pass. Channel length in particular is a function of
 cell size and is not comparable across grids.
 
-## From rasters to vectors
-
-The stream raster vectorizes cleanly after thinning. `r.to.vect -v` preserves the
-basin identifier as the vector category, which is what makes the streams and
-basins joinable.
-
-```{python}
-# | label: vectorize
-gs.run_command("r.thin", input="streams", output="streams_thin",
-               overwrite=True, quiet=True)
-gs.run_command("r.to.vect", input="streams_thin", output="streams_vect",
-               type="line", flags="v", overwrite=True, quiet=True)
-gs.run_command("r.to.vect", input="basins", output="basins_vect",
-               type="area", flags="s", overwrite=True, quiet=True)
-
-print(gs.read_command("v.info", map="streams_vect", flags="t").strip())
-print()
-print(gs.read_command("v.info", map="basins_vect", flags="t").strip())
-```
+Note which direction this comparison runs. 30 m is what this DEM actually
+contains, so the coarser run is the honest half of the pair: resampling to 90 m
+throws detail away, which is a thing you might really do for a regional run.
+Resampling the other way, to 10 m, would invent detail the source never had, and
+the resulting network would look finer while meaning less.
 
 ### One basin above one point
 
@@ -722,8 +818,10 @@ just computed rather than from a map click.
 ```{python}
 # | label: outlet
 # Find the cell with the largest fully-contained contributing area.
-gs.mapcalc("accum_pos = if(accum > 0, accum, null())", overwrite=True)
-cells = gs.read_command("r.stats", input="accum_pos", flags="gn", quiet=True)
+tools.r_mapcalc(
+    expression="accum_pos = if(accum > 0, accum, null())", overwrite=True
+)
+cells = tools.r_stats(input="accum_pos", flags="gn").text
 east, north, value = max(
     (line.split() for line in cells.strip().splitlines()),
     key=lambda parts: float(parts[2]),
@@ -733,16 +831,14 @@ print(f"outlet: {east} E, {north} N")
 print(f"contributing area: {float(value):,.0f} cells "
       f"= {float(value) * cell_area_m2 / 1e6:.1f} km2")
 
-gs.run_command(
-    "r.water.outlet",
+tools.r_water_outlet(
     input="drainage",
     output="outlet_basin",
     coordinates=(east, north),
     overwrite=True,
-    quiet=True,
 )
 
-basin_cells = int(gs.parse_command("r.univar", map="outlet_basin", flags="g")["n"])
+basin_cells = int(tools.r_univar(map="outlet_basin", format="json")["n"])
 disagreement = abs(basin_cells - float(value)) / float(value) * 100
 print(f"r.water.outlet basin: {basin_cells:,} cells "
       f"= {basin_cells * cell_area_m2 / 1e6:.1f} km2")
@@ -760,11 +856,17 @@ computed stream network.
 
 ```{python}
 # | label: map-outlet
-gs.run_command("r.colors", map="outlet_basin", color="grey", quiet=True)
+# One region is the subject here, so a fill is the right call. A single warm
+# tone against the grey terrain, rather than a ramp over a map with one value.
+basin_rules = Path("outlet.rules")
+basin_rules.write_text("0% 208:121:68\n100% 208:121:68\n")
+tools.r_colors(map="outlet_basin", rules=str(basin_rules))
+basin_rules.unlink()
 
 outlet_map = gj.Map(width=760, use_region=True)
-outlet_map.d_shade(shade="relief", color="outlet_basin", brighten=50)
-outlet_map.d_vect(map="streams_vect", color="30:100:180", width=1)
+outlet_map.d_rast(map="relief")
+outlet_map.d_shade(shade="relief", color="outlet_basin", brighten=0)
+outlet_map.d_vect(map="streams_vect", color="40:110:190", width=2)
 outlet_map.d_barscale(at=(4, 6))
 outlet_map.show()
 ```
@@ -784,15 +886,13 @@ segmented mode is slow.
 ```{python}
 # | label: disk-swap
 start = time.perf_counter()
-gs.run_command(
-    "r.watershed",
+tools.r_watershed(
     elevation="elevation@PERMANENT",
     threshold=THRESHOLD,
     accumulation="accum_seg",
     memory=500,
     flags="m",
     overwrite=True,
-    quiet=True,
 )
 seg_elapsed = time.perf_counter() - start
 
@@ -800,7 +900,7 @@ print(f"in-memory: {elapsed:.1f} s")
 print(f"disk swap: {seg_elapsed:.1f} s (memory=500 MB)")
 ```
 
-On two million cells the swap version is pure overhead. On a national DEM it is
+On five million cells the swap version is pure overhead. On a national DEM it is
 the difference between a result and an out-of-memory error. Two other levers help
 before you reach for it: mask out the area you do not need, since NULL cells are
 skipped entirely, and consider running at a coarser resolution built from
@@ -827,17 +927,16 @@ gs.create_project(project, filename="dem.tif")
 
 # 2) Start a session and import, reprojecting if needed.
 session = gj.init(project / "PERMANENT")
-gs.run_command("r.import", input="dem.tif", output="dem", resample="bilinear")
+tools.r_import(input="dem.tif", output="dem", resample="bilinear")
 
 # 3) Set the region from the imported map. This fixes the model grid.
-gs.run_command("g.region", raster="dem")
+tools.g_region(raster="dem")
 
 # 4) Fill NULL gaps, and only NULL gaps.
-gs.run_command("r.fillnulls", input="dem", output="dem_nogaps", method="bilinear")
+tools.r_fillnulls(input="dem", output="dem_nogaps", method="bilinear")
 
 # 5) Route. Choose the threshold from the cell size, not from this page.
-gs.run_command(
-    "r.watershed",
+tools.r_watershed(
     elevation="dem_nogaps",
     threshold=10000,
     accumulation="accum",
@@ -937,15 +1036,14 @@ settings were never written down.
 
 ```{python}
 # | label: cleanup
-gs.run_command(
-    "g.remove",
+tools.g_remove(
     type="raster",
     name=(
-        "streams_res10,basins_res10,streams_res30,basins_res30,"
-        "accum_pos,accum_seg,underestimated,problem_basins"
+        "streams_res30,basins_res30,streams_res90,basins_res90,"
+        "accum_pos,accum_seg,thin_10k,thin_500,"
+        "underestimated,problem_basins"
     ),
     flags="f",
-    quiet=True,
 )
 ```
 
