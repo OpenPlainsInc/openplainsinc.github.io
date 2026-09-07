@@ -44,9 +44,9 @@ website:
       - text: "Blog"
         href: content/blog/index.qmd
     right:
-      - text: "openplains.com"
-        href: https://openplains.com
-        aria-label: "OpenPlains company site"
+      - text: "Join the beta"
+        href: https://openplains.com/beta
+        aria-label: "Request access to the OpenPlains beta"
 
     # Tools
     tools:

@@ -163,9 +163,9 @@ h2, .h2 { letter-spacing: -0.015em; }
     &.active { color: $op-secondary; font-weight: 600; }
   }
 
-  // Link out to the company site: a quiet outlined pill, so the hero keeps
-  // the only filled orange button. Matched by prefix because Quarto's page
-  // script appends a trailing slash to the href after load.
+  // Beta sign-up link on openplains.com: a quiet outlined pill, so the hero
+  // keeps the only filled orange button. Matched by prefix because Quarto's
+  // page script normalizes the href after load.
   .navbar-nav .nav-link[href^="https://openplains.com"] {
     display: inline-flex;
     align-items: center;
