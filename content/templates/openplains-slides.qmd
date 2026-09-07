@@ -1,0 +1,122 @@
+---
+title: "[GRASS at]{.light}<br>[cloud scale.]{.bold}"
+subtitle: "Running geospatial models in the browser and on a metered API."
+author:
+  - name: "Corey T. White"
+    affiliations:
+      - name: "OpenPlains Inc. · NC State Center for Geospatial Analytics"
+    email: corey.white@openplains.com
+date: "2026-09-07"
+date-format: "YYYY-MM-DD"
+image: ../images/logos/openplains-logo.svg
+categories: [template, presentation]
+draft: true
+format:
+  revealjs:
+    theme: [default, ../themes/openplains-revealjs.scss]
+    width: 1280
+    height: 720
+    margin: 0.08
+    slide-number: c/t
+    logo: ../images/logos/openplains-logo.svg
+    footer: "OpenPlains · FOSS4G NA 2026"
+    progress: true
+    controls: false
+    transition: fade
+    background-transition: fade
+    highlight-style: arrow
+    code-copy: false
+    code-line-numbers: false
+    title-slide-attributes:
+      data-background-image: ../images/brand/slide-title-day.svg
+      data-background-size: cover
+      data-background-position: center
+---
+
+## Using this template {.smaller}
+
+[Template]{.eyebrow}
+
+Copy this file next to your talk, keep the `format` block, and swap the copy. The theme lives in `content/themes/openplains-revealjs.scss` and reads the site fonts from `/fonts/`.
+
+- Headline contrast: `[light words]{.light} [bold words]{.bold}`
+- Eyebrow above a heading: `[Watershed analysis]{.eyebrow}` on its own line
+- Section divider: add `{.op-section background-image="../images/brand/slide-section.svg"}` to the heading
+- Closing slide: `{.op-closing background-image="../images/brand/slide-closing-dusk.svg"}`
+- Night title: point `data-background-image` at `slide-title-night.svg` and add `class: op-night`
+
+## [02]{.op-number}[Compute in the]{.light} [browser]{.bold} {.op-section background-image="../images/brand/slide-section.svg" background-size="cover"}
+
+GPU raster analytics validated against GRASS, at zero marginal cost.
+
+## [One call,]{.light} [three rasters]{.bold}
+
+[Watershed analysis]{.eyebrow}
+
+:::: {.columns}
+::: {.column width="45%"}
+- **Accumulation, drainage, basins** from a single r.watershed run
+- USGS 3DEP terrain, clipped to the drawn area of interest
+- Outputs land as COG with a WGS 84 bbox and attribution
+
+::: {.op-note}
+**Note.** Threshold sets the minimum basin size in cells. Start at 10000 for a 10 m DEM.
+:::
+:::
+::: {.column width="55%"}
+![](../blog/images/grass_watershed.png){fig-alt="Basins delineated with r.watershed"}
+:::
+::::
+
+## [The same code,]{.light} [local or cloud]{.bold}
+
+[grass.tools]{.eyebrow}
+
+:::: {.columns}
+::: {.column width="60%"}
+```python
+from grass.tools import Tools
+
+tools = Tools()
+tools.g_region(raster="elevation")
+tools.r_watershed(
+    elevation="elevation",
+    threshold=10000,
+    accumulation="accum",
+    drainage="drain",
+    basin="basins",
+    nprocs=4,
+)
+```
+:::
+::: {.column width="40%"}
+::: {.op-card}
+[Local]{.eyebrow}
+Runs in your GRASS session, on your laptop.
+:::
+
+::: {.op-card .dark}
+[Cloud]{.eyebrow}
+Same call, submitted as a metered job. The result comes back as a COG.
+:::
+:::
+::::
+
+## [Numbers]{.light} [that matter]{.bold}
+
+[Results]{.eyebrow}
+
+| Module | Area | Runtime |
+|---|---|---|
+| r.slope.aspect | Raleigh box, 3DEP | 54 s |
+| r.watershed | Raleigh box, 3DEP | [YOUR VALUE] |
+
+> Measured on the staging environment. Replace with your own runs.
+
+## [Thanks.]{.light}<br>[Get in early.]{.bold} {.op-closing background-image="../images/brand/slide-closing-dusk.svg" background-size="cover"}
+
+The closed beta is open to design partners. Your workflows decide what we build next.
+
+[openplains.com/beta](https://openplains.com/beta){.op-cta}
+
+[corey.white@openplains.com · learning.openplains.com · github.com/OpenPlainsInc]{.muted style="font-size:0.5em; display:block; margin-top:1.5em;"}
