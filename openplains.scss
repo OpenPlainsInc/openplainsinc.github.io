@@ -163,17 +163,37 @@ h2, .h2 { letter-spacing: -0.015em; }
     &.active { color: $op-secondary; font-weight: 600; }
   }
 
-  // Call to action: the openplains.com item on the right.
+  // Link out to the company site: a quiet outlined pill, so the hero keeps
+  // the only filled orange button. Matched by prefix because Quarto's page
+  // script appends a trailing slash to the href after load.
   .navbar-nav .nav-link[href^="https://openplains.com"] {
-    background: $op-secondary;
-    color: #fff;
-    font-weight: 700;
-    border-radius: $border-radius;
-    padding: 0.55rem 1.1rem;
-    margin-left: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: transparent;
+    border: 1.5px solid rgba($op-primary, 0.55);
+    border-radius: 100px;
+    color: $op-primary-dark;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    padding: 0.4rem 1rem 0.4rem 1.05rem;
+    margin: 0 1rem 0 0.75rem;
     opacity: 1;
     transition: none;
-    &:hover, &:focus { background: $op-brown; color: #fff; }
+    &::after {
+      font-family: "bootstrap-icons";
+      content: "\F1C5";
+      font-size: 0.7em;
+      line-height: 1;
+      opacity: 0.8;
+    }
+    &:hover, &:focus {
+      background: $op-primary;
+      border-color: $op-primary;
+      color: #fff;
+      &::after { opacity: 1; }
+    }
   }
 
   .aa-DetachedSearchButton, .aa-DetachedSearchButtonPlaceholder {
