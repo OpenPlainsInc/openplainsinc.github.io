@@ -1,10 +1,9 @@
 ---
-title: "Workshops"
-description: "Half-day and full-day workshop material from FOSS4G NA and classroom events, with setup instructions and data."
+title: "Blog"
+description: "Notes, experiments, and announcements from the OpenPlains team."
 listing:
     contents:
-        - smackhack25/
-        - foss4gna_2024/
+        - "*.qmd"
     sort: "date desc"
     type: grid
     grid-columns: 3

@@ -1,10 +1,14 @@
 ---
 title: "Talks"
+description: "Slides from conference sessions on OpenPlains and case studies in cloud GRASS."
 listing:
     contents: 
         - talks/
     sort: "date desc"
-    type: default
+    type: grid
+    grid-columns: 3
+    image-height: 190px
+    fields: [image, date, title, description, categories]
     categories: true
 page-layout: full
 title-block-banner: true

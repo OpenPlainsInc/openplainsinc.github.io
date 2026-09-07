@@ -38,7 +38,7 @@ The project is organized into several key directories and files:
 
 * `_extensions/`: Custom Quarto extensions.
 
-* `themes.scss`: Custom SCSS for styling our Quarto documents.
+* `openplains.scss`: Brand SCSS theme for the website (palette, self-hosted Lexend Deca and Cascadia Mono from `fonts/`, navbar, listing cards, home page blocks). `theme.scss` is the older theme still used by the FOSS4G NA 2024 OpenPlains reveal.js talk; `content/themes/grass.scss` is the GRASS theme for GRASS-branded pages.
 
 ## Content Authoring
 
