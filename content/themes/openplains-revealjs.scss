@@ -1,0 +1,313 @@
+/*-- scss:defaults --*/
+// OpenPlains reveal.js theme. Pair with the `default` reveal theme:
+//   format:
+//     revealjs:
+//       theme: [default, ../../themes/openplains-revealjs.scss]
+// Slide classes: .op-title (title slide, set via title-slide-attributes),
+// .op-section (dark divider), .op-closing (dusk sky). Headline contrast:
+// [light words]{.light} [bold words]{.bold}.
+
+// Palette
+$op-primary:       #657e96;
+$op-primary-dark:  #2d4a5e;
+$op-primary-light: #a8bfcf;
+$op-pale-blue:     #cbdff1;
+$op-secondary:     #d07944;
+$op-gold:          #d49441;
+$op-tan:           #f0e3ce;
+$op-tan-light:     #fffcf7;
+$op-brown:         #a76a3a;
+$op-deep-brown:    #8a4820;
+$op-buff:          #e0c879;
+$op-white:         #fbfbfb;
+$op-gray:          #c8c0b4;
+$op-dark:          #1a2a36;
+$op-text-muted:    #4a6070;
+
+// Reveal variables
+$font-family-sans-serif: "Lexend Deca", system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+$font-family-monospace:  "Cascadia Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+$presentation-font-size-root: 34px;
+$presentation-line-height: 1.45;
+$presentation-heading-font: $font-family-sans-serif;
+$presentation-heading-color: $op-primary-dark;
+$presentation-heading-font-weight: 800;
+$presentation-heading-letter-spacing: -0.025em;
+$presentation-heading-line-height: 1.1;
+$presentation-h1-font-size: 2.2em;
+$presentation-h2-font-size: 1.5em;
+$presentation-h3-font-size: 1.1em;
+$presentation-block-margin: 14px;
+
+$body-bg: $op-white;
+$body-color: $op-primary-dark;
+$link-color: $op-secondary;
+$link-color-hover: $op-brown;
+$selection-bg: rgba($op-gold, 0.35);
+$selection-color: $op-dark;
+
+$code-color: $op-deep-brown;
+$code-bg: $op-tan;
+$code-block-bg: #f7f1e6;
+$code-block-border-color: rgba($op-primary, 0.2);
+$code-block-font-size: 0.6em;
+
+$callout-color-note: $op-primary;
+$callout-color-tip: $op-gold;
+$callout-color-warning: $op-secondary;
+$callout-color-caution: $op-brown;
+$callout-color-important: #b85c30;
+
+/*-- scss:rules --*/
+@font-face {
+  font-family: "Lexend Deca";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/LexendDeca-Variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Cascadia Mono";
+  font-style: normal;
+  font-weight: 200 700;
+  font-display: swap;
+  src: url("/fonts/CascadiaMono-Variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Cascadia Mono";
+  font-style: italic;
+  font-weight: 200 700;
+  font-display: swap;
+  src: url("/fonts/CascadiaMono-Italic-Variable.woff2") format("woff2");
+}
+
+.reveal {
+  -webkit-font-smoothing: antialiased;
+
+  // Headline contrast, as in the wordmark
+  .light { font-weight: 300; }
+  .bold  { font-weight: 800; }
+
+  // Eyebrow label above a heading: [Watershed analysis]{.eyebrow}
+  .eyebrow {
+    display: block;
+    font-size: 0.42em;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: $op-secondary;
+    margin-bottom: 0.4em;
+  }
+  .muted { color: $op-text-muted; }
+  .accent { color: $op-secondary; }
+
+  .slides section {
+    text-align: left;
+    > h1, > h2, > h3 { text-align: left; }
+  }
+
+  h1, h2 { margin-bottom: 0.5em; }
+  h2 { font-size: $presentation-h2-font-size; }
+
+  p { margin: 0 0 0.6em; }
+  strong { font-weight: 700; }
+
+  ul, ol { margin-left: 0; }
+  .slides section ul { list-style: none; padding-left: 0; }
+  .slides section ul > li {
+    position: relative;
+    padding-left: 1.1em;
+    margin-bottom: 0.45em;
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 0.32em;
+      height: 0.32em;
+      border-radius: 50%;
+      background: $op-secondary;
+    }
+    > ul > li::before { background: $op-primary-light; }
+  }
+
+  // Code
+  pre {
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba($op-primary-dark, 0.11);
+    border: 1px solid rgba($op-primary, 0.18);
+    width: 100%;
+    margin: 0.4em 0 0.8em;
+    code { padding: 0.9em 1em; line-height: 1.55; }
+  }
+  code:not(pre code) {
+    padding: 0.1em 0.35em;
+    border-radius: 6px;
+    background: $op-tan;
+    color: $op-deep-brown;
+    font-size: 0.85em;
+  }
+
+  // Images and figures
+  img, figure img { border-radius: 12px; box-shadow: 0 6px 32px rgba($op-primary-dark, 0.15); }
+  img.no-shadow, .no-shadow img, .quarto-figure.no-shadow img, img.slide-logo { border-radius: 0; box-shadow: none; }
+  figcaption, .caption { font-size: 0.5em; color: #8a9eb0; margin-top: 0.4em; }
+
+  // Callouts
+  .callout { border-radius: 12px; font-size: 0.7em; }
+  .callout .callout-title-container { font-weight: 700; }
+
+  // Cream note block: ::: {.op-note} ... :::
+  .op-note {
+    background: $op-tan;
+    border-radius: 12px;
+    padding: 0.55em 0.8em;
+    font-size: 0.7em;
+    line-height: 1.5;
+    color: $op-text-muted;
+    strong { color: $op-brown; }
+  }
+
+  // Cards: ::: {.op-card} / ::: {.op-card .dark}
+  .op-card {
+    background: #fff;
+    border: 1px solid rgba($op-primary, 0.15);
+    border-radius: 14px;
+    box-shadow: 0 2px 16px rgba($op-primary-dark, 0.11);
+    padding: 0.6em 0.8em;
+    font-size: 0.7em;
+    line-height: 1.45;
+    &.dark { background: $op-primary-dark; color: $op-white; border-color: $op-primary-dark; .eyebrow { color: $op-gold; } }
+    .eyebrow { font-size: 0.6em; color: $op-primary; }
+  }
+
+  // Tables
+  table { font-size: 0.65em; border-collapse: collapse; }
+  table th { color: $op-primary-dark; font-weight: 700; border-bottom: 2px solid $op-primary; }
+  table td { border-bottom: 1px solid rgba($op-primary, 0.2); }
+
+  blockquote {
+    border-left: 4px solid $op-gold;
+    background: rgba($op-tan, 0.5);
+    border-radius: 0 12px 12px 0;
+    padding: 0.4em 0.8em;
+    font-style: normal;
+    color: $op-text-muted;
+  }
+
+  // Footer bar, logo, slide number
+  .footer {
+    font-size: 15px;
+    color: #8a9eb0;
+    bottom: 12px;
+    a { color: #8a9eb0; }
+  }
+  .slide-number {
+    font-family: $font-family-monospace;
+    font-size: 14px;
+    color: $op-primary;
+    background: transparent;
+    top: auto !important;
+    right: 16px !important;
+    bottom: 12px !important;
+  }
+  .slide-logo { max-height: 2.4rem !important; bottom: 8px !important; left: 16px !important; }
+  .progress { color: $op-secondary; height: 4px; }
+  .controls { color: $op-primary; }
+
+  // Title, section, and closing slides center vertically.
+  .slides section.present#title-slide,
+  .slides section.present.op-title,
+  .slides section.present.op-section,
+  .slides section.present.op-closing {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: 1.5em !important;
+  }
+
+  // Title slide: sky background comes from title-slide-attributes.
+  #title-slide, .op-title {
+    text-align: left;
+    .title {
+      font-size: 2.5em;
+      line-height: 1.04;
+      letter-spacing: -0.03em;
+      color: $op-primary-dark;
+      margin-bottom: 0.3em;
+      max-width: 62%;
+    }
+    .subtitle {
+      font-size: 0.75em;
+      font-weight: 400;
+      color: $op-text-muted;
+      margin-bottom: 1.2em;
+      max-width: 58%;
+    }
+    .quarto-title-authors { display: block; }
+    .quarto-title-author { padding: 0; text-align: left; }
+    .quarto-title-author-name { font-size: 0.65em; font-weight: 600; color: $op-primary-dark; }
+    .quarto-title-affiliation { font-size: 0.45em; color: $op-primary; margin: 0.1em 0; }
+    .quarto-title-author-email { font-size: 0.5em; margin: 0.15em 0; a { font-family: $font-family-monospace; font-size: 1em; color: #8a9eb0; } }
+    .date { font-family: $font-family-monospace; font-size: 0.42em; color: #8a9eb0; margin-top: 0.6em; }
+  }
+
+  // Night-sky title variant: set data-background-image to slide-title-night.svg
+  // and add .op-night to title-slide-attributes' class.
+  .op-night, .op-night#title-slide {
+    .title { color: $op-white; }
+    .subtitle { color: $op-primary-light; }
+    .quarto-title-author-name { color: $op-white; }
+    .quarto-title-affiliation { color: $op-primary-light; }
+    .eyebrow { color: $op-buff; }
+  }
+
+  // Section divider: ## [Compute in the]{.light} [browser]{.bold} {.op-section background-image="..."}
+  .op-section {
+    color: $op-white;
+    h1, h2 { color: $op-white; font-size: 2em; }
+    p { color: $op-primary-light; font-size: 0.8em; max-width: 70%; }
+    .op-number {
+      display: block;
+      font-family: $font-family-monospace;
+      font-weight: 600;
+      font-size: 3.6em;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      color: $op-gold;
+      margin-bottom: 0.25em;
+    }
+    a { color: $op-buff; }
+  }
+
+  // Closing slide: dusk sky with dark text
+  .op-closing {
+    color: $op-dark;
+    h1, h2 { color: $op-dark; }
+    p { color: $op-dark; max-width: 60%; }
+    a { color: $op-dark; }
+    .op-cta {
+      display: inline-block;
+      background: $op-dark;
+      color: $op-white !important;
+      font-weight: 700;
+      font-size: 0.6em;
+      padding: 0.6em 1.3em;
+      border-radius: 10px;
+      text-decoration: none;
+      margin-top: 0.3em;
+    }
+  }
+
+  // Dark body slide: ## Title {.op-dark background-color="#2d4a5e"}
+  .op-dark {
+    color: $op-white;
+    h1, h2, h3 { color: $op-white; }
+    .eyebrow { color: $op-buff; }
+    .muted { color: $op-primary-light; }
+    .slides section ul > li::before { background: $op-gold; }
+  }
+}
+
+// Speaker view and print keep the same fonts
+.reveal-viewport { background: $op-white; }
