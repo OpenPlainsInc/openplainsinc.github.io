@@ -1,8 +1,9 @@
 ---
-title: "Talks"
+title: "Blog"
+description: "Notes, experiments, and announcements from the OpenPlains team."
 listing:
-    contents: 
-        - talks/
+    contents:
+        - "*.qmd"
     sort: "date desc"
     type: grid
     grid-columns: 3

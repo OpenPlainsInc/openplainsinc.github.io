@@ -1,0 +1,476 @@
+/*-- scss:defaults --*/
+// OpenPlains brand theme for the Learning site (Bootstrap 5 / Quarto).
+// Tokens follow the OpenPlains brand style guide.
+
+// Palette
+$op-primary:       #657e96;
+$op-primary-dark:  #2d4a5e;
+$op-primary-light: #a8bfcf;
+$op-pale-blue:     #cbdff1;
+$op-secondary:     #d07944;
+$op-gold:          #d49441;
+$op-tan:           #f0e3ce;
+$op-tan-light:     #fffcf7;
+$op-brown:         #a76a3a;
+$op-deep-brown:    #8a4820;
+$op-buff:          #e0c879;
+$op-white:         #fbfbfb;
+$op-gray:          #c8c0b4;
+$op-dark:          #1a2a36;
+$op-text-muted:    #4a6070;
+
+// Bootstrap
+$primary:   $op-primary;
+$secondary: $op-secondary;
+$success:   #6f8f5a;
+$info:      $op-primary-light;
+$warning:   $op-gold;
+$danger:    #b85c30;
+$light:     $op-tan;
+$dark:      $op-dark;
+
+$body-bg:    $op-white;
+$body-color: $op-primary-dark;
+$link-color: $op-secondary;
+$link-hover-color: $op-brown;
+$link-decoration: none;
+$link-hover-decoration: underline;
+
+$font-family-sans-serif: "Lexend Deca", system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+$font-family-monospace:  "Cascadia Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+$font-size-root: 16px;
+$line-height-base: 1.65;
+$headings-color: $op-primary-dark;
+$headings-font-weight: 700;
+$headings-line-height: 1.15;
+$h1-font-size: 2.25rem;
+$h2-font-size: 1.75rem;
+$h3-font-size: 1.375rem;
+
+$border-radius:    10px;
+$border-radius-sm: 6px;
+$border-radius-lg: 16px;
+$border-color: rgba($op-primary, 0.18);
+
+// Navbar
+$navbar-bg: $op-tan;
+$navbar-fg: $op-primary-dark;
+$navbar-hl: $op-secondary;
+$navbar-padding-y: 0.9rem;
+
+// Footer
+$footer-bg: $op-primary-dark;
+$footer-fg: $op-primary-light;
+
+// Code
+$code-bg: $op-tan;
+$code-color: $op-deep-brown;
+$code-block-bg: #f7f1e6;
+$code-block-border-left: false;
+$code-block-padding-left: 1rem;
+$btn-code-copy-color: $op-primary;
+$btn-code-copy-color-active: $op-secondary;
+
+// Callouts
+$callout-color-note: $op-primary;
+$callout-color-tip: $op-gold;
+$callout-color-warning: $op-secondary;
+$callout-color-caution: $op-brown;
+$callout-color-important: #b85c30;
+
+// Tables
+$table-border-color: rgba($op-primary, 0.2);
+$table-striped-bg: rgba($op-tan, 0.45);
+
+// Reveal.js (in case this file is reused for slides)
+$presentation-heading-color: $op-primary;
+
+/*-- scss:rules --*/
+@font-face {
+  font-family: "Lexend Deca";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/LexendDeca-Variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Cascadia Mono";
+  font-style: normal;
+  font-weight: 200 700;
+  font-display: swap;
+  src: url("/fonts/CascadiaMono-Variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Cascadia Mono";
+  font-style: italic;
+  font-weight: 200 700;
+  font-display: swap;
+  src: url("/fonts/CascadiaMono-Italic-Variable.woff2") format("woff2");
+}
+
+:root {
+  --op-primary: #{$op-primary};
+  --op-primary-dark: #{$op-primary-dark};
+  --op-primary-light: #{$op-primary-light};
+  --op-secondary: #{$op-secondary};
+  --op-gold: #{$op-gold};
+  --op-tan: #{$op-tan};
+  --op-tan-light: #{$op-tan-light};
+  --op-brown: #{$op-brown};
+  --op-buff: #{$op-buff};
+  --op-white: #{$op-white};
+  --op-gray: #{$op-gray};
+  --op-dark: #{$op-dark};
+  --op-shadow: 0 2px 16px rgba(45, 74, 94, 0.11);
+  --op-shadow-lg: 0 6px 32px rgba(45, 74, 94, 0.15);
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: 0.005em;
+}
+
+h1, .h1 { letter-spacing: -0.02em; }
+h2, .h2 { letter-spacing: -0.015em; }
+
+// Light word + bold word, as in the wordmark.
+.op-light { font-weight: 300; }
+.op-bold  { font-weight: 800; }
+
+// ---------------------------------------------------------------------------
+// Navbar
+// ---------------------------------------------------------------------------
+.navbar {
+  border-bottom: 1px solid rgba($op-brown, 0.18);
+  box-shadow: none;
+
+  .navbar-brand-container { align-items: center; }
+  .navbar-logo { max-height: 40px; height: 40px; width: auto; }
+  .navbar-title {
+    font-size: 1.25rem;
+    letter-spacing: -0.01em;
+    color: $op-primary-dark;
+    .op-sub { font-weight: 400; color: $op-brown; margin-left: 0.3rem; }
+  }
+
+  .navbar-nav .nav-link {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: $op-primary-dark;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    &:hover { color: $op-secondary; }
+    &.active { color: $op-secondary; font-weight: 600; }
+  }
+
+  // Call to action: the openplains.com item on the right.
+  .navbar-nav .nav-link[href="https://openplains.com"] {
+    background: $op-secondary;
+    color: #fff;
+    font-weight: 700;
+    border-radius: $border-radius;
+    padding: 0.55rem 1.1rem;
+    margin-left: 0.5rem;
+    opacity: 1;
+    &:hover, &:focus { background: $op-brown; color: #fff; }
+  }
+
+  .aa-DetachedSearchButton, .aa-DetachedSearchButtonPlaceholder {
+    background: $op-white;
+    border: 1px solid rgba($op-primary, 0.3);
+    border-radius: $border-radius;
+    color: #8a9eb0;
+  }
+  .aa-DetachedSearchButtonIcon svg { color: $op-primary; }
+}
+
+// ---------------------------------------------------------------------------
+// Title banner (tutorial and listing pages)
+// ---------------------------------------------------------------------------
+.quarto-title-banner {
+  background: $op-tan !important;
+  color: $op-primary-dark !important;
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+  h1, .title { color: $op-primary-dark !important; font-weight: 800; }
+  .description, .subtitle { color: $op-text-muted !important; font-size: 1.15rem; }
+  a { color: $op-brown !important; }
+  .quarto-categories .quarto-category {
+    border: 1px solid rgba($op-brown, 0.4);
+    color: $op-brown !important;
+    border-radius: 100px;
+    padding: 0.15em 0.7em;
+    font-size: 0.7em;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 1;
+  }
+}
+.quarto-title .quarto-categories .quarto-category { color: $op-brown; border-color: rgba($op-brown, 0.4); }
+.quarto-title-meta-heading { color: $op-primary; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.72rem; font-weight: 700; }
+
+// ---------------------------------------------------------------------------
+// Listing cards
+// ---------------------------------------------------------------------------
+.quarto-listing {
+  .quarto-grid-item.card {
+    border: 1px solid rgba($op-primary, 0.12);
+    border-radius: $border-radius-lg;
+    box-shadow: var(--op-shadow);
+    background: #fff;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    &:hover { box-shadow: var(--op-shadow-lg); transform: translateY(-2px); }
+
+    .card-img-top, .thumbnail-image, .card-img { border-radius: 0; }
+    .card-body { padding: 1.3rem 1.4rem 1.2rem; }
+    .card-title, .listing-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      line-height: 1.3;
+      color: $op-primary-dark;
+      margin-bottom: 0.5rem;
+    }
+    .card-text, .listing-description {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: $op-text-muted;
+    }
+    .listing-date, .listing-reading-time, .listing-author {
+      font-size: 0.75rem;
+      color: #8a9eb0;
+    }
+    .card-attribution { border-top: 1px solid rgba($op-primary, 0.12); padding-top: 0.7rem; }
+    .listing-categories .listing-category {
+      border: 1px solid rgba($op-brown, 0.35);
+      color: $op-brown;
+      border-radius: 100px;
+      font-size: 0.65rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.1em 0.65em;
+    }
+  }
+
+  // Category sidebar on listing pages
+  .quarto-listing-category-title { color: $op-primary; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+  .quarto-listing-category .category { color: $op-primary-dark; &.active { color: $op-secondary; font-weight: 600; } .quarto-category-count { color: #8a9eb0; } }
+}
+
+// Default (row) listing on pages that still use it
+.quarto-listing-default .quarto-post {
+  border-bottom: 1px solid rgba($op-primary, 0.15);
+  .listing-title { font-weight: 700; color: $op-primary-dark; }
+  .thumbnail img { border-radius: $border-radius; }
+}
+
+// ---------------------------------------------------------------------------
+// Home page blocks
+// ---------------------------------------------------------------------------
+.op-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: $op-secondary;
+  margin-bottom: 0.6rem;
+}
+
+.op-hero {
+  background: $op-tan;
+  position: relative;
+  overflow: hidden;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-top: -1.5rem;
+  padding: 4rem 0 0;
+
+  .op-hero-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    gap: 3rem;
+    align-items: flex-end;
+  }
+  .op-hero-copy {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+    padding-bottom: 4.5rem;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(2.4rem, 4.6vw, 4rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    color: $op-primary-dark;
+  }
+  .op-hero-lede {
+    margin: 0;
+    max-width: 36rem;
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: $op-text-muted;
+  }
+  .op-hero-actions { display: flex; flex-wrap: wrap; gap: 0.9rem; }
+
+  .op-hero-art {
+    flex: 0 0 400px;
+    position: relative;
+    height: 360px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    .op-sun {
+      position: absolute;
+      left: 50%;
+      bottom: 64px;
+      transform: translateX(-50%);
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      background: $op-gold;
+      opacity: 0.55;
+    }
+    .op-plover { position: relative; width: 300px; height: auto; }
+    .op-prairie-dog { position: absolute; right: 16px; bottom: 0; width: 112px; height: auto; }
+  }
+  // Rounded lip into the page body
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 36px;
+    background: $body-bg;
+    border-radius: 36px 36px 0 0;
+  }
+}
+
+.op-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.9rem;
+  border-radius: $border-radius;
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none !important;
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+.op-btn-primary {
+  background: $op-secondary;
+  color: #fff !important;
+  &:hover { background: $op-brown; transform: translateY(-1px); box-shadow: 0 4px 16px rgba($op-secondary, 0.4); }
+}
+.op-btn-outline {
+  border: 2px solid $op-primary;
+  color: $op-primary !important;
+  padding: calc(0.85rem - 2px) calc(1.9rem - 2px);
+  &:hover { background: $op-primary; color: #fff !important; }
+}
+
+.op-paths {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.op-path {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.75rem;
+  border-radius: $border-radius-lg;
+  background: #fff;
+  border: 1px solid rgba($op-primary, 0.12);
+  box-shadow: var(--op-shadow);
+  color: inherit;
+  text-decoration: none !important;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  &:hover { box-shadow: var(--op-shadow-lg); transform: translateY(-2px); color: inherit; }
+  svg { width: 28px; height: 28px; stroke: $op-primary; }
+  .op-path-title { font-size: 1.35rem; font-weight: 700; color: $op-primary-dark; }
+  .op-path-text { font-size: 0.95rem; line-height: 1.6; color: $op-text-muted; }
+  .op-path-link { font-size: 0.9rem; font-weight: 600; color: $op-secondary; margin-top: auto; }
+}
+
+.op-section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 4rem 0 1.5rem;
+  h2 { margin: 0; font-size: 2.1rem; border: none; padding: 0; }
+  .op-view-all { font-weight: 600; }
+}
+
+@media (max-width: 991.98px) {
+  .navbar .navbar-title .op-sub { display: none; }
+  .op-hero .op-hero-inner { flex-direction: column; align-items: stretch; }
+  .op-hero .op-hero-copy { padding-bottom: 2rem; }
+  .op-hero .op-hero-art { flex: none; height: 260px; .op-plover { width: 220px; } .op-sun { width: 180px; height: 180px; bottom: 48px; } .op-prairie-dog { width: 84px; } }
+  .op-paths { grid-template-columns: 1fr; }
+}
+
+// ---------------------------------------------------------------------------
+// Content styling
+// ---------------------------------------------------------------------------
+div.sourceCode, pre.sourceCode, pre {
+  border: 1px solid rgba($op-primary, 0.18);
+  border-radius: $border-radius;
+}
+code:not(.sourceCode) { padding: 0.15em 0.4em; border-radius: $border-radius-sm; }
+
+.callout { border-radius: $border-radius; }
+.callout.callout-style-default > .callout-header { font-weight: 700; }
+
+.sidebar nav[role="doc-toc"] {
+  > h2 { color: $op-primary; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+  ul > li > a { color: $op-text-muted; &.active { color: $op-secondary; border-left-color: $op-secondary; font-weight: 600; } }
+}
+
+.table > :not(caption) > * > * { padding: 0.6rem 0.8rem; }
+thead th { color: $op-primary-dark; font-weight: 700; border-bottom: 2px solid $op-primary !important; }
+
+figure figcaption, .figure-caption { color: #8a9eb0; font-size: 0.85rem; }
+
+// Footer
+.nav-footer {
+  padding: 2rem 2rem;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  .nav-footer-left { flex: 2 1 auto; font-size: 0.85rem; }
+  .nav-footer-center { flex: 0 1 auto; font-size: 0.85rem; }
+  a { color: $op-white; &:hover { color: $op-buff; } }
+  .nav-footer-right a { font-size: 1.1rem; margin-left: 0.6rem; }
+}
+
+// Icons
+i.fa-sharp-duotone { color: $op-secondary; }
+.highlight { color: $op-primary; font-weight: bold; }
+.text-white { color: $op-white !important; }
+.text-center { text-align: center !important; }
+.list-unstyled { list-style: none; }
+
+// Cookie consent banner (termsfeed widget loaded by Quarto)
+.termsfeed-com---nb {
+  font-family: $font-family-sans-serif !important;
+  .cc-nb-main-container { padding: 1.5rem 2rem !important; }
+  .cc-nb-title { color: $op-primary-dark !important; font-weight: 700 !important; font-size: 1.1rem !important; }
+  .cc-nb-text { color: $op-text-muted !important; font-size: 0.9rem !important; }
+  .cc-nb-okagree, .cc-nb-reject, .cc-nb-changep {
+    border-radius: $border-radius !important;
+    font-family: inherit !important;
+    font-weight: 700 !important;
+    font-size: 0.85rem !important;
+    padding: 0.6rem 1.1rem !important;
+  }
+  .cc-nb-okagree { background: $op-secondary !important; color: #fff !important; }
+  .cc-nb-reject { background: $op-primary !important; color: #fff !important; }
+  .cc-nb-changep { background: $op-tan !important; color: $op-primary-dark !important; }
+}
+.termsfeed-com---palette-light.termsfeed-com---nb { background: #fff !important; box-shadow: var(--op-shadow-lg) !important; border-radius: $border-radius-lg $border-radius-lg 0 0 !important; }

@@ -5,7 +5,10 @@ listing:
         - smackhack25/
         - foss4gna_2024/
     sort: "date desc"
-    type: default
+    type: grid
+    grid-columns: 3
+    image-height: 190px
+    fields: [image, date, title, description, categories]
     categories: true
 page-layout: full
 title-block-banner: true

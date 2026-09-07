@@ -1,26 +1,82 @@
 ---
-title: "Start Learning"
-about:
-    id: hero-heading
-    template: marquee
-    image: content/images/logos/logo_320w-132.jpg
-    image-width: 220px
+title: "OpenPlains Learning"
+pagetitle: "OpenPlains Learning"
+description: "Tutorials, workshops, and talks on interactive geospatial modeling with GRASS and OpenPlains."
 listing:
+    id: recent
     contents:
         - content/notebooks/stac_tutorial/*.qmd
         - content/notebooks/actinia/*.qmd
+        - content/notebooks/hurricane_helene_2024/*.qmd
         - content/blog/*.qmd
+        - "!content/blog/index.qmd"
         - content/workshops/foss4gna_2024/workshop.qmd
         - content/workshops/smackhack25/ncssm_workshop.ipynb
     sort: "date desc"
-    type: default
-    categories: true
+    type: grid
+    grid-columns: 3
+    image-height: 190px
+    max-items: 6
+    fields: [image, date, title, description, categories]
+    categories: false
+    sort-ui: false
+    filter-ui: false
 page-layout: full
 title-block-banner: false
+title-block-style: none
+toc: false
 ---
 
-:::{#hero-heading}
+```{=html}
+<style>#title-block-header { display: none; }</style>
+<section class="op-hero">
+  <div class="op-hero-inner">
+    <div class="op-hero-copy">
+      <div class="op-eyebrow">Tutorials, workshops, and talks</div>
+      <h1><span class="op-light">Learn to build</span><br><span class="op-bold">geospatial models</span><br><span class="op-light">with </span><span class="op-bold">GRASS</span><span class="op-light"> in the cloud.</span></h1>
+      <p class="op-hero-lede">Hands-on notebooks that start in a local <a href="https://grass.osgeo.org">GRASS</a> project and end in a browser or on a cloud API. Terrain, hydrology, satellite imagery, and simulation, using the tools <a href="https://openplains.com">OpenPlains</a> builds.</p>
+      <div class="op-hero-actions">
+        <a class="op-btn op-btn-primary" href="content/notebooks/index.qmd">Start with a tutorial</a>
+        <a class="op-btn op-btn-outline" href="content/workshops/index.qmd">Browse workshops</a>
+      </div>
+    </div>
+    <div class="op-hero-art" aria-hidden="true">
+      <div class="op-sun"></div>
+      <img class="op-plover" src="content/images/brand/mt_plover.svg" alt="">
+      <img class="op-prairie-dog" src="content/images/brand/prairie_dog.svg" alt="">
+    </div>
+  </div>
+</section>
 
-Learn how to build interactive geospatial modeling applications for [GRASS](https://grass.osgeo.org) with [OpenPlains](https://openplains.com).
+<nav class="op-paths" aria-label="Content types">
+  <a class="op-path" href="content/notebooks/index.qmd">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+    <span class="op-path-title">Tutorials</span>
+    <span class="op-path-text">Self-paced notebooks you can run locally or open in Colab. Each one ends with a workflow you can reuse.</span>
+    <span class="op-path-link">Browse tutorials</span>
+  </a>
+  <a class="op-path" href="content/workshops/index.qmd">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+    <span class="op-path-title">Workshops</span>
+    <span class="op-path-text">Half-day and full-day material from FOSS4G NA and classroom events, with setup instructions and data.</span>
+    <span class="op-path-link">Browse workshops</span>
+  </a>
+  <a class="op-path" href="content/presentations/index.qmd">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path></svg>
+    <span class="op-path-title">Talks</span>
+    <span class="op-path-text">Slides from conference sessions on OpenPlains, actinia, and case studies in cloud GRASS.</span>
+    <span class="op-path-link">Browse talks</span>
+  </a>
+</nav>
 
+<div class="op-section-head">
+  <div>
+    <div class="op-eyebrow">Latest</div>
+    <h2>Recently published</h2>
+  </div>
+  <a class="op-view-all" href="content/blog/index.qmd">All posts</a>
+</div>
+```
+
+:::{#recent}
 :::
