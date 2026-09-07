@@ -6,11 +6,9 @@ listing:
     id: recent
     contents:
         - content/notebooks/stac_tutorial/*.qmd
-        - content/notebooks/actinia/*.qmd
         - content/notebooks/hurricane_helene_2024/*.qmd
         - content/blog/*.qmd
         - "!content/blog/index.qmd"
-        - content/workshops/foss4gna_2024/workshop.qmd
         - content/workshops/smackhack25/ncssm_workshop.ipynb
     sort: "date desc"
     type: grid
