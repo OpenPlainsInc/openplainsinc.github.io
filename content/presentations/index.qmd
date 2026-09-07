@@ -1,5 +1,6 @@
 ---
 title: "Talks"
+description: "Slides from conference sessions on OpenPlains, actinia, and case studies in cloud GRASS."
 listing:
     contents: 
         - talks/

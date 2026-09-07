@@ -164,7 +164,7 @@ h2, .h2 { letter-spacing: -0.015em; }
   }
 
   // Call to action: the openplains.com item on the right.
-  .navbar-nav .nav-link[href="https://openplains.com"] {
+  .navbar-nav .nav-link[href^="https://openplains.com"] {
     background: $op-secondary;
     color: #fff;
     font-weight: 700;
@@ -189,24 +189,64 @@ h2, .h2 { letter-spacing: -0.015em; }
 // Title banner (tutorial and listing pages)
 // ---------------------------------------------------------------------------
 .quarto-title-banner {
-  background: $op-tan !important;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 40% 70% at 88% 100%, rgba($op-buff, 0.6), rgba($op-buff, 0) 70%),
+    linear-gradient(180deg, $op-pale-blue 0%, #e4e6e2 40%, $op-tan 100%) !important;
   color: $op-primary-dark !important;
-  padding-top: 2.5rem;
-  padding-bottom: 2.5rem;
-  h1, .title { color: $op-primary-dark !important; font-weight: 800; }
-  .description, .subtitle { color: $op-text-muted !important; font-size: 1.15rem; }
+  padding-top: 3.25rem;
+  padding-bottom: 4.5rem;
+  margin-bottom: 0;
+
+  .quarto-title { position: relative; z-index: 1; }
+  h1, .title {
+    color: $op-primary-dark !important;
+    font-weight: 800;
+    font-size: clamp(2rem, 3.4vw, 2.75rem);
+    letter-spacing: -0.025em;
+    line-height: 1.08;
+  }
+  .description, .subtitle {
+    color: $op-text-muted !important;
+    font-size: 1.15rem;
+    line-height: 1.55;
+    max-width: 44rem;
+    margin-top: 0.75rem;
+  }
   a { color: $op-brown !important; }
-  .quarto-categories .quarto-category {
-    border: 1px solid rgba($op-brown, 0.4);
-    color: $op-brown !important;
-    border-radius: 100px;
-    padding: 0.15em 0.7em;
-    font-size: 0.7em;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    opacity: 1;
+  .quarto-categories {
+    margin-top: 1.1rem;
+    gap: 0.4rem;
+    .quarto-category {
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid rgba($op-brown, 0.35);
+      color: $op-brown !important;
+      border-radius: 100px;
+      padding: 0.2em 0.75em;
+      font-size: 0.7em;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      opacity: 1;
+    }
+  }
+  .code-tools-button, .quarto-title-block-button { color: $op-primary-dark !important; }
+
+  // Rounded lip into the page body, matching the home hero.
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 28px;
+    background: $body-bg;
+    border-radius: 28px 28px 0 0;
+    z-index: 0;
   }
 }
+// Give the metadata row and listing content room below the banner.
+#title-block-header.quarto-title-block .quarto-title-meta { margin-top: 0.5rem; }
+.quarto-title-meta-contents { color: $op-primary-dark; }
 .quarto-title .quarto-categories .quarto-category { color: $op-brown; border-color: rgba($op-brown, 0.4); }
 .quarto-title-meta-heading { color: $op-primary; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.72rem; font-weight: 700; }
 

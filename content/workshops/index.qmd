@@ -1,5 +1,6 @@
 ---
 title: "Workshops"
+description: "Half-day and full-day workshop material from FOSS4G NA and classroom events, with setup instructions and data."
 listing:
     contents:
         - smackhack25/
