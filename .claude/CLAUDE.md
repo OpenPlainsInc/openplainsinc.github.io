@@ -38,7 +38,7 @@ The project is organized into several key directories and files:
 
 * `_extensions/`: Custom Quarto extensions.
 
-* `openplains.scss`: Brand SCSS theme for the website (palette, self-hosted Lexend Deca and Cascadia Mono from `fonts/`, navbar, listing cards, home page blocks). `theme.scss` is the older theme still used by the FOSS4G NA 2024 OpenPlains reveal.js talk; `content/themes/grass.scss` is the GRASS theme for GRASS-branded pages.
+* `openplains.scss`: Brand SCSS theme for the website (palette, self-hosted Lexend Deca and Cascadia Mono from `fonts/`, navbar, listing cards, home page blocks). `content/themes/grass.scss` is the GRASS theme for GRASS-branded pages.
 
 * `content/themes/openplains-revealjs.scss`: brand reveal.js theme for new talks. Start a deck from `content/templates/openplains-slides.qmd`, which documents the slide classes (`.light`/`.bold` headline contrast, `.eyebrow`, `.op-section`, `.op-closing`, `.op-note`, `.op-card`) and the sky backgrounds under `content/images/brand/slide-*.svg`.
 
