@@ -28,8 +28,9 @@ toc: false
 ---
 
 ```{=html}
-<style>#title-block-header { display: none; }</style>
-<section class="op-hero">
+<style>#title-block-header { display: none; } #quarto-document-content { padding-top: 0 !important; margin-top: 0 !important; }</style>
+<section class="op-hero op-sky-day" id="op-hero">
+  <div class="op-stars" aria-hidden="true"></div>
   <div class="op-hero-inner">
     <div class="op-hero-copy">
       <div class="op-eyebrow">Tutorials, workshops, and talks</div>
@@ -76,6 +77,18 @@ toc: false
   </div>
   <a class="op-view-all" href="content/blog/index.qmd">All posts</a>
 </div>
+<script>
+  (function () {
+    // Tint the hero sky by the visitor's local time. ?sky=dawn|day|dusk|night overrides it.
+    var hero = document.getElementById("op-hero");
+    if (!hero) return;
+    var forced = new URLSearchParams(window.location.search).get("sky");
+    var h = new Date().getHours();
+    var sky = forced || (h >= 5 && h < 8 ? "dawn" : h >= 8 && h < 17 ? "day" : h >= 17 && h < 20 ? "dusk" : "night");
+    hero.classList.remove("op-sky-day");
+    hero.classList.add("op-sky-" + sky);
+  })();
+</script>
 ```
 
 :::{#recent}

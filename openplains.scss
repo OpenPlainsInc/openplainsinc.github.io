@@ -172,6 +172,7 @@ h2, .h2 { letter-spacing: -0.015em; }
     padding: 0.55rem 1.1rem;
     margin-left: 0.5rem;
     opacity: 1;
+    transition: none;
     &:hover, &:focus { background: $op-brown; color: #fff; }
   }
 
@@ -282,8 +283,9 @@ h2, .h2 { letter-spacing: -0.015em; }
   overflow: hidden;
   width: 100vw;
   margin-left: calc(50% - 50vw);
-  margin-top: -1.5rem;
+  margin-top: 0;
   padding: 4rem 0 0;
+  transition: background 0.6s ease;
 
   .op-hero-inner {
     max-width: 1320px;
@@ -337,6 +339,8 @@ h2, .h2 { letter-spacing: -0.015em; }
     .op-plover { position: relative; width: 300px; height: auto; }
     .op-prairie-dog { position: absolute; right: 16px; bottom: 0; width: 112px; height: auto; }
   }
+  .op-stars { display: none; }
+  .op-hero-inner { position: relative; z-index: 1; }
   // Rounded lip into the page body
   &::after {
     content: "";
@@ -345,6 +349,55 @@ h2, .h2 { letter-spacing: -0.015em; }
     height: 36px;
     background: $body-bg;
     border-radius: 36px 36px 0 0;
+  }
+}
+
+// Sky by time of day. The class is set by a small script on the home page;
+// .op-sky-day is the no-JS default.
+.op-hero.op-sky-day {
+  background:
+    radial-gradient(ellipse 45% 55% at 78% 92%, rgba($op-buff, 0.55), rgba($op-buff, 0) 70%),
+    linear-gradient(180deg, #e3ebf1 0%, $op-tan 55%, $op-tan 100%);
+}
+.op-hero.op-sky-dawn {
+  background:
+    radial-gradient(ellipse 50% 60% at 78% 100%, rgba($op-gold, 0.55), rgba($op-gold, 0) 70%),
+    linear-gradient(180deg, $op-primary-light 0%, $op-pale-blue 30%, #f4dcc0 65%, $op-tan 100%);
+  .op-sun { background: $op-buff; opacity: 0.8; }
+}
+.op-hero.op-sky-dusk {
+  background:
+    radial-gradient(ellipse 55% 65% at 78% 100%, rgba($op-secondary, 0.6), rgba($op-secondary, 0) 70%),
+    linear-gradient(180deg, $op-primary 0%, #b58a86 35%, $op-gold 70%, $op-tan 100%);
+  h1, .op-hero-lede { color: $op-dark; }
+  .op-hero-lede a { color: $op-deep-brown; text-decoration: underline; text-underline-offset: 3px; }
+  .op-eyebrow { color: $op-deep-brown; }
+  .op-sun { background: $op-secondary; opacity: 0.75; }
+  .op-btn-outline { border-color: $op-primary-dark; color: $op-primary-dark !important; &:hover { background: $op-primary-dark; color: #fff !important; } }
+}
+.op-hero.op-sky-night {
+  background:
+    radial-gradient(ellipse 45% 55% at 78% 95%, rgba($op-primary, 0.5), rgba($op-primary, 0) 70%),
+    linear-gradient(180deg, $op-dark 0%, $op-primary-dark 60%, #3d5a70 100%);
+  h1 { color: $op-white; }
+  .op-hero-lede { color: $op-primary-light; }
+  .op-hero-lede a { color: $op-buff; }
+  .op-eyebrow { color: $op-buff; }
+  .op-btn-outline { border-color: $op-primary-light; color: $op-primary-light !important; &:hover { background: $op-primary-light; color: $op-dark !important; } }
+  .op-sun { background: $op-tan; opacity: 0.9; width: 200px; height: 200px; bottom: 90px; box-shadow: 0 0 60px 20px rgba($op-tan, 0.25); }
+  .op-stars {
+    display: block;
+    position: absolute;
+    inset: 0 0 40px 0;
+    z-index: 0;
+    background-image:
+      radial-gradient(circle, rgba($op-white, 0.9) 1px, transparent 1.5px),
+      radial-gradient(circle, rgba($op-white, 0.6) 1px, transparent 1.5px);
+    background-size: 90px 70px, 140px 110px;
+    background-position: 10px 5px, 60px 40px;
+    opacity: 0.55;
+    mask-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0) 100%);
+    -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0) 100%);
   }
 }
 
