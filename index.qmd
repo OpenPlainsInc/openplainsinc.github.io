@@ -65,7 +65,7 @@ toc: false
   <a class="op-path" href="content/presentations/index.qmd">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path></svg>
     <span class="op-path-title">Talks</span>
-    <span class="op-path-text">Slides from conference sessions on OpenPlains, actinia, and case studies in cloud GRASS.</span>
+    <span class="op-path-text">Slides from conference sessions on OpenPlains and case studies in cloud GRASS.</span>
     <span class="op-path-link">Browse talks</span>
   </a>
 </nav>

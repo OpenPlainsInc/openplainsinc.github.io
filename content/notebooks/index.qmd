@@ -1,6 +1,6 @@
 ---
 title: "Tutorials"
-description: "Self-paced notebooks on GRASS, STAC imagery, photogrammetry, and cloud processing with actinia. Run them locally or open them in Colab."
+description: "Self-paced notebooks on GRASS, STAC imagery, photogrammetry, and cloud processing. Run them locally or open them in Colab."
 listing:
     contents:
         - actinia/
