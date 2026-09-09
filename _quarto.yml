@@ -1,6 +1,8 @@
 project:
   type: website
   output-dir: docs
+  resources:
+    - fonts/
 website:
 
   # Site Settings
@@ -23,12 +25,12 @@ website:
   
   # Navbar
   navbar:
-    title: "OpenPlains"
-    logo: content/images/logos/openplains/openplains-logo-05x-400x393.png
+    title: '<span class="op-light">Open</span><span class="op-bold">Plains</span><span class="op-sub">Learning</span>'
+    logo: content/images/logos/openplains-logo.svg
     logo-alt: "OpenPlains"
-    logo-href: https://openplains.com
-    background: primary
-    foreground: light
+    logo-href: index.qmd
+    background: "#f0e3ce"
+    foreground: "#2d4a5e"
     search: true
     left:
       - text: "Home"
@@ -39,6 +41,12 @@ website:
         href: content/workshops/index.qmd
       - text: "Talks"
         href: content/presentations/index.qmd
+      - text: "Blog"
+        href: content/blog/index.qmd
+    right:
+      - text: "Join the beta"
+        href: https://openplains.com/beta
+        aria-label: "Request access to the OpenPlains beta"
 
     # Tools
     tools:
@@ -52,7 +60,7 @@ website:
     # Footer
   page-footer:
     left: |
-      [OpenPlains&trade; &copy; 2025. All rights reserved.](https://openplains.com) |
+      [OpenPlains&trade; &copy; 2026. All rights reserved.](https://openplains.com) |
       [Privacy Policy](https://openplains.com/privacy) |
       [Terms of Service](https://openplains.com/terms) |
       [Contact Us](https://openplains.com/contact)
@@ -74,9 +82,12 @@ execute:
   freeze: auto
 format:
   html:
-    theme: [pandoc, theme.scss]
+    theme: [cosmo, openplains.scss]
+    mainfont: "Lexend Deca"
+    monofont: "Cascadia Mono"
     toc: true
-    toc-title: Table of Contents
+    toc-title: On this page
+    code-copy: true
     link-external-newwindow: true
     include-in-header:
       - text: |

@@ -8,7 +8,21 @@ categories: [foss4gna, presentation, openplains]
 draft: false
 format:
     revealjs:
-        theme: [simple, ../../../theme.scss]
+        theme: [default, ../../themes/openplains-revealjs.scss]
+        width: 1280
+        height: 720
+        margin: 0.08
+        slide-number: c/t
+        logo: ../../images/logos/openplains-logo.svg
+        footer: "OpenPlains · FOSS4G NA 2024"
+        progress: true
+        controls: false
+        transition: fade
+        background-transition: fade
+        title-slide-attributes:
+            data-background-image: ../../images/brand/slide-title-day.svg
+            data-background-size: cover
+            data-background-position: center
 ---
 
 ## Part 1. From Academia to Startup
@@ -147,7 +161,7 @@ Trust in unfamiliar models
 
 :::{.columns}
 :::{.column width=50%}
-![](../../images/logos/grassgis_logo_colorlogo_text_whitebg.png)
+![](../../images/logos/grassgis_logo_colorlogo_text_whitebg.png){width="62%" .no-shadow}
 :::
 :::{.column width=50%}
 

@@ -38,7 +38,9 @@ The project is organized into several key directories and files:
 
 * `_extensions/`: Custom Quarto extensions.
 
-* `themes.scss`: Custom SCSS for styling our Quarto documents.
+* `openplains.scss`: Brand SCSS theme for the website (palette, self-hosted Lexend Deca and Cascadia Mono from `fonts/`, navbar, listing cards, home page blocks). `content/themes/grass.scss` is the GRASS theme for GRASS-branded pages.
+
+* `content/themes/openplains-revealjs.scss`: brand reveal.js theme for new talks. Start a deck from `content/templates/openplains-slides.qmd`, which documents the slide classes (`.light`/`.bold` headline contrast, `.eyebrow`, `.op-section`, `.op-closing`, `.op-note`, `.op-card`) and the sky backgrounds under `content/images/brand/slide-*.svg`.
 
 ## Content Authoring
 

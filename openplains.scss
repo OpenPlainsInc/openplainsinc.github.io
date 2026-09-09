@@ -1,0 +1,589 @@
+/*-- scss:defaults --*/
+// OpenPlains brand theme for the Learning site (Bootstrap 5 / Quarto).
+// Tokens follow the OpenPlains brand style guide.
+
+// Palette
+$op-primary:       #657e96;
+$op-primary-dark:  #2d4a5e;
+$op-primary-light: #a8bfcf;
+$op-pale-blue:     #cbdff1;
+$op-secondary:     #d07944;
+$op-gold:          #d49441;
+$op-tan:           #f0e3ce;
+$op-tan-light:     #fffcf7;
+$op-brown:         #a76a3a;
+$op-deep-brown:    #8a4820;
+$op-buff:          #e0c879;
+$op-white:         #fbfbfb;
+$op-gray:          #c8c0b4;
+$op-dark:          #1a2a36;
+$op-text-muted:    #4a6070;
+
+// Bootstrap
+$primary:   $op-primary;
+$secondary: $op-secondary;
+$success:   #6f8f5a;
+$info:      $op-primary-light;
+$warning:   $op-gold;
+$danger:    #b85c30;
+$light:     $op-tan;
+$dark:      $op-dark;
+
+$body-bg:    $op-white;
+$body-color: $op-primary-dark;
+$link-color: $op-secondary;
+$link-hover-color: $op-brown;
+$link-decoration: none;
+$link-hover-decoration: underline;
+
+$font-family-sans-serif: "Lexend Deca", system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+$font-family-monospace:  "Cascadia Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+$font-size-root: 16px;
+$line-height-base: 1.65;
+$headings-color: $op-primary-dark;
+$headings-font-weight: 700;
+$headings-line-height: 1.15;
+$h1-font-size: 2.25rem;
+$h2-font-size: 1.75rem;
+$h3-font-size: 1.375rem;
+
+$border-radius:    10px;
+$border-radius-sm: 6px;
+$border-radius-lg: 16px;
+$border-color: rgba($op-primary, 0.18);
+
+// Navbar
+$navbar-bg: $op-tan;
+$navbar-fg: $op-primary-dark;
+$navbar-hl: $op-secondary;
+$navbar-padding-y: 0.9rem;
+
+// Footer
+$footer-bg: $op-primary-dark;
+$footer-fg: $op-primary-light;
+
+// Code
+$code-bg: $op-tan;
+$code-color: $op-deep-brown;
+$code-block-bg: #f7f1e6;
+$code-block-border-left: false;
+$code-block-padding-left: 1rem;
+$btn-code-copy-color: $op-primary;
+$btn-code-copy-color-active: $op-secondary;
+
+// Callouts
+$callout-color-note: $op-primary;
+$callout-color-tip: $op-gold;
+$callout-color-warning: $op-secondary;
+$callout-color-caution: $op-brown;
+$callout-color-important: #b85c30;
+
+// Tables
+$table-border-color: rgba($op-primary, 0.2);
+$table-striped-bg: rgba($op-tan, 0.45);
+
+// Reveal.js (in case this file is reused for slides)
+$presentation-heading-color: $op-primary;
+
+/*-- scss:rules --*/
+@font-face {
+  font-family: "Lexend Deca";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/LexendDeca-Variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Cascadia Mono";
+  font-style: normal;
+  font-weight: 200 700;
+  font-display: swap;
+  src: url("/fonts/CascadiaMono-Variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Cascadia Mono";
+  font-style: italic;
+  font-weight: 200 700;
+  font-display: swap;
+  src: url("/fonts/CascadiaMono-Italic-Variable.woff2") format("woff2");
+}
+
+:root {
+  --op-primary: #{$op-primary};
+  --op-primary-dark: #{$op-primary-dark};
+  --op-primary-light: #{$op-primary-light};
+  --op-secondary: #{$op-secondary};
+  --op-gold: #{$op-gold};
+  --op-tan: #{$op-tan};
+  --op-tan-light: #{$op-tan-light};
+  --op-brown: #{$op-brown};
+  --op-buff: #{$op-buff};
+  --op-white: #{$op-white};
+  --op-gray: #{$op-gray};
+  --op-dark: #{$op-dark};
+  --op-shadow: 0 2px 16px rgba(45, 74, 94, 0.11);
+  --op-shadow-lg: 0 6px 32px rgba(45, 74, 94, 0.15);
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: 0.005em;
+}
+
+h1, .h1 { letter-spacing: -0.02em; }
+h2, .h2 { letter-spacing: -0.015em; }
+
+// Light word + bold word, as in the wordmark.
+.op-light { font-weight: 300; }
+.op-bold  { font-weight: 800; }
+
+// ---------------------------------------------------------------------------
+// Navbar
+// ---------------------------------------------------------------------------
+.navbar {
+  border-bottom: 1px solid rgba($op-brown, 0.18);
+  box-shadow: none;
+
+  .navbar-brand-container { align-items: center; }
+  .navbar-logo { max-height: 40px; height: 40px; width: auto; }
+  .navbar-title {
+    font-size: 1.25rem;
+    letter-spacing: -0.01em;
+    color: $op-primary-dark;
+    .op-sub { font-weight: 400; color: $op-brown; margin-left: 0.3rem; }
+  }
+
+  .navbar-nav .nav-link {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: $op-primary-dark;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    &:hover { color: $op-secondary; }
+    &.active { color: $op-secondary; font-weight: 600; }
+  }
+
+  // Beta sign-up link on openplains.com: a quiet outlined pill, so the hero
+  // keeps the only filled orange button. Matched by prefix because Quarto's
+  // page script normalizes the href after load.
+  .navbar-nav .nav-link[href^="https://openplains.com"] {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: transparent;
+    border: 1.5px solid rgba($op-primary, 0.55);
+    border-radius: 100px;
+    color: $op-primary-dark;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    padding: 0.4rem 1rem 0.4rem 1.05rem;
+    margin: 0 1rem 0 0.75rem;
+    opacity: 1;
+    transition: none;
+    &::after {
+      font-family: "bootstrap-icons";
+      content: "\F1C5";
+      font-size: 0.7em;
+      line-height: 1;
+      opacity: 0.8;
+    }
+    &:hover, &:focus {
+      background: $op-primary;
+      border-color: $op-primary;
+      color: #fff;
+      &::after { opacity: 1; }
+    }
+  }
+
+  .aa-DetachedSearchButton, .aa-DetachedSearchButtonPlaceholder {
+    background: $op-white;
+    border: 1px solid rgba($op-primary, 0.3);
+    border-radius: $border-radius;
+    color: #8a9eb0;
+  }
+  .aa-DetachedSearchButtonIcon svg { color: $op-primary; }
+}
+
+// ---------------------------------------------------------------------------
+// Title banner (tutorial and listing pages)
+// ---------------------------------------------------------------------------
+.quarto-title-banner {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 40% 70% at 88% 100%, rgba($op-buff, 0.6), rgba($op-buff, 0) 70%),
+    linear-gradient(180deg, $op-pale-blue 0%, #e4e6e2 40%, $op-tan 100%) !important;
+  color: $op-primary-dark !important;
+  padding-top: 3.25rem;
+  padding-bottom: 4.5rem;
+  margin-bottom: 0;
+
+  .quarto-title { position: relative; z-index: 1; }
+  h1, .title {
+    color: $op-primary-dark !important;
+    font-weight: 800;
+    font-size: clamp(2rem, 3.4vw, 2.75rem);
+    letter-spacing: -0.025em;
+    line-height: 1.08;
+  }
+  .description, .subtitle {
+    color: $op-text-muted !important;
+    font-size: 1.15rem;
+    line-height: 1.55;
+    max-width: 44rem;
+    margin-top: 0.75rem;
+  }
+  a { color: $op-brown !important; }
+  .quarto-categories {
+    margin-top: 1.1rem;
+    gap: 0.4rem;
+    .quarto-category {
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid rgba($op-brown, 0.35);
+      color: $op-brown !important;
+      border-radius: 100px;
+      padding: 0.2em 0.75em;
+      font-size: 0.7em;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      opacity: 1;
+    }
+  }
+  .code-tools-button, .quarto-title-block-button { color: $op-primary-dark !important; }
+
+  // Rounded lip into the page body, matching the home hero.
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 28px;
+    background: $body-bg;
+    border-radius: 28px 28px 0 0;
+    z-index: 0;
+  }
+}
+// Give the metadata row and listing content room below the banner.
+#title-block-header.quarto-title-block .quarto-title-meta { margin-top: 0.5rem; }
+.quarto-title-meta-contents { color: $op-primary-dark; }
+.quarto-title .quarto-categories .quarto-category { color: $op-brown; border-color: rgba($op-brown, 0.4); }
+.quarto-title-meta-heading { color: $op-primary; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.72rem; font-weight: 700; }
+
+// ---------------------------------------------------------------------------
+// Listing cards
+// ---------------------------------------------------------------------------
+.quarto-listing {
+  .quarto-grid-item.card {
+    border: 1px solid rgba($op-primary, 0.12);
+    border-radius: $border-radius-lg;
+    box-shadow: var(--op-shadow);
+    background: #fff;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    &:hover { box-shadow: var(--op-shadow-lg); transform: translateY(-2px); }
+
+    .card-img-top, .thumbnail-image, .card-img { border-radius: 0; }
+    .card-body { padding: 1.3rem 1.4rem 1.2rem; }
+    .card-title, .listing-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      line-height: 1.3;
+      color: $op-primary-dark;
+      margin-bottom: 0.5rem;
+    }
+    .card-text, .listing-description {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: $op-text-muted;
+    }
+    .listing-date, .listing-reading-time, .listing-author {
+      font-size: 0.75rem;
+      color: #8a9eb0;
+    }
+    .card-attribution { border-top: 1px solid rgba($op-primary, 0.12); padding-top: 0.7rem; }
+    .listing-categories .listing-category {
+      border: 1px solid rgba($op-brown, 0.35);
+      color: $op-brown;
+      border-radius: 100px;
+      font-size: 0.65rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.1em 0.65em;
+    }
+  }
+
+  // Category sidebar on listing pages
+  .quarto-listing-category-title { color: $op-primary; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+  .quarto-listing-category .category { color: $op-primary-dark; &.active { color: $op-secondary; font-weight: 600; } .quarto-category-count { color: #8a9eb0; } }
+}
+
+// Default (row) listing on pages that still use it
+.quarto-listing-default .quarto-post {
+  border-bottom: 1px solid rgba($op-primary, 0.15);
+  .listing-title { font-weight: 700; color: $op-primary-dark; }
+  .thumbnail img { border-radius: $border-radius; }
+}
+
+// ---------------------------------------------------------------------------
+// Home page blocks
+// ---------------------------------------------------------------------------
+.op-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: $op-secondary;
+  margin-bottom: 0.6rem;
+}
+
+.op-hero {
+  background: $op-tan;
+  position: relative;
+  overflow: hidden;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-top: 0;
+  padding: 4rem 0 0;
+  transition: background 0.6s ease;
+
+  .op-hero-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    gap: 3rem;
+    align-items: flex-end;
+  }
+  .op-hero-copy {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+    padding-bottom: 4.5rem;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(2.4rem, 4.6vw, 4rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    color: $op-primary-dark;
+  }
+  .op-hero-lede {
+    margin: 0;
+    max-width: 36rem;
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: $op-text-muted;
+  }
+  .op-hero-actions { display: flex; flex-wrap: wrap; gap: 0.9rem; }
+
+  .op-hero-art {
+    flex: 0 0 400px;
+    position: relative;
+    height: 360px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    .op-sun {
+      position: absolute;
+      left: 50%;
+      bottom: 64px;
+      transform: translateX(-50%);
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      background: $op-gold;
+      opacity: 0.55;
+    }
+    .op-plover { position: relative; width: 300px; height: auto; }
+    .op-prairie-dog { position: absolute; right: 16px; bottom: 0; width: 112px; height: auto; }
+  }
+  .op-stars { display: none; }
+  .op-hero-inner { position: relative; z-index: 1; }
+  // Rounded lip into the page body
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 36px;
+    background: $body-bg;
+    border-radius: 36px 36px 0 0;
+  }
+}
+
+// Sky by time of day. The class is set by a small script on the home page;
+// .op-sky-day is the no-JS default.
+.op-hero.op-sky-day {
+  background:
+    radial-gradient(ellipse 45% 55% at 78% 92%, rgba($op-buff, 0.55), rgba($op-buff, 0) 70%),
+    linear-gradient(180deg, #e3ebf1 0%, $op-tan 55%, $op-tan 100%);
+}
+.op-hero.op-sky-dawn {
+  background:
+    radial-gradient(ellipse 50% 60% at 78% 100%, rgba($op-gold, 0.55), rgba($op-gold, 0) 70%),
+    linear-gradient(180deg, $op-primary-light 0%, $op-pale-blue 30%, #f4dcc0 65%, $op-tan 100%);
+  .op-sun { background: $op-buff; opacity: 0.8; }
+}
+.op-hero.op-sky-dusk {
+  background:
+    radial-gradient(ellipse 55% 65% at 78% 100%, rgba($op-secondary, 0.6), rgba($op-secondary, 0) 70%),
+    linear-gradient(180deg, $op-primary 0%, #b58a86 35%, $op-gold 70%, $op-tan 100%);
+  h1, .op-hero-lede { color: $op-dark; }
+  .op-hero-lede a { color: $op-deep-brown; text-decoration: underline; text-underline-offset: 3px; }
+  .op-eyebrow { color: $op-deep-brown; }
+  .op-sun { background: $op-secondary; opacity: 0.75; }
+  .op-btn-outline { border-color: $op-primary-dark; color: $op-primary-dark !important; &:hover { background: $op-primary-dark; color: #fff !important; } }
+}
+.op-hero.op-sky-night {
+  background:
+    radial-gradient(ellipse 45% 55% at 78% 95%, rgba($op-primary, 0.5), rgba($op-primary, 0) 70%),
+    linear-gradient(180deg, $op-dark 0%, $op-primary-dark 60%, #3d5a70 100%);
+  h1 { color: $op-white; }
+  .op-hero-lede { color: $op-primary-light; }
+  .op-hero-lede a { color: $op-buff; }
+  .op-eyebrow { color: $op-buff; }
+  .op-btn-outline { border-color: $op-primary-light; color: $op-primary-light !important; &:hover { background: $op-primary-light; color: $op-dark !important; } }
+  .op-sun { background: $op-tan; opacity: 0.9; width: 200px; height: 200px; bottom: 90px; box-shadow: 0 0 60px 20px rgba($op-tan, 0.25); }
+  .op-stars {
+    display: block;
+    position: absolute;
+    inset: 0 0 40px 0;
+    z-index: 0;
+    background-image:
+      radial-gradient(circle, rgba($op-white, 0.9) 1px, transparent 1.5px),
+      radial-gradient(circle, rgba($op-white, 0.6) 1px, transparent 1.5px);
+    background-size: 90px 70px, 140px 110px;
+    background-position: 10px 5px, 60px 40px;
+    opacity: 0.55;
+    mask-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0) 100%);
+    -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0) 100%);
+  }
+}
+
+.op-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.9rem;
+  border-radius: $border-radius;
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none !important;
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+.op-btn-primary {
+  background: $op-secondary;
+  color: #fff !important;
+  &:hover { background: $op-brown; transform: translateY(-1px); box-shadow: 0 4px 16px rgba($op-secondary, 0.4); }
+}
+.op-btn-outline {
+  border: 2px solid $op-primary;
+  color: $op-primary !important;
+  padding: calc(0.85rem - 2px) calc(1.9rem - 2px);
+  &:hover { background: $op-primary; color: #fff !important; }
+}
+
+.op-paths {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.op-path {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.75rem;
+  border-radius: $border-radius-lg;
+  background: #fff;
+  border: 1px solid rgba($op-primary, 0.12);
+  box-shadow: var(--op-shadow);
+  color: inherit;
+  text-decoration: none !important;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  &:hover { box-shadow: var(--op-shadow-lg); transform: translateY(-2px); color: inherit; }
+  svg { width: 28px; height: 28px; stroke: $op-primary; }
+  .op-path-title { font-size: 1.35rem; font-weight: 700; color: $op-primary-dark; }
+  .op-path-text { font-size: 0.95rem; line-height: 1.6; color: $op-text-muted; }
+  .op-path-link { font-size: 0.9rem; font-weight: 600; color: $op-secondary; margin-top: auto; }
+}
+
+.op-section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 4rem 0 1.5rem;
+  h2 { margin: 0; font-size: 2.1rem; border: none; padding: 0; }
+  .op-view-all { font-weight: 600; }
+}
+
+@media (max-width: 991.98px) {
+  .navbar .navbar-title .op-sub { display: none; }
+  .op-hero .op-hero-inner { flex-direction: column; align-items: stretch; }
+  .op-hero .op-hero-copy { padding-bottom: 2rem; }
+  .op-hero .op-hero-art { flex: none; height: 260px; .op-plover { width: 220px; } .op-sun { width: 180px; height: 180px; bottom: 48px; } .op-prairie-dog { width: 84px; } }
+  .op-paths { grid-template-columns: 1fr; }
+}
+
+// ---------------------------------------------------------------------------
+// Content styling
+// ---------------------------------------------------------------------------
+div.sourceCode, pre.sourceCode, pre {
+  border: 1px solid rgba($op-primary, 0.18);
+  border-radius: $border-radius;
+}
+code:not(.sourceCode) { padding: 0.15em 0.4em; border-radius: $border-radius-sm; }
+
+.callout { border-radius: $border-radius; }
+.callout.callout-style-default > .callout-header { font-weight: 700; }
+
+.sidebar nav[role="doc-toc"] {
+  > h2 { color: $op-primary; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+  ul > li > a { color: $op-text-muted; &.active { color: $op-secondary; border-left-color: $op-secondary; font-weight: 600; } }
+}
+
+.table > :not(caption) > * > * { padding: 0.6rem 0.8rem; }
+thead th { color: $op-primary-dark; font-weight: 700; border-bottom: 2px solid $op-primary !important; }
+
+figure figcaption, .figure-caption { color: #8a9eb0; font-size: 0.85rem; }
+
+// Footer
+.nav-footer {
+  padding: 2rem 2rem;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  .nav-footer-left { flex: 2 1 auto; font-size: 0.85rem; }
+  .nav-footer-center { flex: 0 1 auto; font-size: 0.85rem; }
+  a { color: $op-white; &:hover { color: $op-buff; } }
+  .nav-footer-right a { font-size: 1.1rem; margin-left: 0.6rem; }
+}
+
+// Icons
+i.fa-sharp-duotone { color: $op-secondary; }
+.highlight { color: $op-primary; font-weight: bold; }
+.text-white { color: $op-white !important; }
+.text-center { text-align: center !important; }
+.list-unstyled { list-style: none; }
+
+// Cookie consent banner (termsfeed widget loaded by Quarto)
+.termsfeed-com---nb {
+  font-family: $font-family-sans-serif !important;
+  .cc-nb-main-container { padding: 1.5rem 2rem !important; }
+  .cc-nb-title { color: $op-primary-dark !important; font-weight: 700 !important; font-size: 1.1rem !important; }
+  .cc-nb-text { color: $op-text-muted !important; font-size: 0.9rem !important; }
+  .cc-nb-okagree, .cc-nb-reject, .cc-nb-changep {
+    border-radius: $border-radius !important;
+    font-family: inherit !important;
+    font-weight: 700 !important;
+    font-size: 0.85rem !important;
+    padding: 0.6rem 1.1rem !important;
+  }
+  .cc-nb-okagree { background: $op-secondary !important; color: #fff !important; }
+  .cc-nb-reject { background: $op-primary !important; color: #fff !important; }
+  .cc-nb-changep { background: $op-tan !important; color: $op-primary-dark !important; }
+}
+.termsfeed-com---palette-light.termsfeed-com---nb { background: #fff !important; box-shadow: var(--op-shadow-lg) !important; border-radius: $border-radius-lg $border-radius-lg 0 0 !important; }

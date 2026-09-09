@@ -1,5 +1,6 @@
 ---
 title: "Tutorials"
+description: "Self-paced notebooks on GRASS, STAC imagery, photogrammetry, and cloud processing. Run them locally or open them in Colab."
 listing:
     contents:
         - actinia/
@@ -8,7 +9,10 @@ listing:
         - stac_tutorial/
         - watershed_analysis/
     sort: "date desc"
-    type: default
+    type: grid
+    grid-columns: 3
+    image-height: 190px
+    fields: [image, date, title, description, categories]
     categories: true
 page-layout: full
 title-block-banner: true
