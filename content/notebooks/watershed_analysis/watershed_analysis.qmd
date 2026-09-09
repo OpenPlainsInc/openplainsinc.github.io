@@ -16,7 +16,8 @@ format:
     toc: true
     toc-depth: 3
     code-copy: true
-    code-fold: false
+    code-fold: true
+    code-summary: "Show code"
     code-tools: true
     lightbox: true
     other-links:
@@ -81,6 +82,9 @@ This guide delineates stream networks and watersheds from a digital elevation
 model using
 [`r.watershed`](https://grass.osgeo.org/grass-stable/manuals/r.watershed.html)
 in GRASS, then looks at how the threshold and the cell size affect the result.
+For a broader treatment of terrain analysis in GRASS, including watershed
+analysis alongside slope, curvature, solar radiation, and visibility, see the
+Geomorphometry in GRASS chapter (White et al., 2026).
 
 ::: {.callout-note}
 ## Who this is for
@@ -265,7 +269,7 @@ SCALE = {"at": (3, 5), "style": "line", "color": "white", "bgcolor": "black", "f
 overview = gj.Map(width=760, use_region=True)
 overview.d_rast(map="relief")
 overview.d_vect(map="basins_vect", fill_color="none", color=DIVIDE, width=1)
-overview.d_vect(map="streams_vect", color=STREAM, width=2)
+overview.d_vect(map="streams_vect", type="line", color=STREAM, width=2)
 overview.d_barscale(**SCALE)
 overview.show()
 ```
@@ -278,7 +282,7 @@ Path("images").mkdir(exist_ok=True)
 cover = gj.Map(width=520, filename="images/cover.png", use_region=True)
 cover.d_rast(map="relief")
 cover.d_vect(map="basins_vect", fill_color="none", color=DIVIDE, width=1)
-cover.d_vect(map="streams_vect", color=STREAM, width=2)
+cover.d_vect(map="streams_vect", type="line", color=STREAM, width=2)
 ```
 
 Gray lines are divides and blue lines are streams, drawn over a hillshade in
@@ -419,12 +423,12 @@ for suffix in ("9km2", "045km2"):
 
 coarse = gj.Map(width=600, use_region=True)
 coarse.d_rast(map="relief")
-coarse.d_vect(map="vect_9km2", color=STREAM, width=2)
+coarse.d_vect(map="vect_9km2", type="line", color=STREAM, width=2)
 coarse.show()
 
 fine = gj.Map(width=600, use_region=True)
 fine.d_rast(map="relief")
-fine.d_vect(map="vect_045km2", color=STREAM, width=2)
+fine.d_vect(map="vect_045km2", type="line", color=STREAM, width=2)
 fine.show()
 ```
 
@@ -446,17 +450,28 @@ though the threshold parameter looks the same.
 ```{python}
 # | label: resolution
 def run_at_resolution(res, suffix, threshold_cells=10000):
-    tools.g_region(raster="elevation@PERMANENT", res=res, flags="a")
-    reg = tools.g_region(flags="p", format="json")
-    tools.r_watershed(
-        elevation="elevation@PERMANENT",
-        threshold=threshold_cells,
-        stream=f"streams_res{suffix}",
-        basin=f"basins_res{suffix}",
-        overwrite=True,
-    )
-    basins = len(tools.r_stats(input=f"basins_res{suffix}", flags="n").text.split())
-    stream_cells = int(tools.r_univar(map=f"streams_res{suffix}", format="json")["n"])
+    """Run r.watershed on the DEM resampled to the given cell size."""
+    dem = f"elevation_{suffix}"
+    # RegionManager restores the original region when the block ends.
+    with gs.RegionManager(raster="elevation@PERMANENT", res=res, flags="a"):
+        reg = tools.g_region(flags="p", format="json")
+        # Average the 30 m cells that fall inside each coarser cell. Reading
+        # the 30 m raster directly at a coarser region would take one 30 m
+        # cell per output cell instead, a nearest-neighbor resample.
+        tools.r_resamp_stats(
+            input="elevation@PERMANENT", output=dem, method="average", overwrite=True
+        )
+        tools.r_watershed(
+            elevation=dem,
+            threshold=threshold_cells,
+            stream=f"streams_res{suffix}",
+            basin=f"basins_res{suffix}",
+            overwrite=True,
+        )
+        basins = len(tools.r_stats(input=f"basins_res{suffix}", flags="n").text.split())
+        stream_cells = int(
+            tools.r_univar(map=f"streams_res{suffix}", format="json")["n"]
+        )
     return {
         "resolution m": int(reg["nsres"]),
         "cells in region": reg["rows"] * reg["cols"],
@@ -467,16 +482,21 @@ def run_at_resolution(res, suffix, threshold_cells=10000):
     }
 
 
-# 30 m is what this DEM contains, so the comparison runs native against coarser.
-res_rows = [run_at_resolution(30, "30"), run_at_resolution(90, "90")]
-tools.g_region(raster="elevation@PERMANENT")
-show_table(res_rows)
+# 30 m is the DEM's own cell size, so that run is unchanged by the resample.
+show_table([run_at_resolution(30, "30"), run_at_resolution(90, "90")])
 ```
 
-With the same 10,000 cell threshold, the 90 m run produces about twelve times
-fewer watersheds. This is why the main run set the threshold in square
+With the same 10,000 cell threshold, the 90 m run produces about fifteen
+times fewer watersheds. This is why the main run set the threshold in square
 kilometers and converted it to cells from the region. It also helps to record
 the region settings alongside the threshold in your methods.
+
+Two details in the code matter for a fair comparison. The coarser DEM is made
+with `r.resamp.stats`, which averages the 30 m cells inside each 90 m cell.
+Reading the 30 m raster at a 90 m region would instead pick one 30 m cell per
+90 m cell, which keeps noise and drops detail. And the region change is wrapped
+in `gs.RegionManager`, which puts the original region back when the block
+ends, so later cells run on the 30 m grid without needing to reset it.
 
 Cell size also limits what the DEM can represent. At 30 m, a 4 m wide swale
 does not appear at all, and neither does the flow path through it. At 1 m, the
@@ -523,11 +543,11 @@ channel, often because the coordinate was picked from a basemap.
 
 ```{python}
 # | label: map-outlet
-# Tint the relief orange inside the watershed: a copy of the relief clipped
-# to the basin, with the same ramp ending in orange instead of white.
-tools.r_mapcalc(
-    expression="outlet_shade = if(isnull(outlet_basin), null(), relief)", overwrite=True
-)
+# Tint the relief orange inside the watershed: copy the relief with the basin
+# as a mask, then give the copy the same ramp ending in orange instead of
+# white. MaskManager clears the mask when the block ends.
+with gs.MaskManager(mask_name="outlet_basin"):
+    tools.r_mapcalc(expression="outlet_shade = relief", overwrite=True)
 rules = Path("outlet.rules")
 rules.write_text(
     f"{shade['min']} 0:0:0\n{shade['median']} 70:35:10\n{shade['max']} 255:170:90\n"
@@ -538,7 +558,7 @@ rules.unlink()
 outlet_map = gj.Map(width=760, use_region=True)
 outlet_map.d_rast(map="relief")
 outlet_map.d_rast(map="outlet_shade")
-outlet_map.d_vect(map="streams_vect", color=STREAM, width=2)
+outlet_map.d_vect(map="streams_vect", type="line", color=STREAM, width=2)
 outlet_map.d_barscale(**SCALE)
 outlet_map.show()
 ```
@@ -708,11 +728,21 @@ tools.g_remove(
     name=(
         "streams_9km2,basins_9km2,streams_045km2,basins_045km2,"
         "thin_9km2,thin_045km2,streams_res30,basins_res30,"
-        "streams_res90,basins_res90,accum_pos,edge_basins,outlet_shade"
+        "streams_res90,basins_res90,elevation_30,elevation_90,accum_pos,"
+        "edge_basins,outlet_shade"
     ),
     flags="f",
 )
 ```
+
+::: {.callout-tip}
+## Try this without installing GRASS
+
+OpenPlains runs GRASS tools like `r.watershed` in the browser, over an area you
+draw on the map, with no local install. The platform is in beta.
+[Request access](https://openplains.com/beta) to try it on your own
+watershed.
+:::
 
 ## References
 
@@ -729,6 +759,12 @@ Metz, M., Mitasova, H., & Harmon, R. S. (2011). Efficient extraction of drainage
 networks from massive, radar-based elevation models with least cost path search.
 *Hydrology and Earth System Sciences*, 15, 667-678.
 <https://doi.org/10.5194/hess-15-667-2011>
+
+White, C. T., Mitasova, H., Neteler, M., Petrasova, A., & Hofierka, J. (2026).
+Geomorphometry in GRASS. In H. I. Reuter, C. H. Grohmann, & V. Lecours (Eds.),
+*Geomorphometry: Concepts, software, applications* (2nd ed., Developments in
+Soil Science, Vol. 37, pp. 417-442). Elsevier.
+<https://doi.org/10.1016/B978-0-44-333376-7.00023-9>
 
 GRASS Development Team. (2026). *Geographic Resources Analysis Support System
 (GRASS) Software*. Open Source Geospatial Foundation.
