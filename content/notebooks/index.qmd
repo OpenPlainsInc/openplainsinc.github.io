@@ -7,6 +7,7 @@ listing:
         - hurricane_helene_2024/
         - us_doi/
         - stac_tutorial/
+        - watershed_analysis/
     sort: "date desc"
     type: grid
     grid-columns: 3
