@@ -89,13 +89,44 @@ Both tools are GRASS addons installable with `g.extension`:
   builds the animation plan and renders the frames.
 
 Everything else (`r.mapcalc`, `r.import`, `g.region`, `d.rgb`) is core GRASS.
+
+Every step is shown twice: as terminal commands and as Python through the
+[grass.tools](https://grass.osgeo.org/grass-stable/manuals/libpython/grass.tools.html)
+API (GRASS 8.5 or newer). Pick a tab once and the whole post follows.
 :::
 
 ## 1. Set up a project and install the addons
 
 Falls Lake sits in North Carolina, so we work in the state plane projection
 [EPSG:3358](https://epsg.io/3358) (NAD83 / North Carolina, meters). Create a
-project, then install the two addons.
+project, then install the two addons. In Python the project is opened once
+with `grass.script.setup` and every later snippet reuses the same `tools`
+object.
+
+::: {.panel-tabset group="language"}
+
+## Python
+
+```python
+import os
+
+import grass.script as gs
+from grass.tools import Tools
+
+# One-time: create a project in NC State Plane meters
+project = os.path.expanduser("~/grassdata/falls_lake")
+gs.create_project(project, epsg="3358")
+
+# Open the project; the session stays open for the rest of the post
+session = gs.setup.init(project)
+tools = Tools(session=session)
+
+# Install the addons into this GRASS installation
+tools.g_extension(extension="t.stac")
+tools.g_extension(extension="r.anim.morph")
+```
+
+## Terminal
 
 ```bash
 # One-time: create a project in NC State Plane meters
@@ -106,13 +137,27 @@ g.extension extension=t.stac
 g.extension extension=r.anim.morph
 ```
 
+:::
+
 Set the computational region over the reservoir at Sentinel-2's native 10 m
 resolution. These bounds are in EPSG:3358 and enclose the upper reach of the
 lake; adjust them to your own area of interest.
 
+::: {.panel-tabset group="language"}
+
+## Python
+
+```python
+tools.g_region(n=268570, s=238520, e=639300, w=627590, res=10, flags="p")
+```
+
+## Terminal
+
 ```bash
 g.region n=268570 s=238520 e=639300 w=627590 res=10 -p
 ```
+
+:::
 
 ## 2. Explore the catalog with t.stac
 
@@ -121,6 +166,22 @@ collection holds **items** (individual acquisitions). Start at the catalog and
 drill down. We use the public
 [Earth Search](https://element84.com/earth-search/) endpoint, which serves
 Sentinel-2 L2A as cloud-optimized GeoTIFFs, no credentials required.
+
+::: {.panel-tabset group="language"}
+
+## Python
+
+```python
+url = "https://earth-search.aws.element84.com/v1/"
+
+# List collections in the catalog
+print(tools.t_stac_catalog(url=url).text)
+
+# Inspect the Sentinel-2 L2A collection (extent, assets, date range)
+print(tools.t_stac_collection(url=url, collection_id="sentinel-2-l2a").text)
+```
+
+## Terminal
 
 ```bash
 # List collections in the catalog
@@ -132,10 +193,34 @@ t.stac.collection \
     collection_id="sentinel-2-l2a"
 ```
 
+:::
+
 Before importing anything, search the collection over our region and window and
 keep only near-clear scenes. The `query` option accepts the STAC
 [query extension](https://github.com/stac-api-extensions/query), so we filter on
 `eo:cloud_cover`.
+
+::: {.panel-tabset group="language"}
+
+## Python
+
+```python
+import json
+
+# How many low-cloud Sentinel-2 scenes intersect the region this year?
+items = tools.t_stac_item(
+    url=url,
+    collection_id="sentinel-2-l2a",
+    datetime="2025-07-25/2026-07-17",
+    query=json.dumps({"eo:cloud_cover": {"lt": 10}}),
+    format="json",
+).json
+for item in items:
+    props = item["properties"]
+    print(item["id"], props["datetime"][:10], props["eo:cloud_cover"])
+```
+
+## Terminal
 
 ```bash
 # How many low-cloud Sentinel-2 scenes intersect the region this year?
@@ -145,6 +230,8 @@ t.stac.item \
     datetime="2025-07-25/2026-07-17" \
     query='{"eo:cloud_cover":{"lt":10}}'
 ```
+
+:::
 
 Over the window that search returns dozens of candidate passes. For the
 endpoints we pick two nearly cloud-free scenes from the **same Sentinel-2 tile
@@ -159,6 +246,30 @@ green and near-infrared for water detection, plus red and blue to complete the
 true-color composite. The `extent=region` and `resolution=value` options clip
 and resample each asset to the current region as it lands, and `method=bilinear`
 reprojects from Sentinel-2's UTM grid into our state plane project.
+
+::: {.panel-tabset group="language"}
+
+## Python
+
+```python
+# Before: 25 July 2025, after: 3 July 2026
+for item_id in ("S2A_17SPV_20250725_0_L2A", "S2B_17SPV_20260703_0_L2A"):
+    tools.t_stac_item(
+        flags="d",
+        url=url,
+        collection_id="sentinel-2-l2a",
+        ids=item_id,
+        asset_keys="green,nir,red,blue",
+        method="bilinear",
+        extent="region",
+        resolution="value",
+        resolution_value=10,
+        memory=1000,
+        nprocs=4,
+    )
+```
+
+## Terminal
 
 ```bash
 # Before: 25 July 2025
@@ -182,9 +293,27 @@ t.stac.item -d \
     memory=1000 nprocs=4
 ```
 
+:::
+
 t.stac names each imported raster `<collection>.<item_id>.<asset>`, for example
 `sentinel-2-l2a.S2A_17SPV_20250725_0_L2A.green`. Those names are precise but
 awkward in `r.mapcalc`, so rename them to something short:
+
+::: {.panel-tabset group="language"}
+
+## Python
+
+```python
+for band in ("green", "nir", "red", "blue"):
+    tools.g_rename(
+        raster=f"sentinel-2-l2a.S2A_17SPV_20250725_0_L2A.{band},before_{band}"
+    )
+    tools.g_rename(
+        raster=f"sentinel-2-l2a.S2B_17SPV_20260703_0_L2A.{band},after_{band}"
+    )
+```
+
+## Terminal
 
 ```bash
 for band in green nir red blue; do
@@ -193,6 +322,8 @@ for band in green nir red blue; do
 done
 ```
 
+:::
+
 ::: {.callout-important}
 ## Match your footprints before you compare
 Sentinel-2 tile 17SPV sits at the edge of two orbit swaths, so different dates
@@ -200,11 +331,27 @@ image different diagonal slices of the region. If you compare water area over
 the full region, a change in *coverage* masquerades as a change in *water*.
 Always restrict the comparison to the pixels both scenes actually observed:
 
+::: {.panel-tabset group="language"}
+
+## Python
+
+```python
+# 1 where every band of both dates has valid data, null elsewhere
+tools.r_mapcalc(
+    expression="common = if(before_green > 0 && before_nir > 0"
+    " && after_green > 0 && after_nir > 0, 1, null())"
+)
+```
+
+## Terminal
+
 ```bash
 # 1 where every band of both dates has valid data, null elsewhere
 r.mapcalc expression="common = if(before_green>0 && before_nir>0 && \
     after_green>0 && after_nir>0, 1, null())"
 ```
+
+:::
 
 Every measurement below is confined to this common footprint.
 :::
@@ -216,6 +363,23 @@ The Normalized Difference Water Index
 water from land using the green and near-infrared bands. Water is bright in
 green and dark in NIR, so open water has a positive NDWI.
 
+::: {.panel-tabset group="language"}
+
+## Python
+
+```python
+for t in ("before", "after"):
+    tools.r_mapcalc(
+        expression=f"ndwi_{t} = float({t}_green - {t}_nir)"
+        f" / float({t}_green + {t}_nir)"
+    )
+    tools.r_mapcalc(
+        expression=f"water_{t} = if(!isnull(common) && ndwi_{t} > 0.0, 1, 0)"
+    )
+```
+
+## Terminal
+
 ```bash
 for T in before after; do
     r.mapcalc expression="ndwi_${T} = float(${T}_green - ${T}_nir) / \
@@ -224,6 +388,8 @@ for T in before after; do
         ndwi_${T} > 0.0, 1, 0)"
 done
 ```
+
+:::
 
 ::: {.callout-tip}
 ## A note on the L2A offset
@@ -239,12 +405,29 @@ With the two masks in hand, the change is a single map algebra expression:
 water present on both dates is **stable**, water that became land is
 **receded**, and land that became water is **gained**.
 
+::: {.panel-tabset group="language"}
+
+## Python
+
+```python
+tools.r_mapcalc(
+    expression="change = if(water_before == 1 && water_after == 1, 1,"
+    " if(water_before == 1 && water_after == 0, 2,"
+    " if(water_before == 0 && water_after == 1, 3, null())))"
+)
+print(tools.r_report(map="change", units="k,p").text)
+```
+
+## Terminal
+
 ```bash
 r.mapcalc expression="change = if(water_before==1 && water_after==1, 1, \
     if(water_before==1 && water_after==0, 2, \
     if(water_before==0 && water_after==1, 3, null())))"
 r.report map=change units=k,p
 ```
+
+:::
 
 Over the animated arms, the numbers tell a clear story: **3.72 km² of water on
 25 July 2025 fell to 3.37 km² by 3 July 2026**, a 9.4% loss. Of that, 0.39 km²
@@ -272,6 +455,30 @@ over the pixel values directly, then stretch each band to a 0 to 255 display
 range with a common min and max, and clip it to the common footprint. The same
 stretch is applied to both dates so their colors are comparable:
 
+::: {.panel-tabset group="language"}
+
+## Python
+
+```python
+tools.g_region(n=253700, s=249290, e=639420, w=634870, res=10, flags="p")
+
+
+# 1-99 percentile stretch per band: red 157-2333, green 218-2236, blue 198-2064
+def stretch(src, lo, hi, dst):
+    tools.r_mapcalc(
+        expression=f"{dst} = if(isnull(common), null(),"
+        f" round(255.0 * (min(max({src}, {lo}), {hi}) - {lo}) / ({hi} - {lo})))"
+    )
+
+
+bounds = {"red": (157, 2333), "green": (218, 2236), "blue": (198, 2064)}
+for band, (lo, hi) in bounds.items():
+    stretch(f"before_{band}", lo, hi, f"bef_{band}8")
+    stretch(f"after_{band}", lo, hi, f"aft_{band}8")
+```
+
+## Terminal
+
 ```bash
 g.region n=253700 s=249290 e=639420 w=634870 res=10 -p
 
@@ -288,8 +495,40 @@ stretch after_green  218 2236 aft_green8
 stretch after_blue   198 2064 aft_blue8
 ```
 
+:::
+
 With `bef_red8`, `bef_green8`, `bef_blue8` and their `aft_` counterparts in
 hand, build the animation:
+
+::: {.panel-tabset group="language"}
+
+## Python
+
+```python
+tools.r_anim_morph(
+    before="bef_red8,bef_green8,bef_blue8",
+    after="aft_red8,aft_green8,aft_blue8",
+    output="fl",
+    primitive="contraction",
+    mask_before="water_before",
+    mask_after="water_after",
+    roi_start=0.0,
+    roi_end=0.85,
+    bg_start=0.85,
+    bg_end=1.0,
+    blend_duration=0.25,
+    frames=48,
+    output_plan="fl_plan",
+)
+
+# Read the plan statistics back as JSON and list the frames
+plan = tools.r_univar(map="fl_plan_S", format="json")
+print(f"start times run from {plan['min']:.2f} to {plan['max']:.2f}")
+frames = tools.g_list(type="raster", pattern="fl_b1_*").text.split()
+print(f"{len(frames)} frames per band")
+```
+
+## Terminal
 
 ```bash
 r.anim.morph \
@@ -306,6 +545,8 @@ r.anim.morph \
     output_plan=fl_plan
 ```
 
+:::
+
 A few options are worth calling out:
 
 - **`primitive=contraction`** reads both masks and orders the transition so the
@@ -316,49 +557,8 @@ A few options are worth calling out:
   at the very end, keeping attention on the shoreline.
 - **`output_plan=fl_plan`** saves the computed `S` and `E` rasters so you can
   inspect or reuse the plan.
-
-### The same step from Python
-
-r.anim.morph is a regular GRASS tool, so it is also callable from Python
-through the `grass.tools` API (GRASS 8.5 and newer). Open the project, call
-the tool as a method with the same options, and read the plan statistics
-back as JSON:
-
-```python
-import os
-
-import grass.script as gs
-from grass.tools import Tools
-
-project = os.path.expanduser("~/grassdata/falls_lake")
-with gs.setup.init(project) as session:
-    tools = Tools(session=session)
-    tools.g_region(n=253700, s=249290, e=639420, w=634870, res=10)
-    tools.r_anim_morph(
-        before="bef_red8,bef_green8,bef_blue8",
-        after="aft_red8,aft_green8,aft_blue8",
-        output="fl",
-        primitive="contraction",
-        mask_before="water_before",
-        mask_after="water_after",
-        roi_start=0.0,
-        roi_end=0.85,
-        bg_start=0.85,
-        bg_end=1.0,
-        blend_duration=0.25,
-        frames=48,
-        output_plan="fl_plan",
-    )
-    plan = tools.r_univar(map="fl_plan_S", format="json")
-    print(f"start times run from {plan['min']:.2f} to {plan['max']:.2f}")
-    frames = tools.g_list(type="raster", pattern="fl_b1_*").text.split()
-    print(f"{len(frames)} frames per band")
-```
-
-Flags are passed as a string, for example `flags="c"` to match the before
-bands to the after bands, and `overwrite=True` replaces existing frames. The
-frame export in the next section works the same way: build a `Tools` object
-with the `GRASS_RENDER_*` variables in its `env` and call `d_rgb` in a loop.
+- In Python, flags go in a string (`flags="c"` matches the before bands to the
+  after bands) and `overwrite=True` replaces existing frames.
 
 That saved plan is the clearest window into how the framework thinks. Mapping
 `fl_plan_S`, the per-pixel start time, shows the spatial ordering the
@@ -376,7 +576,43 @@ or compose the three bands of each frame into RGB and export a video.
 ## 6. Export to GIF and MP4
 
 Render each frame's three bands to a true-color PNG, then let `ffmpeg` (or
-ImageMagick `convert`) assemble them.
+ImageMagick `convert`) assemble them. The display drivers read their settings
+from `GRASS_RENDER_*` environment variables, so in Python they go into the
+`env` of a second `Tools` object.
+
+::: {.panel-tabset group="language"}
+
+## Python
+
+```python
+import subprocess
+
+# Composite each frame to a PNG with the cairo driver
+env = os.environ.copy()
+env.update(
+    GRASS_RENDER_IMMEDIATE="cairo",
+    GRASS_RENDER_FILE_READ="TRUE",
+    GRASS_RENDER_WIDTH="760",
+    GRASS_RENDER_HEIGHT="736",
+)
+render = Tools(env=env)
+for f in range(1, 49):
+    label = f"{f:02d}"
+    for b in (1, 2, 3):
+        render.r_colors(map=f"fl_b{b}_{label}", color="grey255")
+    env["GRASS_RENDER_FILE"] = f"frame_{label}.png"
+    render.d_erase()
+    render.d_rgb(red=f"fl_b1_{label}", green=f"fl_b2_{label}", blue=f"fl_b3_{label}")
+
+# Assemble a looping MP4
+subprocess.run(
+    ["ffmpeg", "-framerate", "15", "-i", "frame_%02d.png", "-c:v", "libx264",
+     "-pix_fmt", "yuv420p", "-crf", "20", "falls_lake_anim_morph.mp4"],
+    check=True,
+)
+```
+
+## Terminal
 
 ```bash
 # Composite each frame to a PNG with the cairo driver
@@ -400,7 +636,212 @@ ffmpeg -framerate 15 -i frame_%02d.png -i palette.png \
     falls_lake_anim_morph.gif
 ```
 
+:::
+
 The result is the animation at the top of this post.
+
+## 7. The whole reservoir
+
+The upper arms are where the drawdown is easiest to read, but a fair question
+is what the whole reservoir did. Answering it exposes the footprint problem
+from a different angle: neither scene above covers the whole lake. Tile 17SPV
+is imaged from two orbits. Passes from one orbit cover the full tile; passes
+from the other cover only a diagonal strip, and the strip is what
+`S2A_17SPV_20250725` and `S2B_17SPV_20260703` are. The catalog tells you
+which is which: the `s2:nodata_pixel_percentage` property is 0 for a full
+tile and about 88 for a strip. Filter on it and two full-tile, near
+cloud-free passes bracket the same window: `S2C_17SPV_20250726_0_L2A`
+(26 July 2025, 0.3% cloud) and `S2C_17SPV_20260701_0_L2A` (1 July 2026,
+0.7% cloud), both from Sentinel-2C on the full-coverage orbit.
+
+Import them over a region that encloses the whole reservoir and rerun the
+same steps: common footprint, NDWI masks, stretch, r.anim.morph. Only the
+names, the region, and the stretch bounds change, so the code is condensed.
+
+::: {.panel-tabset group="language"}
+
+## Python
+
+```python
+tools.g_region(n=264000, s=238520, e=652030, w=627590, res=10, flags="p")
+scenes = (("S2C_17SPV_20250726_0_L2A", "lb"), ("S2C_17SPV_20260701_0_L2A", "la"))
+for item_id, prefix in scenes:
+    tools.t_stac_item(
+        flags="d", url=url, collection_id="sentinel-2-l2a", ids=item_id,
+        asset_keys="green,nir,red,blue", method="bilinear", extent="region",
+        resolution="value", resolution_value=10, memory=2000, nprocs=4,
+    )
+    for band in ("green", "nir", "red", "blue"):
+        tools.g_rename(raster=f"sentinel-2-l2a.{item_id}.{band},{prefix}_{band}")
+
+tools.r_mapcalc(
+    expression="lcommon = if(lb_green > 0 && lb_nir > 0"
+    " && la_green > 0 && la_nir > 0, 1, null())"
+)
+for t in ("lb", "la"):
+    tools.r_mapcalc(
+        expression=f"ndwi_{t} = float({t}_green - {t}_nir) / float({t}_green + {t}_nir)"
+    )
+    tools.r_mapcalc(
+        expression=f"water_{t} = if(!isnull(lcommon) && ndwi_{t} > 0.0, 1, 0)"
+    )
+
+# Zoom to the water of either date, with a 500 m margin
+tools.r_mapcalc(expression="lwater_any = if(water_lb == 1 || water_la == 1, 1, null())")
+tools.g_region(zoom="lwater_any", res=10)
+reg = tools.g_region(flags="p", format="json")
+tools.g_region(n=reg["north"] + 500, s=reg["south"] - 500,
+               e=reg["east"] + 500, w=reg["west"] - 500)
+
+# 1-99 percentile stretch per band: red 78-3370, green 144-3349, blue 90-3337
+bounds = {"red": (78, 3370), "green": (144, 3349), "blue": (90, 3337)}
+for band, (lo, hi) in bounds.items():
+    for t in ("lb", "la"):
+        tools.r_mapcalc(
+            expression=f"{t}_{band}8 = if(isnull(lcommon), null(),"
+            f" round(255.0 * (min(max({t}_{band}, {lo}), {hi}) - {lo}) / ({hi} - {lo})))"
+        )
+
+tools.r_anim_morph(
+    before="lb_red8,lb_green8,lb_blue8",
+    after="la_red8,la_green8,la_blue8",
+    output="lake",
+    primitive="contraction",
+    mask_before="water_lb",
+    mask_after="water_la",
+    roi_start=0.0,
+    roi_end=0.85,
+    bg_start=0.85,
+    bg_end=1.0,
+    blend_duration=0.25,
+    frames=48,
+    output_plan="lake_plan",
+)
+
+# Render at the region's own size so every cell keeps its 10 m footprint,
+# then let ffmpeg scale the video down
+env = os.environ.copy()
+env.update(
+    GRASS_RENDER_IMMEDIATE="cairo",
+    GRASS_RENDER_FILE_READ="TRUE",
+    GRASS_RENDER_WIDTH=str(reg["cols"]),
+    GRASS_RENDER_HEIGHT=str(reg["rows"]),
+)
+render = Tools(env=env)
+for f in range(1, 49):
+    label = f"{f:02d}"
+    for b in (1, 2, 3):
+        render.r_colors(map=f"lake_b{b}_{label}", color="grey255")
+    env["GRASS_RENDER_FILE"] = f"lake_{label}.png"
+    render.d_erase()
+    render.d_rgb(red=f"lake_b1_{label}", green=f"lake_b2_{label}", blue=f"lake_b3_{label}")
+subprocess.run(
+    ["ffmpeg", "-framerate", "15", "-i", "lake_%02d.png",
+     "-vf", "scale=-2:1440:flags=lanczos", "-c:v", "libx264",
+     "-pix_fmt", "yuv420p", "-crf", "23", "falls_lake_whole_anim_morph.mp4"],
+    check=True,
+)
+```
+
+## Terminal
+
+```bash
+g.region n=264000 s=238520 e=652030 w=627590 res=10 -p
+for item in S2C_17SPV_20250726_0_L2A S2C_17SPV_20260701_0_L2A; do
+    t.stac.item -d \
+        url="https://earth-search.aws.element84.com/v1/" \
+        collection_id="sentinel-2-l2a" ids="$item" \
+        asset_keys="green,nir,red,blue" \
+        method=bilinear extent=region \
+        resolution=value resolution_value=10 \
+        memory=2000 nprocs=4
+done
+for band in green nir red blue; do
+    g.rename raster="sentinel-2-l2a.S2C_17SPV_20250726_0_L2A.${band},lb_${band}"
+    g.rename raster="sentinel-2-l2a.S2C_17SPV_20260701_0_L2A.${band},la_${band}"
+done
+
+r.mapcalc expression="lcommon = if(lb_green>0 && lb_nir>0 && \
+    la_green>0 && la_nir>0, 1, null())"
+for T in lb la; do
+    r.mapcalc expression="ndwi_${T} = float(${T}_green - ${T}_nir) / \
+        float(${T}_green + ${T}_nir)"
+    r.mapcalc expression="water_${T} = if(!isnull(lcommon) && \
+        ndwi_${T} > 0.0, 1, 0)"
+done
+
+# Zoom to the water of either date, with a 500 m margin
+r.mapcalc expression="lwater_any = if(water_lb==1 || water_la==1, 1, null())"
+g.region zoom=lwater_any res=10
+eval $(g.region -g)
+g.region n=$((n+500)) s=$((s-500)) e=$((e+500)) w=$((w-500)) -p
+
+# 1-99 percentile stretch per band: red 78-3370, green 144-3349, blue 90-3337
+stretch() {  # stretch <src> <lo> <hi> <dst>, clipped to lcommon
+    r.mapcalc expression="$4 = if(isnull(lcommon), null(), \
+        round(255.0 * (min(max($1, $2), $3) - $2) / ($3 - $2)))"
+}
+for T in lb la; do
+    stretch ${T}_red    78 3370 ${T}_red8
+    stretch ${T}_green 144 3349 ${T}_green8
+    stretch ${T}_blue   90 3337 ${T}_blue8
+done
+
+r.anim.morph \
+    before=lb_red8,lb_green8,lb_blue8 \
+    after=la_red8,la_green8,la_blue8 \
+    output=lake \
+    primitive=contraction \
+    mask_before=water_lb \
+    mask_after=water_la \
+    roi_start=0.0 roi_end=0.85 \
+    bg_start=0.85 bg_end=1.0 \
+    blend_duration=0.25 \
+    frames=48 \
+    output_plan=lake_plan
+
+# Render at the region's own size so every cell keeps its 10 m footprint,
+# then let ffmpeg scale the video down
+eval $(g.region -g)
+export GRASS_RENDER_IMMEDIATE=cairo GRASS_RENDER_FILE_READ=TRUE
+export GRASS_RENDER_WIDTH=$cols GRASS_RENDER_HEIGHT=$rows
+for f in $(seq -w 1 48); do
+    for b in 1 2 3; do r.colors map=lake_b${b}_${f} color=grey255; done
+    export GRASS_RENDER_FILE="lake_${f}.png"
+    d.erase
+    d.rgb red=lake_b1_${f} green=lake_b2_${f} blue=lake_b3_${f}
+done
+ffmpeg -framerate 15 -i lake_%02d.png -vf "scale=-2:1440:flags=lanczos" \
+    -c:v libx264 -pix_fmt yuv420p -crf 23 falls_lake_whole_anim_morph.mp4
+```
+
+:::
+
+Over the whole reservoir the change is no longer subtle. **29.4 km² of water
+on 26 July 2025 became 19.4 km² on 1 July 2026, a 34% loss**: 10.9 km² of
+former lake surface was exposed while 1.0 km² was newly counted as water. The
+main body near the dam stays wet and forms the stable core of the plan; the
+shallow upper reaches at the northwest end of the lake drain almost entirely,
+which is why they animate first and longest. Most of the newly counted water
+is cloud shadow on the July 2026 scene, which NDWI reads as water; masking
+with the scene classification asset would remove it, and the same scattered
+cumulus is visible in the frames.
+
+:::: {layout-ncol=2}
+![Frame 24 of 48 over the whole reservoir, 26 July 2025 morphing into 1 July 2026. The northwest reaches are already lakebed while the main body holds.](images/falls_lake_whole_frame_24.jpg){#fig-whole-frame fig-alt="True color satellite view of all of Falls Lake mid-way through the drawdown animation, with exposed lakebed in the upper reaches"}
+
+::: {#fig-whole-video}
+```{=html}
+<video autoplay loop muted playsinline style="max-width:100%"
+       aria-label="Animation of the whole Falls Lake reservoir drawing down between July 2025 and July 2026">
+  <source src="images/falls_lake_whole_anim_morph.mp4" type="video/mp4">
+</video>
+```
+
+The whole-reservoir animation. The same contraction plan, staged so the land settles in the final frames. ([Download the MP4](images/falls_lake_whole_anim_morph.mp4).)
+:::
+::::
+
 
 ## What the animation is, and is not
 
@@ -420,13 +861,14 @@ sits within days of that low point. Rain in late July lifted the lake back to
 [4 September drought update](https://www.deq.nc.gov/news/press-releases/2026/09/04/north-carolina-drought-expands-some-parts-state)
 still had Falls Lake more than three feet below normal.
 
-Set against that, the 9.4% surface-area loss over the mapped arms is the
-understated number. Surface area is what an optical satellite can see, and it
-lags stage badly on a reservoir like this one: a six-foot drop in the pool
-took storage down by more than a third while removing less than a tenth of
-the water surface in these arms. What area does capture well is *where* the
-change happened. The upper arms shelve gently, so the stage drop exposes a
-wide, continuous band of lakebed along every cove, and that is what r.anim.morph
+Set against that, the 9.4% surface-area loss over the mapped arms is a window,
+not the whole story. Across the reservoir the same method finds a 34% loss of
+water surface (section 7), in line with the roughly one-third drop in storage
+the Corps reported. The arms window happens to be dominated by the deep
+channel that stays wet, while the shallow upper reaches of the lake lose
+nearly all of their surface. What area captures well in either case is
+*where* the change happened: gently shelving shorelines expose a wide,
+continuous band of lakebed along every cove, and that is what r.anim.morph
 turns into something you can watch. Sources: WRAL reporting from
 [16 June](https://www.wral.com/news/local/falls-lake-water-levels-drop-june-2026/)
 and [8 July 2026](https://www.wral.com/news/local/nc-extreme-drought-water-level-falls-lake-raleigh-july-2026/),
