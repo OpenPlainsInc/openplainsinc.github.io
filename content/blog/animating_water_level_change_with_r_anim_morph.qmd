@@ -38,8 +38,8 @@ pull the imagery straight from a SpatioTemporal Asset Catalog.
 Our subject is [Falls Lake](https://en.wikipedia.org/wiki/Falls_Lake), the
 managed reservoir north of Raleigh, North Carolina. We will take a full year of
 Sentinel-2 passes, from 25 July 2025 to today, find two cloud-free scenes that
-bracket the window, and animate the reservoir's shoreline as it draws down over
-the summer.
+bracket the window, and animate the reservoir's shoreline as the 2025 to 2026
+drought draws it down.
 
 ::: {#fig-hero}
 ```{=html}
@@ -317,6 +317,49 @@ A few options are worth calling out:
 - **`output_plan=fl_plan`** saves the computed `S` and `E` rasters so you can
   inspect or reuse the plan.
 
+### The same step from Python
+
+r.anim.morph is a regular GRASS tool, so it is also callable from Python
+through the `grass.tools` API (GRASS 8.5 and newer). Open the project, call
+the tool as a method with the same options, and read the plan statistics
+back as JSON:
+
+```python
+import os
+
+import grass.script as gs
+from grass.tools import Tools
+
+project = os.path.expanduser("~/grassdata/falls_lake")
+with gs.setup.init(project) as session:
+    tools = Tools(session=session)
+    tools.g_region(n=253700, s=249290, e=639420, w=634870, res=10)
+    tools.r_anim_morph(
+        before="bef_red8,bef_green8,bef_blue8",
+        after="aft_red8,aft_green8,aft_blue8",
+        output="fl",
+        primitive="contraction",
+        mask_before="water_before",
+        mask_after="water_after",
+        roi_start=0.0,
+        roi_end=0.85,
+        bg_start=0.85,
+        bg_end=1.0,
+        blend_duration=0.25,
+        frames=48,
+        output_plan="fl_plan",
+    )
+    plan = tools.r_univar(map="fl_plan_S", format="json")
+    print(f"start times run from {plan['min']:.2f} to {plan['max']:.2f}")
+    frames = tools.g_list(type="raster", pattern="fl_b1_*").text.split()
+    print(f"{len(frames)} frames per band")
+```
+
+Flags are passed as a string, for example `flags="c"` to match the before
+bands to the after bands, and `overwrite=True` replaces existing frames. The
+frame export in the next section works the same way: build a `Tools` object
+with the `GRASS_RENDER_*` variables in its `env` and call `d_rgb` in a loop.
+
 That saved plan is the clearest window into how the framework thinks. Mapping
 `fl_plan_S`, the per-pixel start time, shows the spatial ordering the
 `contraction` primitive built: the shoreline fringe (low start times) begins
@@ -361,16 +404,34 @@ The result is the animation at the top of this post.
 
 ## What the animation is, and is not
 
-Falls Lake is a
+The two dates bracket a real drought, not a seasonal cycle. Falls Lake is a
 [US Army Corps of Engineers](https://www.saw.usace.army.mil/Locations/District-Lakes-and-Dams/Falls-Lake/)
-flood-control reservoir, so it is held close to its normal pool most of the
-year. Across the full window its surface stayed within roughly 10% of full;
-what you see is a **modest seasonal drawdown**, not a drought emptying the lake.
-The reason it still reads clearly is that the upper arms are shallow and shelve
-gently, so a small drop in stage exposes a wide planimetric band of lakebed. The
-honest headline is a 9.4% surface-area decline over the mapped arms, and r.anim.morph
-turns that measured, spatially-coherent change into something you can actually
-watch.
+reservoir with a normal pool of 251.5 feet, and the 25 July 2025 scene shows
+it close to that level, just before a dry fall opened the driest year North
+Carolina has recorded since 1895. Raleigh Water entered Stage 1 restrictions on
+20 April 2026 when water-supply storage fell to 85%. By mid June the lake was
+5.3 feet below normal pool at 66% storage, Wake County was in extreme drought,
+and most of Durham County was in exceptional drought, the highest category on
+the U.S. Drought Monitor. On 9 July the USGS gauge read 245.27 feet, about six
+feet below normal, the lowest the lake had been since the 2007 to 2008 drought,
+and the Corps had it on pace for its driest June on record. The 3 July scene
+sits within days of that low point. Rain in late July lifted the lake back to
+84% storage and the restrictions were lifted on 3 August, but the state's
+[4 September drought update](https://www.deq.nc.gov/news/press-releases/2026/09/04/north-carolina-drought-expands-some-parts-state)
+still had Falls Lake more than three feet below normal.
+
+Set against that, the 9.4% surface-area loss over the mapped arms is the
+understated number. Surface area is what an optical satellite can see, and it
+lags stage badly on a reservoir like this one: a six-foot drop in the pool
+took storage down by more than a third while removing less than a tenth of
+the water surface in these arms. What area does capture well is *where* the
+change happened. The upper arms shelve gently, so the stage drop exposes a
+wide, continuous band of lakebed along every cove, and that is what r.anim.morph
+turns into something you can watch. Sources: WRAL reporting from
+[16 June](https://www.wral.com/news/local/falls-lake-water-levels-drop-june-2026/)
+and [8 July 2026](https://www.wral.com/news/local/nc-extreme-drought-water-level-falls-lake-raleigh-july-2026/),
+the [N.C. Drought Management Advisory Council](https://www.ncdrought.org/),
+and the Corps' Falls Lake water management data.
 
 That is the real value of pairing the two tools. **t.stac** makes a year of
 analysis-ready Sentinel-2 a couple of commands away, and **r.anim.morph** turns a pair
