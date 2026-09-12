@@ -265,12 +265,16 @@ finger of the lake.
 ## 5. Build the animation with r.anim.morph
 
 Now the payoff. We hand r.anim.morph the true-color bands for each date and the two
-water masks, and ask for a `contraction` primitive. Because the animation runs
-over the pixel values directly, first stretch each band to a 0 to 255 display
+water masks, and ask for a `contraction` primitive. First zoom the region to
+the upper Cheek Creek and Ledge Creek arms, where the drawdown is easiest to
+see; every frame and figure below uses this window. Because the animation runs
+over the pixel values directly, then stretch each band to a 0 to 255 display
 range with a common min and max, and clip it to the common footprint. The same
 stretch is applied to both dates so their colors are comparable:
 
 ```bash
+g.region n=253700 s=249290 e=639420 w=634870 res=10 -p
+
 # 1-99 percentile stretch per band: red 157-2333, green 218-2236, blue 198-2064
 stretch() {  # stretch <src> <lo> <hi> <dst>
     r.mapcalc expression="$4 = if(isnull(common), null(), \
