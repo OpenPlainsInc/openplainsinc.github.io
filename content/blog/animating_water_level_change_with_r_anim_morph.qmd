@@ -663,6 +663,8 @@ names, the region, and the stretch bounds change, so the code is condensed.
 ## Python
 
 ```python
+from io import StringIO
+
 tools.g_region(n=264000, s=238520, e=652030, w=627590, res=10, flags="p")
 scenes = (("S2C_17SPV_20250726_0_L2A", "lb"), ("S2C_17SPV_20260701_0_L2A", "la"))
 for item_id, prefix in scenes:
@@ -686,15 +688,21 @@ for t in ("lb", "la"):
         expression=f"water_{t} = if(!isnull(lcommon) && ndwi_{t} > 0.0, 1, 0)"
     )
 
-# Zoom to the water of either date, with a 500 m margin
+# Zoom to the lake itself: clump the water of either date, keep bodies of
+# 20 ha or more (ponds and cloud shadow drop out), and add a 300 m margin
 tools.r_mapcalc(expression="lwater_any = if(water_lb == 1 || water_la == 1, 1, null())")
-tools.g_region(zoom="lwater_any", res=10)
+tools.r_clump(input="lwater_any", output="lwater_clumps", flags="d")
+sizes = (line.split() for line in tools.r_stats(input="lwater_clumps", flags="cn").text.splitlines())
+rules = "\n".join(f"{cat} = 1" for cat, cells in sizes if int(cells) >= 2000)
+tools.r_reclass(input="lwater_clumps", output="lake_body", rules=StringIO(rules))
+tools.g_region(zoom="lake_body", res=10)
 reg = tools.g_region(flags="p", format="json")
-tools.g_region(n=reg["north"] + 500, s=reg["south"] - 500,
-               e=reg["east"] + 500, w=reg["west"] - 500)
+tools.g_region(n=reg["north"] + 300, s=reg["south"] - 300,
+               e=reg["east"] + 300, w=reg["west"] - 300)
+reg = tools.g_region(flags="p", format="json")
 
-# 1-99 percentile stretch per band: red 78-3370, green 144-3349, blue 90-3337
-bounds = {"red": (78, 3370), "green": (144, 3349), "blue": (90, 3337)}
+# 1-99 percentile stretch per band: red 86-3014, green 154-3063, blue 95-3070
+bounds = {"red": (86, 3014), "green": (154, 3063), "blue": (95, 3070)}
 for band, (lo, hi) in bounds.items():
     for t in ("lb", "la"):
         tools.r_mapcalc(
@@ -737,8 +745,8 @@ for f in range(1, 49):
     render.d_rgb(red=f"lake_b1_{label}", green=f"lake_b2_{label}", blue=f"lake_b3_{label}")
 subprocess.run(
     ["ffmpeg", "-framerate", "15", "-i", "lake_%02d.png",
-     "-vf", "scale=-2:1440:flags=lanczos", "-c:v", "libx264",
-     "-pix_fmt", "yuv420p", "-crf", "23", "falls_lake_whole_anim_morph.mp4"],
+     "-vf", "scale=-2:1000:flags=lanczos", "-c:v", "libx264",
+     "-pix_fmt", "yuv420p", "-crf", "25", "falls_lake_whole_anim_morph.mp4"],
     check=True,
 )
 ```
@@ -770,11 +778,15 @@ for T in lb la; do
         ndwi_${T} > 0.0, 1, 0)"
 done
 
-# Zoom to the water of either date, with a 500 m margin
+# Zoom to the lake itself: clump the water of either date, keep bodies of
+# 20 ha or more (ponds and cloud shadow drop out), and add a 300 m margin
 r.mapcalc expression="lwater_any = if(water_lb==1 || water_la==1, 1, null())"
-g.region zoom=lwater_any res=10
+r.clump -d input=lwater_any output=lwater_clumps
+r.stats -cn input=lwater_clumps | awk '$2 >= 2000 {print $1 " = 1"}' \
+    | r.reclass input=lwater_clumps output=lake_body rules=-
+g.region zoom=lake_body res=10
 eval $(g.region -g)
-g.region n=$((n+500)) s=$((s-500)) e=$((e+500)) w=$((w-500)) -p
+g.region n=$((n+300)) s=$((s-300)) e=$((e+300)) w=$((w-300)) -p
 
 # 1-99 percentile stretch per band: red 78-3370, green 144-3349, blue 90-3337
 stretch() {  # stretch <src> <lo> <hi> <dst>, clipped to lcommon
@@ -782,9 +794,9 @@ stretch() {  # stretch <src> <lo> <hi> <dst>, clipped to lcommon
         round(255.0 * (min(max($1, $2), $3) - $2) / ($3 - $2)))"
 }
 for T in lb la; do
-    stretch ${T}_red    78 3370 ${T}_red8
-    stretch ${T}_green 144 3349 ${T}_green8
-    stretch ${T}_blue   90 3337 ${T}_blue8
+    stretch ${T}_red    86 3014 ${T}_red8
+    stretch ${T}_green 154 3063 ${T}_green8
+    stretch ${T}_blue   95 3070 ${T}_blue8
 done
 
 r.anim.morph \
@@ -811,24 +823,27 @@ for f in $(seq -w 1 48); do
     d.erase
     d.rgb red=lake_b1_${f} green=lake_b2_${f} blue=lake_b3_${f}
 done
-ffmpeg -framerate 15 -i lake_%02d.png -vf "scale=-2:1440:flags=lanczos" \
-    -c:v libx264 -pix_fmt yuv420p -crf 23 falls_lake_whole_anim_morph.mp4
+ffmpeg -framerate 15 -i lake_%02d.png -vf "scale=-2:1000:flags=lanczos" \
+    -c:v libx264 -pix_fmt yuv420p -crf 25 falls_lake_whole_anim_morph.mp4
 ```
 
 :::
 
-Over the whole reservoir the change is no longer subtle. **29.4 km² of water
-on 26 July 2025 became 19.4 km² on 1 July 2026, a 34% loss**: 10.9 km² of
-former lake surface was exposed while 1.0 km² was newly counted as water. The
+Over the whole reservoir the change is no longer subtle. **29.0 km² of water
+on 26 July 2025 became 18.8 km² on 1 July 2026, a 35% loss**: 10.8 km² of
+former lake surface was exposed while 0.7 km² was newly counted as water. The
 main body near the dam stays wet and forms the stable core of the plan; the
 shallow upper reaches at the northwest end of the lake drain almost entirely,
-which is why they animate first and longest. Most of the newly counted water
-is cloud shadow on the July 2026 scene, which NDWI reads as water; masking
-with the scene classification asset would remove it, and the same scattered
-cumulus is visible in the frames.
+which is why they animate first and longest. Two artifacts of the scenes are
+worth knowing. The water surface reads bright grey in the 1 July 2026 pass,
+most likely sun glint from that orbit's view angle, so the main body
+brightens even where it stays wet. And most of the newly counted water is
+cloud shadow, which NDWI reads as water; masking with the scene
+classification asset would remove it, and the same scattered cumulus is
+visible in the frames.
 
 :::: {layout-ncol=2}
-![Frame 24 of 48 over the whole reservoir, 26 July 2025 morphing into 1 July 2026. The northwest reaches are already lakebed while the main body holds.](images/falls_lake_whole_frame_24.jpg){#fig-whole-frame fig-alt="True color satellite view of all of Falls Lake mid-way through the drawdown animation, with exposed lakebed in the upper reaches"}
+![Frame 24 of 48 over the whole reservoir (a 12 by 14 km window), 26 July 2025 morphing into 1 July 2026. The northwest reaches are already lakebed while the main body holds.](images/falls_lake_whole_frame_24.jpg){#fig-whole-frame fig-alt="True color satellite view of all of Falls Lake mid-way through the drawdown animation, with exposed lakebed in the upper reaches"}
 
 ::: {#fig-whole-video}
 ```{=html}
@@ -862,7 +877,7 @@ sits within days of that low point. Rain in late July lifted the lake back to
 still had Falls Lake more than three feet below normal.
 
 Set against that, the 9.4% surface-area loss over the mapped arms is a window,
-not the whole story. Across the reservoir the same method finds a 34% loss of
+not the whole story. Across the reservoir the same method finds a 35% loss of
 water surface (section 7), in line with the roughly one-third drop in storage
 the Corps reported. The arms window happens to be dominated by the deep
 channel that stays wet, while the shallow upper reaches of the lake lose
