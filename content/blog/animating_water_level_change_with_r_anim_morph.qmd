@@ -858,9 +858,9 @@ The whole-reservoir animation. The same contraction plan, staged so the land set
 ::::
 
 
-## What the animation is, and is not
+## The drought behind the animation
 
-The two dates bracket a real drought, not a seasonal cycle. Falls Lake is a
+The two dates bracket the 2025 to 2026 drought. Falls Lake is a
 [US Army Corps of Engineers](https://www.saw.usace.army.mil/Locations/District-Lakes-and-Dams/Falls-Lake/)
 reservoir with a normal pool of 251.5 feet, and the 25 July 2025 scene shows
 it close to that level, just before a dry fall opened the driest year North
@@ -876,8 +876,8 @@ sits within days of that low point. Rain in late July lifted the lake back to
 [4 September drought update](https://www.deq.nc.gov/news/press-releases/2026/09/04/north-carolina-drought-expands-some-parts-state)
 still had Falls Lake more than three feet below normal.
 
-Set against that, the 9.4% surface-area loss over the mapped arms is a window,
-not the whole story. Across the reservoir the same method finds a 35% loss of
+Set against that, the 9.4% surface-area loss over the mapped arms is only a window
+on it. Across the reservoir the same method finds a 35% loss of
 water surface (section 7), in line with the roughly one-third drop in storage
 the Corps reported. The arms window happens to be dominated by the deep
 channel that stays wet, while the shallow upper reaches of the lake lose
@@ -892,8 +892,8 @@ and the Corps' Falls Lake water management data.
 
 That is the real value of pairing the two tools. **t.stac** makes a year of
 analysis-ready Sentinel-2 a couple of commands away, and **r.anim.morph** turns a pair
-of dates into a spatially-honest animation whose motion encodes *where* the
-change is, not just *that* there was change. Swap the primitive to `expansion`
+of dates into a spatially-honest animation whose motion shows *where* the
+change happened. Swap the primitive to `expansion`
 for a flood, `dem` for snow accumulating down from the peaks, or `directional`
 for a fire front, and the same workflow retells a very different story.
 
