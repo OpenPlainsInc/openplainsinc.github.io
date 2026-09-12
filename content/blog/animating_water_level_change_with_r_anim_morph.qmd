@@ -1,6 +1,6 @@
 ---
-title: "Animating a year of water-level change at Falls Lake with r.anim.morph"
-description: "Introducing r.anim.morph: import a year of Sentinel-2 with t.stac and turn two dates into a smooth, spatially-aware before-and-after animation of Falls Lake, North Carolina."
+title: "Animating the Falls Lake drawdown with r.anim.morph"
+description: "Introducing r.anim.morph: pull two Sentinel-2 scenes a year apart with t.stac and morph them into a spatially aware before-and-after animation of Falls Lake, North Carolina, during the 2025 to 2026 drought."
 author: "Corey T. White"
 date: "2026-07-17"
 date-modified: last-modified
