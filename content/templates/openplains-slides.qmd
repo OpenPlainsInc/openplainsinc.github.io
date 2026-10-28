@@ -1,6 +1,6 @@
 ---
 title: "[GRASS at]{.light}<br>[cloud scale.]{.bold}"
-subtitle: "Running geospatial models in the browser and on a metered API."
+subtitle: "Running geospatial models in the browser and on the OpenPlains API."
 author:
   - name: "Corey T. White"
     affiliations:
@@ -97,7 +97,7 @@ Runs in your GRASS session, on your laptop.
 
 ::: {.op-card .dark}
 [Cloud]{.eyebrow}
-Same call, submitted as a metered job. The result comes back as a COG.
+Same call, submitted as a cloud job. The result comes back as a COG.
 :::
 :::
 ::::
